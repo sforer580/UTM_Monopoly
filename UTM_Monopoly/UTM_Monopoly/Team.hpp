@@ -1,10 +1,13 @@
 //
-//  main.cpp
+//  Team.hpp
 //  UTM_Monopoly
 //
 //  Created by Scott S Forer on 5/31/16.
 //  Copyright © 2016 Scott S Forer. All rights reserved.
 //
+
+#ifndef Team_hpp
+#define Team_hpp
 
 #include <iostream>
 #include <cstdlib>
@@ -18,16 +21,31 @@
 
 #include "Parameters.hpp"
 #include "Physics.hpp"
-#include "Team.hpp"
 #include "Individual.hpp"
 #include "Simulator.hpp"
 
 using namespace std;
 
-int main()
+
+class Team
 {
-    Simulator S;
-    Parameters P;
-    S.set_team_sizes(P.num_teams);
-    cout << S.system.size() << endl;
-}
+    friend class Parameters;
+    friend class Individual;
+    friend class Physics;
+    friend class Simulator;
+    
+protected:
+    
+    
+public:
+    vector<Individual> agent;
+    void set_team_sizes();
+    double team_fitness;
+    
+private:
+    
+    
+};
+
+
+#endif /* Team_hpp */

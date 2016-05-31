@@ -1,10 +1,13 @@
 //
-//  main.cpp
+//  Physics.hpp
 //  UTM_Monopoly
 //
 //  Created by Scott S Forer on 5/31/16.
 //  Copyright © 2016 Scott S Forer. All rights reserved.
 //
+
+#ifndef Physics_hpp
+#define Physics_hpp
 
 #include <iostream>
 #include <cstdlib>
@@ -17,17 +20,10 @@
 #include <iomanip>
 
 #include "Parameters.hpp"
-#include "Physics.hpp"
 #include "Team.hpp"
 #include "Individual.hpp"
 #include "Simulator.hpp"
 
 using namespace std;
 
-int main()
-{
-    Simulator S;
-    Parameters P;
-    S.set_team_sizes(P.num_teams);
-    cout << S.system.size() << endl;
-}
+#endif /* Physics_hpp */
