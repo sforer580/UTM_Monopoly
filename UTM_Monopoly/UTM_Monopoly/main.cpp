@@ -28,6 +28,6 @@ int main()
 {
     Simulator S;
     Parameters P;
-    S.set_team_sizes(P.num_teams);
+    S.create_teams(P.num_teams);
     cout << S.system.size() << endl;
 }

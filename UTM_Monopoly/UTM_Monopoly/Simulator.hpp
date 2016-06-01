@@ -39,7 +39,7 @@ protected:
     
 public:
     vector<Team> system;
-    void set_team_sizes(int);
+    void create_teams(int);
     
 private:
     
@@ -48,13 +48,13 @@ private:
 
 
 /////////////////////////////////////////////////////////////////
-//Team settings
-void set_team_sizes(int num_teams)
+//Create teams
+void create_teams(int num_teams)
 {
-    for (int i=0; i <num_teams; i++)
+    for (int i=0; i < num_teams; i++)
     {
         Team T;
-        Teams.push_back(T);
+        system.push_back(T);
     }
 }
 
