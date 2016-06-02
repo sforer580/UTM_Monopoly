@@ -19,10 +19,10 @@
 #include <fstream>
 #include <iomanip>
 
-#include "Parameters.hpp"
-#include "Physics.hpp"
+//#include "Parameters.hpp"
+//#include "Physics.hpp"
 #include "Individual.hpp"
-#include "Simulator.hpp"
+//#include "Simulator.hpp"
 
 using namespace std;
 
@@ -32,13 +32,13 @@ class Team
     friend class Parameters;
     friend class Individual;
     friend class Physics;
-    friend class Simulator;
+    //friend class Simulator;
     
 protected:
     
     
 public:
-    vector<Individual> agent;
+    vector<Individual> agents;
     void set_team_sizes();
     double team_fitness;
     

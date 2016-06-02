@@ -29,5 +29,11 @@ int main()
     Simulator S;
     Parameters P;
     S.create_teams(P.num_teams);
-    cout << S.system.size() << endl;
+    P.set_team_sizes();
+    S.create_individuals(P.num_teams, P.team_sizes);
+    cout << "total number of teams" << "\t" << S.system.size() << endl;
+    for(int i=0; i < P.num_teams; i++)
+    {
+        cout << "team" << "\t" << i << "\t" << "has" << "\t" << S.system.at(i).agents.size() << "\t" << "agents" << endl;
+    }
 }

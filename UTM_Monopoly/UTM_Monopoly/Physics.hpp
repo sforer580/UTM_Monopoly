@@ -19,10 +19,10 @@
 #include <fstream>
 #include <iomanip>
 
-#include "Parameters.hpp"
-#include "Team.hpp"
-#include "Individual.hpp"
-#include "Simulator.hpp"
+//#include "Parameters.hpp"
+//#include "Team.hpp"
+//#include "Individual.hpp"
+//#include "Simulator.hpp"
 
 using namespace std;
 
