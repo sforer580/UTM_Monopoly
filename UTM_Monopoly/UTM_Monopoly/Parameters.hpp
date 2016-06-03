@@ -53,8 +53,8 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 10;
-    int team_1 = 10;
+    int num_teams = 1;
+    int team_1 = 1;
     int team_2 = 5;
     int team_3 = 2;
     int team_4 = 8;
@@ -64,6 +64,7 @@ public:
     int team_8 = 8;
     int team_9 = 10;
     int team_10 = 2;
+    int num_waypoints = 3;
     
     vector<int> team_sizes;
     

@@ -1,13 +1,13 @@
 //
-//  Individual.hpp
+//  Waypoint.hpp
 //  UTM_Monopoly
 //
-//  Created by Scott S Forer on 5/31/16.
+//  Created by Scott S Forer on 6/2/16.
 //  Copyright © 2016 Scott S Forer. All rights reserved.
 //
 
-#ifndef Individual_hpp
-#define Individual_hpp
+#ifndef Waypoint_hpp
+#define Waypoint_hpp
 
 #include <iostream>
 #include <cstdlib>
@@ -19,35 +19,37 @@
 #include <fstream>
 #include <iomanip>
 
-//#include "Parameters.hpp"
 //#include "Physics.hpp"
 //#include "Team.hpp"
+//#include "Individual.hpp"
 //#include "Simulator.hpp"
-#include "Waypoint.hpp"
+
 
 using namespace std;
 
 
-class Individual
+class Waypoint
 {
-    friend class Parameters;
     friend class Team;
+    friend class Individual;
     friend class Physics;
     friend class Simulator;
-    friend class Waypoint;
+    friend class Parameters;
     
 protected:
     
     
 public:
-    double agent_fitness;
     
-    vector<Waypoint> check_points;
-    vector<double> current_telem;
+    vector<int> waypoint_telm;
+    
+    void get_waypoint();
+    
     
 private:
     
     
 };
 
-#endif /* Individual_hpp */
+
+#endif /* Waypoint_hpp */
