@@ -45,9 +45,9 @@ public:
     void create_teams(int);
     void create_individuals(int num_teams, vector<int> team_sizes);
     void create_waypoints(int num_teams, vector<int> team_sizes, int num_waypoints);
-    void create_sarting_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm);
-    void create_checkpoints(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints);
-    void create_target_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints);
+    void create_sarting_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int max_x_dim, int max_y_dim, int max_z_dim);
+    void create_checkpoints(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
+    void create_target_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
     
 private:
     
@@ -102,15 +102,18 @@ void Simulator::create_waypoints(int num_teams, vector<int> team_sizes, int num_
 
 /////////////////////////////////////////////////////////////////
 //Create Starting Coordinates
-void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm)
+void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int max_x_dim, int max_y_dim, int max_z_dim)
 {
     for (int i=0; i < num_teams; i++)
     {
         for (int j=0; j < team_sizes.at(i); j++)
         {
+            //int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
+            //int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
+            //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
             int x_waypoint = 2;
             int y_waypoint = 4;
-            int z_waypoint = 0;
+            int z_waypoint = 1;
             
             system.at(i).agents.at(j).check_points.at(0).waypoint_telm.push_back(x_waypoint);
             system.at(i).agents.at(j).check_points.at(0).waypoint_telm.push_back(y_waypoint);
@@ -122,7 +125,7 @@ void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vecto
 
 /////////////////////////////////////////////////////////////////
 //Create Intermediate Waypoints
-void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints)
+void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim)
 {
     for (int i=0; i < num_teams; i++)
     {
@@ -130,6 +133,9 @@ void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector
         {
             for (int k=1; k < num_waypoints-1; k++)
             {
+                //int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
+                //int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
+                //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
                 int x_waypoint = 5;
                 int y_waypoint = 6;
                 int z_waypoint = 8;
@@ -145,12 +151,15 @@ void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector
 
 /////////////////////////////////////////////////////////////////
 //Create Target Coordinates
-void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints)
+void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim)
 {
     for (int i=0; i < num_teams; i++)
     {
         for (int j=0; j < team_sizes.at(i); j++)
         {
+            //int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
+            //int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
+            //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
             int x_waypoint = 10;
             int y_waypoint = 15;
             int z_waypoint = 0;

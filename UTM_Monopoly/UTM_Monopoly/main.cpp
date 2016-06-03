@@ -26,13 +26,14 @@ using namespace std;
 
 int main()
 {
+    srand(time(NULL));
     Simulator S;
     Parameters P;
-    Waypoint W;
+    //Waypoint W;
     S.create_teams(P.num_teams);
     P.set_team_sizes();
     S.create_individuals(P.num_teams, P.team_sizes);
-    S.create_sarting_telm(P.num_teams, P.team_sizes, W.waypoint_telm);
+    //S.create_sarting_telm(P.num_teams, P.team_sizes, W.waypoint_telm, P.max_x_dim, P.max_y_dim, P.max_z_dim);
     cout << "total number of teams" << "\t" << S.system.size() << endl;
     for(int i=0; i < P.num_teams; i++)
     {

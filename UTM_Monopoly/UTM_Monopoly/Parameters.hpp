@@ -46,6 +46,9 @@ public:
     int max_y_dim = 50;
     int min_z_dim = 0;
     int max_z_dim = 30;
+    int time_max = 120;
+    int delta_t = 0.1;
+    int flight_velocity = 5;
     int ca_radius = 5;
     
     vector<int> sim_dim;
@@ -54,16 +57,16 @@ public:
     
     //Team Settings
     int num_teams = 1;
-    int team_1 = 1;
-    int team_2 = 5;
-    int team_3 = 2;
-    int team_4 = 8;
-    int team_5 = 7;
-    int team_6 = 4;
-    int team_7 = 5;
-    int team_8 = 8;
-    int team_9 = 10;
-    int team_10 = 2;
+    int team_0 = 1;
+    int team_1 = 5;
+    int team_2 = 2;
+    int team_3 = 8;
+    int team_4 = 7;
+    int team_5 = 4;
+    int team_6 = 5;
+    int team_7 = 8;
+    int team_8 = 10;
+    int team_9 = 2;
     int num_waypoints = 1;
     
     vector<int> team_sizes;
@@ -94,6 +97,7 @@ void Parameters::set_sim_dim()
 //Team Size Settings
 void Parameters::set_team_sizes()
 {
+    team_sizes.push_back(team_0);
     team_sizes.push_back(team_1);
     team_sizes.push_back(team_2);
     team_sizes.push_back(team_3);
@@ -103,7 +107,6 @@ void Parameters::set_team_sizes()
     team_sizes.push_back(team_7);
     team_sizes.push_back(team_8);
     team_sizes.push_back(team_9);
-    team_sizes.push_back(team_10);
 }
 
 #endif /* Paramters_hpp */
