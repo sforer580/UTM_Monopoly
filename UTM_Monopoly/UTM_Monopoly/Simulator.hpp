@@ -46,8 +46,8 @@ public:
     void create_individuals(int num_teams, vector<int> team_sizes);
     void create_waypoints(int num_teams, vector<int> team_sizes, int num_waypoints);
     void create_sarting_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm);
-    void create_checkpoints(int num_teams, vector<int> team_sizes);
-    void create_target_telm(int num_teams, vector<int> team_sizes);
+    void create_checkpoints(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints);
+    void create_target_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints);
     
 private:
     
@@ -101,7 +101,7 @@ void Simulator::create_waypoints(int num_teams, vector<int> team_sizes, int num_
 
 
 /////////////////////////////////////////////////////////////////
-//Create starting coordinates
+//Create Starting Coordinates
 void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm)
 {
     for (int i=0; i < num_teams; i++)
@@ -110,29 +110,56 @@ void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vecto
         {
             int x_waypoint = 2;
             int y_waypoint = 4;
-            int z_waypoint = 1;
+            int z_waypoint = 0;
             
-            system.at(i).agents.at(j).check_points.at(0).waypoint_telm.at(0).push_back(x_waypoint);
-            system.at(i).agents.at(j).check_points.at(0).waypoint_telm.at(1).push_back(y_waypoint);
-            system.at(i).agents.at(j).check_points.at(0).waypoint_telm.at(2).push_back(z_waypoint);
+            system.at(i).agents.at(j).check_points.at(0).waypoint_telm.push_back(x_waypoint);
+            system.at(i).agents.at(j).check_points.at(0).waypoint_telm.push_back(y_waypoint);
+            system.at(i).agents.at(j).check_points.at(0).waypoint_telm.push_back(z_waypoint);
         }
     }
 }
 
 
 /////////////////////////////////////////////////////////////////
-//Create intermediate waypoints
-void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes)
+//Create Intermediate Waypoints
+void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints)
 {
-    
+    for (int i=0; i < num_teams; i++)
+    {
+        for (int j=0; j < team_sizes.at(i); j++)
+        {
+            for (int k=1; k < num_waypoints-1; k++)
+            {
+                int x_waypoint = 5;
+                int y_waypoint = 6;
+                int z_waypoint = 8;
+                
+                system.at(i).agents.at(j).check_points.at(k).waypoint_telm.push_back(x_waypoint);
+                system.at(i).agents.at(j).check_points.at(k).waypoint_telm.push_back(y_waypoint);
+                system.at(i).agents.at(j).check_points.at(k).waypoint_telm.push_back(z_waypoint);
+            }
+        }
+    }
 }
 
 
 /////////////////////////////////////////////////////////////////
-//Create target coordinates
-void Simulator::create_target_telm(int num_teams, vector<int> team_sizes)
+//Create Target Coordinates
+void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector<int> waypoint_telm, int num_waypoints)
 {
-    
+    for (int i=0; i < num_teams; i++)
+    {
+        for (int j=0; j < team_sizes.at(i); j++)
+        {
+            int x_waypoint = 10;
+            int y_waypoint = 15;
+            int z_waypoint = 0;
+            
+            system.at(i).agents.at(j).check_points.at(num_waypoints+2).waypoint_telm.push_back(x_waypoint);
+            system.at(i).agents.at(j).check_points.at(num_waypoints+2).waypoint_telm.push_back(y_waypoint);
+            system.at(i).agents.at(j).check_points.at(num_waypoints+2).waypoint_telm.push_back(z_waypoint);
+        }
+    }
 }
 
 

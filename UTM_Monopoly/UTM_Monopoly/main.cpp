@@ -28,9 +28,11 @@ int main()
 {
     Simulator S;
     Parameters P;
+    Waypoint W;
     S.create_teams(P.num_teams);
     P.set_team_sizes();
     S.create_individuals(P.num_teams, P.team_sizes);
+    S.create_sarting_telm(P.num_teams, P.team_sizes, W.waypoint_telm);
     cout << "total number of teams" << "\t" << S.system.size() << endl;
     for(int i=0; i < P.num_teams; i++)
     {

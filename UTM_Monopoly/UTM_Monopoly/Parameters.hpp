@@ -64,7 +64,7 @@ public:
     int team_8 = 8;
     int team_9 = 10;
     int team_10 = 2;
-    int num_waypoints = 3;
+    int num_waypoints = 1;
     
     vector<int> team_sizes;
     
