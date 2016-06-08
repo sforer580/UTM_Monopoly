@@ -48,7 +48,14 @@ public:
     void create_sarting_telm(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int max_x_dim, int max_y_dim, int max_z_dim);
     void create_checkpoints(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
     void create_target_telm(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
-    void agent_movement(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints);
+    
+    void build_simulator(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
+    
+    void set_initial_telem(int num_teams, vector<int> team_sizes);
+    void calc_new_telem(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints);
+    
+    
+    void run_simulation(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
     
 private:
     
@@ -177,8 +184,88 @@ void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector
 
 
 /////////////////////////////////////////////////////////////////
+//Build Simulator
+void Simulator::build_simulator(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim)
+{
+    create_teams(num_teams);
+    create_individuals(num_teams, team_sizes);
+    create_waypoints(num_teams, team_sizes, num_waypoints);
+    create_sarting_telm(num_teams, team_sizes, waypoint_telm, max_x_dim, max_y_dim, max_z_dim);
+    create_checkpoints(num_teams, team_sizes, waypoint_telm, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
+    create_target_telm(num_teams, team_sizes, waypoint_telm, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
+    
+    cout << "total number of teams" << "\t" << system.size() << endl;
+    cout << endl;
+    for(int i=0; i < num_teams; i++)
+    {
+        cout << "-------------------------------------------------------------------------" << endl;
+        cout << "team" << "\t" << i << "\t" << "has" << "\t" << system.at(i).agents.size() << "\t" << "agents" << endl;
+        cout << endl;
+        for (int j=0; j < system.at(i).agents.size(); j++)
+        {
+            cout << "team" << "\t" << i << "\t" << "agent" << "\t" << j << endl;
+            for (int k=0; k < num_waypoints+2; k++)
+            {
+                if (k == 0)
+                {
+                    cout << "Starting Telemetry" << "\t";
+                }
+                if (k > 0)
+                {
+                    if (k < num_waypoints+1)
+                    {
+                        cout << "Waypoint" << "\t" << k << "\t" << "Telemetry" << "\t";
+                    }
+                }
+                if (k == num_waypoints+1)
+                {
+                    cout << "Final Destination Telemetry" << "\t";
+                }
+                for (int h=0; h < 3; h++)
+                {
+                    cout << system.at(i).agents.at(j).check_points.at(k).waypoint_telm.at(h) << "\t";
+                }
+                cout << endl;
+            }
+            cout << endl;
+        }
+    }
+    cout << "-------------------------------------------------------------------------" << endl;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//BEGIN TELEMETRY CALCULATIONS
+
+
+/////////////////////////////////////////////////////////////////
+//Set The Starting Telemetry
+void Simulator::set_initial_telem(int num_teams, vector<int> team_sizes)
+{
+    for (int ii=0; ii < num_teams; ii++)
+    {
+        for (int jj=0; jj < team_sizes.at(ii); jj++)
+        {
+            double current_x;
+            double current_y;
+            double current_z;
+            current_x = system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(0);
+            current_y = system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(1);
+            current_z = system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(2);
+            system.at(ii).agents.at(jj).current_telem.push_back(current_x);
+            system.at(ii).agents.at(jj).current_telem.push_back(current_y);
+            system.at(ii).agents.at(jj).current_telem.push_back(current_z);
+        }
+    }
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////
 //Track Agent movements
-void Simulator::agent_movement(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints)
+void Simulator::calc_new_telem(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints)
 {
     for (int current_time=0; current_time < time_max; current_time+delta_t)
     {
@@ -229,6 +316,20 @@ void Simulator::agent_movement(int num_teams, vector<int> team_sizes, vector<dou
     }
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//END TELEMETRY CALCULATIONS
+
+
+/////////////////////////////////////////////////////////////////
+//Runs Entire Simulation
+void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim)
+{
+    build_simulator(num_teams, team_sizes, waypoint_telm, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
+    set_initial_telem(num_teams, team_sizes);
+    
+}
 
 
 

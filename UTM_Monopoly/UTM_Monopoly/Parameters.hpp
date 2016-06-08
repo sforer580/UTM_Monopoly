@@ -58,8 +58,8 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 1;
+    int num_teams = 2;          //must be an interger 0-10
+    int team_0 = 2;
     int team_1 = 3;
     int team_2 = 2;
     int team_3 = 8;
@@ -69,7 +69,7 @@ public:
     int team_7 = 8;
     int team_8 = 10;
     int team_9 = 2;
-    int num_waypoints = 1;      //number of intermediate waypoints
+    int num_waypoints = 2;      //number of intermediate waypoints
     
     vector<int> team_sizes;
     

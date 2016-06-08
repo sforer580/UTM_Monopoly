@@ -30,51 +30,9 @@ int main()
     Simulator S;
     Parameters P;
     Waypoint W;
-    S.create_teams(P.num_teams);
+    Individual I;
     P.set_team_sizes();
-    S.create_individuals(P.num_teams, P.team_sizes);
-    S.create_waypoints(P.num_teams, P.team_sizes, P.num_waypoints);
-    S.create_sarting_telm(P.num_teams, P.team_sizes, W.waypoint_telm, P.max_x_dim, P.max_y_dim, P.max_z_dim);
-    S.create_checkpoints(P.num_teams, P.team_sizes, W.waypoint_telm, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim);
-    S.create_target_telm(P.num_teams, P.team_sizes, W.waypoint_telm, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim);
-    cout << "total number of teams" << "\t" << S.system.size() << endl;
-    cout << endl;
-    for(int i=0; i < P.num_teams; i++)
-    {
-        cout << "-------------------------------------------------------------------------" << endl;
-        cout << "team" << "\t" << i << "\t" << "has" << "\t" << S.system.at(i).agents.size() << "\t" << "agents" << endl;
-        cout << endl;
-        for (int j=0; j < S.system.at(i).agents.size(); j++)
-        {
-            cout << "team" << "\t" << i << "\t" << "agent" << "\t" << j << endl;
-            for (int k=0; k < P.num_waypoints+2; k++)
-            {
-                if (k == 0)
-                {
-                    cout << "Starting Telemetry" << "\t";
-                }
-                if (k > 0)
-                {
-                    if (k < P.num_waypoints+1)
-                        {
-                            cout << "Waypoint" << "\t" << k << "\t" << "Telemetry" << "\t";
-                        }
-                }
-                if (k == P.num_waypoints+1)
-                {
-                    cout << "Final Testination Telemetry" << "\t";
-                }
-                for (int h=0; h < 3; h++)
-                {
-                   cout << S.system.at(i).agents.at(j).check_points.at(k).waypoint_telm.at(h) << "\t";
-                }
-                cout << endl;
-            }
-            cout << endl;
-        }
-    }
+    S.run_simulation(P.num_teams, P.team_sizes, W.waypoint_telm, P.flight_velocity, P.delta_t, P.max_travel_dist, I.current_telem, P.time_max, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim);
     
     
-    
-
 }
