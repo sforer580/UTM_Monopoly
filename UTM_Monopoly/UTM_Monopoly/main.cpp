@@ -38,8 +38,10 @@ int main()
     S.create_checkpoints(P.num_teams, P.team_sizes, W.waypoint_telm, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim);
     S.create_target_telm(P.num_teams, P.team_sizes, W.waypoint_telm, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim);
     cout << "total number of teams" << "\t" << S.system.size() << endl;
+    cout << endl;
     for(int i=0; i < P.num_teams; i++)
     {
+        cout << "-------------------------------------------------------------------------" << endl;
         cout << "team" << "\t" << i << "\t" << "has" << "\t" << S.system.at(i).agents.size() << "\t" << "agents" << endl;
         cout << endl;
         for (int j=0; j < S.system.at(i).agents.size(); j++)
@@ -49,18 +51,18 @@ int main()
             {
                 if (k == 0)
                 {
-                    cout << "has starting telemetry" << "\t";
+                    cout << "Starting Telemetry" << "\t";
                 }
                 if (k > 0)
                 {
                     if (k < P.num_waypoints+1)
                         {
-                            cout << "waypoint" << "\t" << k << "\t" << "telemetry" << "\t";
+                            cout << "Waypoint" << "\t" << k << "\t" << "Telemetry" << "\t";
                         }
                 }
                 if (k == P.num_waypoints+1)
                 {
-                    cout << "final destination" << "\t" << "telemetry" << "\t";
+                    cout << "Final Testination Telemetry" << "\t";
                 }
                 for (int h=0; h < 3; h++)
                 {

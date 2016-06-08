@@ -41,7 +41,7 @@ protected:
     
 public:
     
-    vector<int> waypoint_telm;
+    vector<double> waypoint_telm;
     
     void get_waypoint();
     

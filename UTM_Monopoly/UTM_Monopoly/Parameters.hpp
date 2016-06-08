@@ -50,13 +50,14 @@ public:
     int delta_t = 0.1;
     int flight_velocity = 5;
     int ca_radius = 5;
+    int time_delay = 5;
     
     vector<int> sim_dim;
     
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 2;
+    int num_teams = 2;          //must be an interger 0-10
     int team_0 = 2;
     int team_1 = 3;
     int team_2 = 2;
@@ -67,7 +68,7 @@ public:
     int team_7 = 8;
     int team_8 = 10;
     int team_9 = 2;
-    int num_waypoints = 2;
+    int num_waypoints = 4;      //number of intermediate waypoints
     
     vector<int> team_sizes;
     
