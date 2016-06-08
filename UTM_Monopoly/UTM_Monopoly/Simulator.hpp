@@ -48,6 +48,7 @@ public:
     void create_sarting_telm(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int max_x_dim, int max_y_dim, int max_z_dim);
     void create_checkpoints(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
     void create_target_telm(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
+    void agent_movement(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints);
     
 private:
     
@@ -173,6 +174,62 @@ void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector
         }
     }
 }
+
+
+/////////////////////////////////////////////////////////////////
+//Track Agent movements
+void Simulator::agent_movement(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int flight_velocity, int delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints)
+{
+    for (int current_time=0; current_time < time_max; current_time+delta_t)
+    {
+        for (int hh=0; hh < num_waypoints+2; hh++)
+        {
+            //if ()  //runs for loops untill current position = waypoint_telm.at(hh)
+            //needs a lot of work
+            //{
+                for (int ii=0; ii < num_teams; ii++)
+                {
+                    for (int jj=0; jj < team_sizes.at(ii); jj++)
+                    {
+                        vector <double> V;
+                        vector <double> D;
+                        double V_mag_1;
+                        double V_mag_2;
+                        double V_mag_3;
+                        double V_mag;
+                        double current_x;
+                        double current_y;
+                        double current_z;
+                        
+                        //Creates Vector Between Waypoints
+                        V.push_back(system.at(ii).agents.at(jj).check_points.at(1).waypoint_telm.at(0) - system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(0));
+                        V.push_back(system.at(ii).agents.at(jj).check_points.at(1).waypoint_telm.at(1) - system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(1));
+                        V.push_back(system.at(ii).agents.at(jj).check_points.at(1).waypoint_telm.at(2) - system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(2));
+                        V_mag_1 = V.at(0)*V.at(0);
+                        V_mag_2 = V.at(1)*V.at(1);
+                        V_mag_3 = V.at(2)*V.at(2);
+                        V_mag = sqrt(V_mag_1 + V_mag_2 + V_mag_3);
+                        
+                        //Creates Unit Vector Between Waypoints
+                        D.push_back(V.at(0)/V_mag);
+                        D.push_back(V.at(1)/V_mag);
+                        D.push_back(V.at(2)/V_mag);
+                        
+                        //Calculates current telemetry
+                        current_x = system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(0) + max_travel_dist*D.at(0);
+                        current_y = system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(1) + max_travel_dist*D.at(1);
+                        current_z = system.at(ii).agents.at(jj).check_points.at(0).waypoint_telm.at(2) + max_travel_dist*D.at(2);
+                        system.at(ii).agents.at(jj).current_telem.push_back(current_x);
+                        system.at(ii).agents.at(jj).current_telem.push_back(current_y);
+                        system.at(ii).agents.at(jj).current_telem.push_back(current_z);
+                    }
+                }
+            //}
+        }
+    }
+}
+
+
 
 
 #endif /* Simulator_hpp */
