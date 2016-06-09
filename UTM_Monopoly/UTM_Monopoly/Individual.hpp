@@ -40,6 +40,8 @@ protected:
     
     
 public:
+    int target_waypoint = 1;
+    double dist_to_target_waypoint;
     double agent_fitness;
     
     vector<Waypoint> check_points;

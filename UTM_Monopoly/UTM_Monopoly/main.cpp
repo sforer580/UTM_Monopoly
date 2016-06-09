@@ -32,7 +32,7 @@ int main()
     Waypoint W;
     Individual I;
     P.set_team_sizes();
-    S.run_simulation(P.num_teams, P.team_sizes, W.waypoint_telm, P.flight_velocity, P.delta_t, P.max_travel_dist, I.current_telem, P.time_max, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim);
+    S.run_simulation(P.num_teams, P.team_sizes, W.waypoint_telm, P.flight_velocity, P.delta_t, P.max_travel_dist, I.current_telem, P.time_max, P.num_waypoints, P.max_x_dim, P.max_y_dim, P.max_z_dim, I.target_waypoint, I.dist_to_target_waypoint);
     
     
 }
