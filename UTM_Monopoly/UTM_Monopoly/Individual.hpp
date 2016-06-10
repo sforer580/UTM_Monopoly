@@ -40,7 +40,7 @@ protected:
     
     
 public:
-    int target_waypoint = 1;
+    int target_waypoint = 1;        //agents proceeds to target waypoint and starts at waypoint 0
     double dist_to_target_waypoint;
     double agent_fitness;
     

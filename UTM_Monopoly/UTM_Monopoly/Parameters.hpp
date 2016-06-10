@@ -41,13 +41,13 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 50;
+    int max_x_dim = 10;
     int min_y_dim = 0;
-    int max_y_dim = 50;
+    int max_y_dim = 10;
     int min_z_dim = 0;
-    int max_z_dim = 30;
+    int max_z_dim = 2;
     int time_max = 10;
-    double delta_t = 0.5;           //simulator time step
+    double delta_t = 0.1;           //simulator time step
     int flight_velocity = 5;
     double max_travel_dist = flight_velocity*delta_t;       //max distance a agetn can travel in a time step
     int ca_radius = 5;
@@ -58,8 +58,8 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 1;
+    int num_teams = 2;          //must be an interger 0-10
+    int team_0 = 2;
     int team_1 = 3;
     int team_2 = 2;
     int team_3 = 8;
