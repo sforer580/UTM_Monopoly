@@ -19,11 +19,6 @@
 #include <fstream>
 #include <iomanip>
 
-//#include "Physics.hpp"
-//#include "Team.hpp"
-//#include "Individual.hpp"
-//#include "Simulator.hpp"
-
 
 using namespace std;
 
@@ -32,7 +27,6 @@ class Waypoint
 {
     friend class Team;
     friend class Individual;
-    friend class Physics;
     friend class Simulator;
     friend class Parameters;
     
@@ -41,7 +35,7 @@ protected:
     
 public:
     
-    vector<double> waypoint_telm;
+    vector<double> waypoint_telem;
     
     void get_waypoint();
     

@@ -20,7 +20,6 @@
 #include <iomanip>
 
 //#include "Parameters.hpp"
-//#include "Physics.hpp"
 #include "Individual.hpp"
 //#include "Simulator.hpp"
 
@@ -31,7 +30,6 @@ class Team
 {
     friend class Parameters;
     friend class Individual;
-    friend class Physics;
     //friend class Simulator;
     
 protected:

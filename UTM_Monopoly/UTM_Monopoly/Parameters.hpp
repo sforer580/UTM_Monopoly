@@ -19,11 +19,6 @@
 #include <fstream>
 #include <iomanip>
 
-//#include "Physics.hpp"
-//#include "Team.hpp"
-//#include "Individual.hpp"
-//#include "Simulator.hpp"
-
 
 using namespace std;
 
@@ -32,7 +27,6 @@ class Parameters
 {
     friend class Team;
     friend class Individual;
-    friend class Physics;
     friend class Simulator;
     
 protected:
@@ -41,12 +35,12 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 10;
+    int max_x_dim = 100;
     int min_y_dim = 0;
-    int max_y_dim = 10;
+    int max_y_dim = 100;
     int min_z_dim = 0;
-    int max_z_dim = 2;
-    int time_max = 10;
+    int max_z_dim = 50;
+    int time_max = 120;
     double delta_t = 0.1;           //simulator time step
     int flight_velocity = 5;
     double max_travel_dist = flight_velocity*delta_t;       //max distance a agetn can travel in a time step
@@ -67,9 +61,9 @@ public:
     int team_5 = 4;
     int team_6 = 5;
     int team_7 = 8;
-    int team_8 = 10;
+    int team_8 = 1;
     int team_9 = 2;
-    int num_waypoints = 1;      //number of intermediate waypoints
+    int num_waypoints = 2;      //number of intermediate waypoints
     
     vector<int> team_sizes;
     
