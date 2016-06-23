@@ -42,9 +42,12 @@ public:
     int max_z_dim = 50;
     int time_max = 120;
     double delta_t = 0.1;           //simulator time step
-    int flight_velocity = 5;
-    double max_travel_dist = flight_velocity*delta_t;       //max distance a agetn can travel in a time step
+    double max_flight_velocity = 5.0;
+    double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
     int ca_radius = 5;
+    int ca_inc = 10;
+    double ca_flight_speed = max_flight_velocity/2;
+    double ca_max_travel_dist = ca_flight_speed*delta_t;
     int time_delay = 5;
     
     vector<int> sim_dim;
@@ -52,8 +55,8 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 2;          //must be an interger 0-10
-    int team_0 = 2;
+    int num_teams = 1;          //must be an interger 0-10
+    int team_0 = 1;
     int team_1 = 3;
     int team_2 = 2;
     int team_3 = 8;
@@ -63,7 +66,7 @@ public:
     int team_7 = 8;
     int team_8 = 1;
     int team_9 = 2;
-    int num_waypoints = 2;      //number of intermediate waypoints
+    int num_waypoints = 1;      //number of intermediate waypoints
     
     vector<int> team_sizes;
     

@@ -41,9 +41,12 @@ public:
     int target_waypoint = 1;        //agents proceeds to target waypoint and starts at waypoint 0
     double dist_to_target_waypoint;
     double agent_fitness;
+    double current_travel_speed;
     
     vector<Waypoint> check_points;
     vector<double> current_telem;
+    vector<double> projected_telem;
+    vector<double> inc_projected_telem;
     
 private:
     
