@@ -55,10 +55,10 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 1;
+    int num_teams = 3;          //must be an interger 0-10
+    int team_0 = 2;
     int team_1 = 3;
-    int team_2 = 2;
+    int team_2 = 5;
     int team_3 = 8;
     int team_4 = 7;
     int team_5 = 4;
