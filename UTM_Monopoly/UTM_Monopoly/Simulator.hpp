@@ -58,9 +58,10 @@ public:
     void calc_projected_telem(vector<double> waypoint_telem, double current_travel_speed, double delta_t, vector<double> projected_telem, vector<double> current_telem, int ii, int jj, int target_waypoint);
     void get_inc_projected_telem(int ii, int jj, int ca_inc);
     void check_for_collisions(int num_teams, vector<int> team_sizes, double dist_to_target_waypoint, double max_travel_dist, int target_waypoint, vector<double> current_telem, vector<double> waypoint_telem, int num_waypoints, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double max_flight_speed);
+    void compare_agents_projected_telem(int ii, int jj, int kk, int iii, int jjj, int ca_radius, double current_travel_speed, double ca_flight_speed, double max_flight_velocity);
     void crash_avoidance(int num_teams, vector<int> team_sizes, double dist_to_target_waypoint, double max_travel_dist, int target_waypoint, vector<double> current_telem, vector<double> waypoint_telem, int num_waypoints, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double max_flight_speed, double delta_t);
     //
-    void get_new_telem(int ii, int jj, double current_travel_speed, double max_flight_velocity, double ca_flight_speed, vector<double> current_telem, vector<double> projected_telem, vector<double> waypoint_telem, double delta_t, int target_waypoint);
+    void get_new_telem(int ii, int jj, double current_travel_speed, double max_flight_velocity, double ca_flight_speed, vector<double> current_telem, vector<double> projected_telem, vector<double> waypoint_telem, double delta_t, int target_waypoint, double dist_to_target_waypoint, double max_travel_dist, int num_waypoints, double ca_max_travel_dist);
     void get_new_telem_option_1(int ii, int jj, double dist_to_target_waypoint, double max_travel_dist, int target_waypoint, int num_waypoints, double current_max_travel_dist);
     //void get_new_telem_option_2(int ii, int jj, double dist_to_target_waypoint, double max_travel_dist, vector<double> waypoint_telem, vector<double>current_telem, int target_waypoint);
     void check_if_at_waypoint(int ii, int jj, double dist_to_target_waypoint, vector<double> waypoint_telem, double max_travel_dist, vector<double> current_telem, int target_waypoint, int num_waypoints);
@@ -76,6 +77,16 @@ private:
 
 
 //THERE BE DRAGONS AHEAD
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Current Issues
+//collisions being detected then passing --> resolved
+//agents do not progress passed the collision telemetry --> resolved
+//agents get hung up at waypoint
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////
@@ -127,22 +138,30 @@ void Simulator::create_waypoints(int num_teams, vector<int> team_sizes, int num_
 //Create Starting Coordinates
 void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int max_x_dim, int max_y_dim, int max_z_dim)
 {
-    for (int ii=0; ii < num_teams; ii++)
-    {
-        for (int jj=0; jj < team_sizes.at(ii); jj++)
-        {
-            int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
-            int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
+    //for (int ii=0; ii < num_teams; ii++)
+    //{
+        //for (int jj=0; jj < team_sizes.at(ii); jj++)
+        //{
+            //int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
+            //int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
             //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
             //int x_waypoint = 2;
             //int y_waypoint = 4;
-            int z_waypoint = 0;
+            //int z_waypoint = 0;
             
-            system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(x_waypoint);
-            system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(y_waypoint);
-            system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(z_waypoint);
-        }
-    }
+            //system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(x_waypoint);
+            //system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(y_waypoint);
+            //system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(z_waypoint);
+            
+            //CA check one team two agents on a collision course
+            system.at(0).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
+            system.at(0).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
+            system.at(0).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
+            system.at(0).agents.at(1).check_points.at(0).waypoint_telem.push_back(50);
+            system.at(0).agents.at(1).check_points.at(0).waypoint_telem.push_back(0);
+            system.at(0).agents.at(1).check_points.at(0).waypoint_telem.push_back(0);
+        //}
+    //}
 }
 
 
@@ -150,25 +169,33 @@ void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vecto
 //Create Intermediate Waypoints
 void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector<double> waypoint_telm, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim)
 {
-    for (int ii=0; ii < num_teams; ii++)
-    {
-        for (int jj=0; jj < team_sizes.at(ii); jj++)
-        {
-            for (int kk=1; kk < num_waypoints+1; kk++)
-            {
-                double x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
-                double y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
-                double z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
+    //for (int ii=0; ii < num_teams; ii++)
+    //{
+        //for (int jj=0; jj < team_sizes.at(ii); jj++)
+        //{
+            //for (int kk=1; kk < num_waypoints+1; kk++)
+            //{
+                //double x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
+                //double y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
+                //double z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
                 //int x_waypoint = 5;
                 //int y_waypoint = 6;
                 //int z_waypoint = 8;
                 
-                system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(x_waypoint);
-                system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(y_waypoint);
-                system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(z_waypoint);
-            }
-        }
-    }
+                //system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(x_waypoint);
+                //system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(y_waypoint);
+                //system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(z_waypoint);
+                
+                //CA check one team two agents on a collision course
+                system.at(0).agents.at(0).check_points.at(1).waypoint_telem.push_back(25);
+                system.at(0).agents.at(0).check_points.at(1).waypoint_telem.push_back(25);
+                system.at(0).agents.at(0).check_points.at(1).waypoint_telem.push_back(0);
+                system.at(0).agents.at(1).check_points.at(1).waypoint_telem.push_back(25);
+                system.at(0).agents.at(1).check_points.at(1).waypoint_telem.push_back(25);
+                system.at(0).agents.at(1).check_points.at(1).waypoint_telem.push_back(0);
+            //}
+        //}
+    //}
 }
 
 
@@ -176,22 +203,30 @@ void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector
 //Create Target Coordinates
 void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim)
 {
-    for (int ii=0; ii < num_teams; ii++)
-    {
-        for (int jj=0; jj < team_sizes.at(ii); jj++)
-        {
-            int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
-            int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
+    //for (int ii=0; ii < num_teams; ii++)
+    //{
+        //for (int jj=0; jj < team_sizes.at(ii); jj++)
+        //{
+            //int x_waypoint = abs(((double)rand()/RAND_MAX)*max_x_dim);
+            //int y_waypoint = abs(((double)rand()/RAND_MAX)*max_y_dim);
             //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
             //int x_waypoint = 10;
             //int y_waypoint = 15;
-            int z_waypoint = 0;
+            //int z_waypoint = 0;
             
-            system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(x_waypoint);
-            system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(y_waypoint);
-            system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(z_waypoint);
-        }
-    }
+            //system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(x_waypoint);
+            //system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(y_waypoint);
+            //system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(z_waypoint);
+            
+            //CA check one team two agents on a collision course
+            system.at(0).agents.at(0).check_points.at(2).waypoint_telem.push_back(50);
+            system.at(0).agents.at(0).check_points.at(2).waypoint_telem.push_back(50);
+            system.at(0).agents.at(0).check_points.at(2).waypoint_telem.push_back(0);
+            system.at(0).agents.at(1).check_points.at(2).waypoint_telem.push_back(0);
+            system.at(0).agents.at(1).check_points.at(2).waypoint_telem.push_back(50);
+            system.at(0).agents.at(1).check_points.at(2).waypoint_telem.push_back(0);
+        //}
+    //}
 }
 
 
@@ -411,7 +446,7 @@ void Simulator::calc_projected_telem(vector<double> waypoint_telem, double curre
     current_x = system.at(ii).agents.at(jj).current_telem.at(0) + travel_dist*D.at(0);
     current_y = system.at(ii).agents.at(jj).current_telem.at(1) + travel_dist*D.at(1);
     current_z = system.at(ii).agents.at(jj).current_telem.at(2) + travel_dist*D.at(2);
-    system.at(ii).agents.at(jj).projected_telem.empty();
+    system.at(ii).agents.at(jj).projected_telem.clear();
     system.at(ii).agents.at(jj).projected_telem.push_back(current_x);
     system.at(ii).agents.at(jj).projected_telem.push_back(current_y);
     system.at(ii).agents.at(jj).projected_telem.push_back(current_z);
@@ -423,7 +458,7 @@ void Simulator::calc_projected_telem(vector<double> waypoint_telem, double curre
 //Calculates The Incremented Projected Telemetry
 void Simulator::get_inc_projected_telem(int ii, int jj, int ca_inc)
 {
-    system.at(ii).agents.at(jj).inc_projected_telem.empty();        //clears previous incremented projected telemetry
+    system.at(ii).agents.at(jj).inc_projected_telem.clear();        //clears previous incremented projected telemetry
     double x_inc_movement;
     double y_inc_movement;
     double z_inc_movement;
@@ -432,7 +467,7 @@ void Simulator::get_inc_projected_telem(int ii, int jj, int ca_inc)
     y_inc_movement = (system.at(ii).agents.at(jj).projected_telem.at(1) - system.at(ii).agents.at(jj).current_telem.at(1))/ca_inc;
     z_inc_movement = (system.at(ii).agents.at(jj).projected_telem.at(2) - system.at(ii).agents.at(jj).current_telem.at(2))/ca_inc;
     //pushes the incremented projected telemetry into a vector
-    for (int iii=0; iii < ca_inc; iii++)
+    for (int iii=0; iii < ca_inc+2; iii++)
     {
         system.at(ii).agents.at(jj).inc_projected_telem.push_back(system.at(ii).agents.at(jj).current_telem.at(0) + iii*x_inc_movement);
         system.at(ii).agents.at(jj).inc_projected_telem.push_back(system.at(ii).agents.at(jj).current_telem.at(1) + iii*y_inc_movement);
@@ -452,7 +487,7 @@ void Simulator::check_for_collisions(int num_teams, vector<int> team_sizes, doub
             //only considers agent who have not reached their final destination
             if (system.at(ii).agents.at(jj).target_waypoint < num_waypoints + 2)
             {
-                for (int kk=0; kk < ca_inc; kk++)
+                for (int kk=0; kk < ca_inc+2; kk++)
                 {
                     for (int iii=0; iii < num_teams; iii++)
                     {
@@ -464,35 +499,16 @@ void Simulator::check_for_collisions(int num_teams, vector<int> team_sizes, doub
                                 //will not compare an individual agent to itself
                                 if (ii==iii)
                                 {
-                                    if (jj==jjj)
+                                    if (jj!=jjj)
                                     {
-                                        continue;
+                                        compare_agents_projected_telem(ii, jj, kk, iii, jjj, ca_radius, current_travel_speed, ca_flight_speed, max_flight_velocity);
                                     }
                                 }
-                                else
+                                if (ii!=iii)
                                 {
-                                    double x;
-                                    double x_mag;
-                                    double y;
-                                    double y_mag;
-                                    double z;
-                                    double z_mag;
-                                    double r;
-                                    x = system.at(ii).agents.at(jj).inc_projected_telem.at(kk+(kk*2))-system.at(iii).agents.at(jjj).inc_projected_telem.at(kk+(kk*2));
-                                    y = system.at(ii).agents.at(jj).inc_projected_telem.at(kk+(kk*2)+1)-system.at(iii).agents.at(jjj).inc_projected_telem.at(kk+(kk*2)+1);
-                                    z = system.at(ii).agents.at(jj).inc_projected_telem.at(kk+(kk*2)+2)-system.at(iii).agents.at(jjj).inc_projected_telem.at(kk+(kk*2)+2);
-                                    x_mag = x*x;
-                                    y_mag = y*y;
-                                    z_mag = z*z;
-                                    //check if this is correct
-                                    r = x_mag+y_mag+z_mag;
-                                    if (r < (ca_radius*ca_radius))
+                                    if (jj==jjj)
                                     {
-                                        system.at(ii).agents.at(jj).current_travel_speed = ca_flight_speed;
-                                    }
-                                    else
-                                    {
-                                        system.at(ii).agents.at(jj).current_travel_speed = max_flight_velocity;
+                                       compare_agents_projected_telem(ii, jj, kk, iii, jjj, ca_radius, current_travel_speed, ca_flight_speed, max_flight_velocity); 
                                     }
                                 }
                             }
@@ -506,6 +522,38 @@ void Simulator::check_for_collisions(int num_teams, vector<int> team_sizes, doub
                 continue;
             }
         }
+    }
+}
+
+/////////////////////////////////////////////////////////////////
+//Comapres Agents Incremented Projected Telemetry
+void Simulator::compare_agents_projected_telem(int ii, int jj, int kk, int iii, int jjj, int ca_radius, double current_travel_speed, double ca_flight_speed, double max_flight_velocity)
+{
+    double x;
+    double x_mag;
+    double y;
+    double y_mag;
+    double z;
+    double z_mag;
+    double r;
+    x = system.at(ii).agents.at(jj).inc_projected_telem.at(kk+(kk*2))-system.at(iii).agents.at(jjj).inc_projected_telem.at(kk+(kk*2));
+    y = system.at(ii).agents.at(jj).inc_projected_telem.at(kk+(kk*2)+1)-system.at(iii).agents.at(jjj).inc_projected_telem.at(kk+(kk*2)+1);
+    z = system.at(ii).agents.at(jj).inc_projected_telem.at(kk+(kk*2)+2)-system.at(iii).agents.at(jjj).inc_projected_telem.at(kk+(kk*2)+2);
+    x_mag = x*x;
+    y_mag = y*y;
+    z_mag = z*z;
+    r = x_mag+y_mag+z_mag;
+    //cout << r << endl;
+    if (r <= (ca_radius*ca_radius))
+    {
+        //cout << "collision decteded" << endl;
+        system.at(ii).agents.at(jj).current_travel_speed = ca_flight_speed;
+        //cout << system.at(ii).agents.at(jj).current_travel_speed << endl;
+    }
+    else
+    {
+        //cout << "pass" << endl;
+        system.at(ii).agents.at(jj).current_travel_speed = max_flight_velocity;
     }
 }
 
@@ -533,23 +581,6 @@ void Simulator::crash_avoidance(int num_teams, vector<int> team_sizes, double di
     }
     check_for_collisions(num_teams, team_sizes, dist_to_target_waypoint, max_travel_dist, target_waypoint, current_telem, waypoint_telem, num_waypoints, current_travel_speed, ca_max_travel_dist, projected_telem, inc_projected_telem, ca_inc, ca_radius, ca_flight_speed, max_flight_velocity);
 }
-
-
-/////////////////////////////////////////////////////////////////
-//Gets New Telemetry
-//void get_new_telem(int ii, int jj, double current_travel_speed, double max_flight_velocity, double ca_flight_speed)
-//{
-    //if (system.at(ii).agents.at(jj).current_travel_speed==max_flight_velocity)
-    //{
-        //system.at(ii).agents.at(jj).current_telem.push_back(system.at(ii).agents.at(jj).projected_telem.at(0));
-        //system.at(ii).agents.at(jj).current_telem.push_back(system.at(ii).agents.at(jj).projected_telem.at(1));
-        //system.at(ii).agents.at(jj).current_telem.push_back(system.at(ii).agents.at(jj).projected_telem.at(2));
-    //}
-    //if (system.at(ii).agents.at(jj).current_travel_speed==ca_flight_speed)
-    //{
-        
-    //}
-//}
 
 
 /////////////////////////////////////////////////////////////////
@@ -583,7 +614,9 @@ void Simulator::check_if_at_waypoint(int ii, int jj, double dist_to_target_waypo
     {
         cout << "reached target waypoint" << endl;
         //calc_new_telem(waypoint_telem, max_travel_dist, current_telem, ii, jj, target_waypoint);
+        cout << system.at(ii).agents.at(jj).target_waypoint << endl;
         system.at(ii).agents.at(jj).target_waypoint++;
+        cout << system.at(ii).agents.at(jj).target_waypoint << endl;
         //checks to see if agent has reached their final destination
         check_if_at_final_destination(ii, jj, target_waypoint, num_waypoints);
     }
@@ -592,21 +625,44 @@ void Simulator::check_if_at_waypoint(int ii, int jj, double dist_to_target_waypo
 
 /////////////////////////////////////////////////////////////////
 //Calculates New Telemetry
-void Simulator::get_new_telem(int ii, int jj, double current_travel_speed, double max_flight_velocity, double ca_flight_speed, vector<double> current_telem, vector<double> projected_telem, vector<double> waypoint_telem, double delta_t, int target_waypoint)
+void Simulator::get_new_telem(int ii, int jj, double current_travel_speed, double max_flight_velocity, double ca_flight_speed, vector<double> current_telem, vector<double> projected_telem, vector<double> waypoint_telem, double delta_t, int target_waypoint, double dist_to_target_waypoint, double max_travel_dist, int num_waypoints, double ca_max_travel_dist)
 {
     //system.at(ii).agents.at(jj).current_telem.clear();
-    if (system.at(ii).agents.at(jj).current_travel_speed==max_flight_velocity)
+    //cout << system.at(ii).agents.at(jj).dist_to_target_waypoint << endl;
+    
+    if (system.at(ii).agents.at(jj).dist_to_target_waypoint > 0)
     {
-        system.at(ii).agents.at(jj).current_telem.at(0) = (system.at(ii).agents.at(jj).projected_telem.at(0));
-        system.at(ii).agents.at(jj).current_telem.at(1) = (system.at(ii).agents.at(jj).projected_telem.at(1));
-        system.at(ii).agents.at(jj).current_telem.at(2) = (system.at(ii).agents.at(jj).projected_telem.at(2));
+        if (system.at(ii).agents.at(jj).dist_to_target_waypoint < system.at(ii).agents.at(jj).current_travel_speed*delta_t)
+        {
+                system.at(ii).agents.at(jj).current_telem.at(0) = (system.at(ii).agents.at(jj).check_points.at(system.at(ii).agents.at(jj).target_waypoint).waypoint_telem.at(0));
+                system.at(ii).agents.at(jj).current_telem.at(1) = (system.at(ii).agents.at(jj).check_points.at(system.at(ii).agents.at(jj).target_waypoint).waypoint_telem.at(1));
+                system.at(ii).agents.at(jj).current_telem.at(2) = (system.at(ii).agents.at(jj).check_points.at(system.at(ii).agents.at(jj).target_waypoint).waypoint_telem.at(2));
+        }
+        //cout << "current telem" << endl;
+        //for (int ll=0; ll < 3; ll++)
+        //{
+            //cout << system.at(ii).agents.at(jj).current_telem.at(ll) << "\t";
+        //}
+        //cout << endl;
     }
-    if (system.at(ii).agents.at(jj).current_travel_speed==ca_flight_speed)
+    if (system.at(ii).agents.at(jj).dist_to_target_waypoint > 0)
     {
-        calc_projected_telem(waypoint_telem, current_travel_speed, delta_t, projected_telem, current_telem, ii, jj, target_waypoint);
-        system.at(ii).agents.at(jj).current_telem.push_back(system.at(ii).agents.at(jj).projected_telem.at(0));
-        system.at(ii).agents.at(jj).current_telem.push_back(system.at(ii).agents.at(jj).projected_telem.at(1));
-        system.at(ii).agents.at(jj).current_telem.push_back(system.at(ii).agents.at(jj).projected_telem.at(2));
+        if (system.at(ii).agents.at(jj).dist_to_target_waypoint > system.at(ii).agents.at(jj).current_travel_speed*delta_t)
+        {
+            if (system.at(ii).agents.at(jj).current_travel_speed==max_flight_velocity)
+            {
+                system.at(ii).agents.at(jj).current_telem.at(0) = (system.at(ii).agents.at(jj).projected_telem.at(0));
+                system.at(ii).agents.at(jj).current_telem.at(1) = (system.at(ii).agents.at(jj).projected_telem.at(1));
+                system.at(ii).agents.at(jj).current_telem.at(2) = (system.at(ii).agents.at(jj).projected_telem.at(2));
+            }
+            if (system.at(ii).agents.at(jj).current_travel_speed==ca_flight_speed)
+            {
+                calc_projected_telem(waypoint_telem, current_travel_speed, delta_t, projected_telem, current_telem, ii, jj, target_waypoint);
+                system.at(ii).agents.at(jj).current_telem.at(0) = (system.at(ii).agents.at(jj).projected_telem.at(0));
+                system.at(ii).agents.at(jj).current_telem.at(1) = (system.at(ii).agents.at(jj).projected_telem.at(1));
+                system.at(ii).agents.at(jj).current_telem.at(2) = (system.at(ii).agents.at(jj).projected_telem.at(2));
+            }
+        }
     }
 }
 
@@ -646,9 +702,27 @@ void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<dou
                     //cout << "cp1" << endl;
                     cout << "team" << "\t" << ii << "\t" << "agent" << "\t" << jj << endl;
                     
-                    get_new_telem(ii, jj, current_travel_speed, max_flight_velocity, ca_flight_speed, current_telem, projected_telem, waypoint_telem, delta_t, target_waypoint);
+                    cout << "target waypoint" << endl;
+                    cout << system.at(ii).agents.at(jj).target_waypoint << endl;
+                    
+                    cout << "distance to target waypoint" << endl;
+                    cout << system.at(ii).agents.at(jj).dist_to_target_waypoint << endl;
+                    
+                    cout << "projected telem" << endl;
+                    for (int ll=0; ll < 3; ll++)
+                    {
+                        cout << system.at(ii).agents.at(jj).projected_telem.at(ll) << "\t";
+                    }
+                    cout << endl;
+                    
+                    //gets the new telemetry based on the flight speed from the CA
+                    get_new_telem(ii, jj, current_travel_speed, max_flight_velocity, ca_flight_speed, current_telem, projected_telem, waypoint_telem, delta_t, target_waypoint, dist_to_target_waypoint, max_travel_dist, num_waypoints, ca_max_travel_dist);
                     //cout << system.at(ii).agents.at(jj).target_waypoint << endl;
+                    
+                    //runs a check to see if the agent has reached their target waypoint
                     check_if_at_waypoint(ii, jj, dist_to_target_waypoint, waypoint_telem, max_travel_dist, current_telem, target_waypoint, num_waypoints);
+                    
+                    
                     //cout << system.at(ii).agents.at(jj).target_waypoint << endl;
                     //checks to see if the distance from the current telemetry to the target waypoint is within the max travel distance
                     //get_new_telem_option_1(ii, jj, dist_to_target_waypoint, max_travel_dist, target_waypoint, num_waypoints, ca_max_travel_dist);
@@ -666,7 +740,11 @@ void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<dou
                     }
                     cout << endl;
                     cout << "current travel speed" << "\t" << system.at(ii).agents.at(jj).current_travel_speed << endl;
+                    
+                    //resets the travel speed to the max travel speed for the following time step
+                    system.at(ii).agents.at(jj).current_travel_speed=max_flight_velocity;
                 }
+                cout << endl;
             }
         }
         current_time = current_time + delta_t;

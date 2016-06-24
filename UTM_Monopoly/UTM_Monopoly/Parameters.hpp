@@ -35,17 +35,17 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 100;
+    int max_x_dim = 50;
     int min_y_dim = 0;
-    int max_y_dim = 100;
+    int max_y_dim = 50;
     int min_z_dim = 0;
     int max_z_dim = 50;
-    int time_max = 120;
-    double delta_t = 0.1;           //simulator time step
+    int time_max = 200;
+    double delta_t = 1;           //simulator time step
     double max_flight_velocity = 5.0;
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
     int ca_radius = 5;
-    int ca_inc = 10;
+    int ca_inc = 2;                 //amount of increments between the current telem and projected telem
     double ca_flight_speed = max_flight_velocity/2;
     double ca_max_travel_dist = ca_flight_speed*delta_t;
     int time_delay = 5;
@@ -55,9 +55,9 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 3;          //must be an interger 0-10
+    int num_teams = 1;          //must be an interger 0-10
     int team_0 = 2;
-    int team_1 = 3;
+    int team_1 = 1;
     int team_2 = 5;
     int team_3 = 8;
     int team_4 = 7;
