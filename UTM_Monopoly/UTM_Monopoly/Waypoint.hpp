@@ -35,9 +35,7 @@ protected:
     
 public:
     
-    vector<double> waypoint_telem;
-    
-    void get_waypoint();
+    vector<double> waypoint_telem;      //contains the x, y, and z coordinates for the waypoint
     
     
 private:
