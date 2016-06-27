@@ -75,6 +75,20 @@ public:
     //Simulation Main
     void run_simulation(int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed);
     
+    //Test Fucntions
+    void two_agents_same_team_collide(vector<double> waypoint_telm);
+    void two_agents_same_team_near_miss(vector<double> waypoint_telm);
+    void two_agents_same_team_exact_miss(vector<double> waypoint_telm);
+    void two_agents_same_team_close_parallel(vector<double> waypoint_telm);
+    void two_agents_same_team_exact_parallel(vector<double> waypoint_telm);
+    void two_agents_same_team_far_parallel(vector<double> waypoint_telm);
+    void two_agents_diff_team_collide(vector<double> waypoint_telm);
+    void two_agents_diff_team_near_miss(vector<double> waypoint_telm);
+    void two_agents_diff_team_exact_miss(vector<double> waypoint_telm);
+    void two_agents_diff_team_close_parallel(vector<double> waypoint_telm);
+    void two_agents_diff_team_exact_parallel(vector<double> waypoint_telm);
+    void two_agents_diff_team_far_parallel(vector<double> waypoint_telm);
+    
 private:
     
     
@@ -165,13 +179,6 @@ void Simulator::create_sarting_telm(int num_teams, vector<int> team_sizes, vecto
             system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(y_waypoint);
             system.at(ii).agents.at(jj).check_points.at(0).waypoint_telem.push_back(z_waypoint);
             
-            //CA check two teams with one agents on a collision course
-            //system.at(0).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
-            //system.at(0).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
-            //system.at(0).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
-            //system.at(1).agents.at(0).check_points.at(0).waypoint_telem.push_back(50);
-            //system.at(1).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
-            //system.at(1).agents.at(0).check_points.at(0).waypoint_telem.push_back(0);
         }
     }
 }
@@ -198,14 +205,6 @@ void Simulator::create_checkpoints(int num_teams, vector<int> team_sizes, vector
                 system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(x_waypoint);
                 system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(y_waypoint);
                 system.at(ii).agents.at(jj).check_points.at(kk).waypoint_telem.push_back(z_waypoint);
-                
-                //CA check two teams with one agents on a collision course
-                //system.at(0).agents.at(0).check_points.at(1).waypoint_telem.push_back(25);
-                //system.at(0).agents.at(0).check_points.at(1).waypoint_telem.push_back(27.5);
-                //system.at(0).agents.at(0).check_points.at(1).waypoint_telem.push_back(0);
-                //system.at(1).agents.at(0).check_points.at(1).waypoint_telem.push_back(25);
-                //system.at(1).agents.at(0).check_points.at(1).waypoint_telem.push_back(23.5);
-                //system.at(1).agents.at(0).check_points.at(1).waypoint_telem.push_back(0);
             }
         }
     }
@@ -231,14 +230,6 @@ void Simulator::create_target_telm(int num_teams, vector<int> team_sizes, vector
             system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(x_waypoint);
             system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(y_waypoint);
             system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.push_back(z_waypoint);
-            
-            //CA check two teams with one agents on a collision course
-            //system.at(0).agents.at(0).check_points.at(2).waypoint_telem.push_back(50);
-            //system.at(0).agents.at(0).check_points.at(2).waypoint_telem.push_back(50);
-            //system.at(0).agents.at(0).check_points.at(2).waypoint_telem.push_back(0);
-            //system.at(1).agents.at(0).check_points.at(2).waypoint_telem.push_back(0);
-            //system.at(1).agents.at(0).check_points.at(2).waypoint_telem.push_back(50);
-            //system.at(1).agents.at(0).check_points.at(2).waypoint_telem.push_back(0);
         }
     }
 }
@@ -272,6 +263,22 @@ void Simulator::build_simulator(int num_teams, vector<int> team_sizes, vector<do
     create_checkpoints(num_teams, team_sizes, waypoint_telm, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
     create_target_telm(num_teams, team_sizes, waypoint_telm, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
     create_starting_flight_velocity(num_teams, team_sizes, max_flight_velocity);
+    
+    /////////////////////////////
+    //test functions
+    //read fucntion parameters before running
+    //two_agents_same_team_collide(waypoint_telm);
+    //two_agents_same_team_near_miss(waypoint_telm);
+    //two_agents_same_team_exact_miss(waypoint_telm);
+    //two_agents_same_team_close_parallel(waypoint_telm);
+    //two_agents_same_team_exact_parallel(waypoint_telm);
+    //two_agents_same_team_far_parallel(waypoint_telm);
+    //two_agents_diff_team_collide(waypoint_telm);
+    //two_agents_diff_team_near_miss(waypoint_telm);
+    //two_agents_diff_team_exact_miss(waypoint_telm);
+    //two_agents_diff_team_close_parallel(waypoint_telm);
+    //two_agents_diff_team_exact_parallel(waypoint_telm);
+    //two_agents_diff_team_far_parallel(waypoint_telm);
     
     cout << "total number of teams" << "\t" << system.size() << endl;
     for(int i=0; i < num_teams; i++)
@@ -783,6 +790,362 @@ void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<dou
     }
 }
 
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Test Functions
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Same Team
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Same Team On A Collision Course
+void Simulator::two_agents_same_team_collide(vector<double> waypoint_telm)
+{
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(2)=0;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(2)=0;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(2)=0;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Same Team Near Miss
+void Simulator::two_agents_same_team_near_miss(vector<double> waypoint_telm)
+{
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(2)=4;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Same Team Exact Miss
+//waypoint distance exactly equal to the CA radius
+void Simulator::two_agents_same_team_exact_miss(vector<double> waypoint_telm)
+{
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(2)=5;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Same Team Close Range Parallel
+//flight path is parallel within the CA Radius
+void Simulator::two_agents_same_team_close_parallel(vector<double> waypoint_telm)
+{
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(2)=4;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Same Team Exact Parallel
+//flight path is parallel with a distance exactly equal to the CA radius
+void Simulator::two_agents_same_team_exact_parallel(vector<double> waypoint_telm)
+{
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(2)=5;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Same Team Far Range Parallel
+//flight path is parallel with a distance exactly equal to the CA radius
+void Simulator::two_agents_same_team_far_parallel(vector<double> waypoint_telm)
+{
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(1).check_points.at(0).waypoint_telem.at(2)=6;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(1).check_points.at(1).waypoint_telem.at(2)=6;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(1).check_points.at(2).waypoint_telem.at(2)=6;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Different Teams
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Differnt Teams On A Collision Course
+void Simulator::two_agents_diff_team_collide(vector<double> waypoint_telm)
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(0)=50;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(0)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Different Team Near Miss
+void Simulator::two_agents_diff_team_near_miss(vector<double> waypoint_telm)
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(0)=50;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(0)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(2)=4;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Different Team Exact Miss
+//waypoint distance exactly equal to the CA radius
+void Simulator::two_agents_diff_team_exact_miss(vector<double> waypoint_telm)
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(0)=50;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(0)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(2)=5;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Different Team Close Range Parallel
+//flight path is parallel within the CA Radius
+void Simulator::two_agents_diff_team_close_parallel(vector<double> waypoint_telm)
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(2)=4;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(2)=4;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Different Team Exact Parallel
+//flight path is parallel with a distance exactly equal to the CA radius
+void Simulator::two_agents_diff_team_exact_parallel(vector<double> waypoint_telm)
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(2)=5;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(2)=5;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Two Agents Different Team Far Range Parallel
+//flight path is parallel with a distance exactly equal to the CA radius
+void Simulator::two_agents_diff_team_far_parallel(vector<double> waypoint_telm)
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(0).agents.at(0).check_points.at(0).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(0)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(1)=0;
+    system.at(1).agents.at(0).check_points.at(0).waypoint_telem.at(2)=6;
+    
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(0).agents.at(0).check_points.at(1).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(0)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(1)=25;
+    system.at(1).agents.at(0).check_points.at(1).waypoint_telem.at(2)=6;
+    
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(0).agents.at(0).check_points.at(2).waypoint_telem.at(2)=0;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(0)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(1)=50;
+    system.at(1).agents.at(0).check_points.at(2).waypoint_telem.at(2)=6;
+}
 
 
 #endif /* Simulator_hpp */
