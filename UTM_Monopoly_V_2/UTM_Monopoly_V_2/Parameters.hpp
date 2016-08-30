@@ -36,12 +36,12 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 50;
+    int max_x_dim = 1000;
     int min_y_dim = 0;
-    int max_y_dim = 50;
+    int max_y_dim = 1000;
     int min_z_dim = 0;
-    int max_z_dim = 10;
-    int time_max = 40;                                         //max time simulator will run
+    int max_z_dim = 50;
+    int time_max = 120;                                         //max time simulator will run
     double delta_t = 0.1;                                         //simulator time step
     double max_flight_velocity = 5.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
@@ -55,9 +55,9 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 2;          //must be an interger 0-10
-    int team_0 = 1;
-    int team_1 = 1;
+    int num_teams = 1;          //must be an interger 0-10
+    int team_0 = 100;
+    int team_1 = 100;
     int team_2 = 50;
     int team_3 = 80;
     int team_4 = 70;
@@ -66,14 +66,14 @@ public:
     int team_7 = 80;
     int team_8 = 10;
     int team_9 = 20;
-    int num_waypoints = 1;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
+    int num_waypoints = 10;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
     
     void set_team_sizes();
     
     //CCEA Settings
-    int pop_size = 2;
+    int pop_size = 1;
     
     
     

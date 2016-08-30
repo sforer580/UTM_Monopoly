@@ -43,8 +43,11 @@ public:
     void create_target_telem(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim);
     void build_simulator(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, double max_flight_velocity);
     
+    //Fitness Functions
+    void get_agent_fitness(int pop_size, int num_teams, vector<int> team_sizes, vector<double> current_telem, vector<double> waypoint_telem, int num_waypoints);
     
-    void run_inner_CCEA(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed);
+    
+    void run_inner_CCEA(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double agent_fitness);
     
 private:
     
@@ -55,7 +58,7 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////// Current Issues
-//stuck in simulation time loop
+//
 //////// Resloved Issues
 //terminating with uncaught exception in build simulator
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,8 +217,8 @@ void CCEA::build_simulator(int pop_size, int num_teams, vector<int> team_sizes, 
     
     //uncomment for loop for test fucntions
     //{
-    //for (int ss=0; ss < pop_size; ss++)
-    //{
+    for (int ss=0; ss < pop_size; ss++)
+    {
         /////////////////////////////
         //test functions
     
@@ -248,7 +251,7 @@ void CCEA::build_simulator(int pop_size, int num_teams, vector<int> team_sizes, 
         //sim.at(ss).two_sims_two_agents_diff_team_exact_parallel(waypoint_telem);
         //sim.at(ss).two_sims_two_agents_diff_team_far_parallel(waypoint_telem);
         /////////////////////////////
-    //}
+    }
     //}
     
     create_sarting_telem(pop_size, num_teams, team_sizes, waypoint_telem, max_x_dim, max_y_dim, max_z_dim);
@@ -259,6 +262,7 @@ void CCEA::build_simulator(int pop_size, int num_teams, vector<int> team_sizes, 
        sim.at(ii).create_starting_flight_velocity(num_teams, team_sizes, max_flight_velocity);
     }
     
+    /*
     cout << "number of simulations" << "\t" << sim.size() << endl;
     for (int ii=0; ii < pop_size; ii++)
     {
@@ -312,6 +316,52 @@ void CCEA::build_simulator(int pop_size, int num_teams, vector<int> team_sizes, 
     cout << "-------------------------------------------------------------------------" << endl;
     cout << "-------------------------------------------------------------------------" << endl;
     cout << endl;
+     */
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Fitness functions
+//gets the fitness for each agent in each team
+void CCEA::get_agent_fitness(int pop_size, int num_teams, vector<int> team_sizes, vector<double> current_telem, vector<double> waypoint_telem, int num_waypoints)
+{
+    for (int ss=0; ss < pop_size; ss++)
+    {
+        for (int ii=0; ii < num_teams; ii++)
+        {
+            for (int jj=0; jj < team_sizes.at(ii); jj++)
+            {
+                cout << endl;
+                cout << endl;
+                if (sim.at(ss).system.at(ii).agents.at(jj).current_telem.at(0) == sim.at(ss).system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.at(0))
+                {
+                    if (sim.at(ss).system.at(ii).agents.at(jj).current_telem.at(1) == sim.at(ss).system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.at(1))
+                    {
+                        if (sim.at(ss).system.at(ii).agents.at(jj).current_telem.at(2) == sim.at(ss).system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.at(2))
+                        {
+                            cout << "simulation" << "\t" << ss << "\t" << "team" << "\t" << ii << "\t" << "agent" << "\t" << jj << "\t" << "has reached its final destination" << endl;
+                            cout << "fitness" << "\t" << sim.at(ss).system.at(ii).agents.at(jj).agent_fitness;
+                            continue;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    cout << "simulation" << "\t" << ss << "\t" << "team" << "\t" << ii << "\t" << "agent" << "\t" << jj << "\t" << "has not reached its final destination" << endl;
+                    cout << "fitness" << "\t" << sim.at(ss).system.at(ii).agents.at(jj).agent_fitness;
+                }
+            }
+        }
+    }
+    cout << endl;
 }
 
 
@@ -319,16 +369,19 @@ void CCEA::build_simulator(int pop_size, int num_teams, vector<int> team_sizes, 
 /////////////////////////////////////////////////////////////////
 //Run inner CCEA
 //executes the inner CCEA
-void CCEA::run_inner_CCEA(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed)
+void CCEA::run_inner_CCEA(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double agent_fitness)
 {
     for (int ss=0; ss < pop_size; ss++)
     {
+        /*
         cout << "simulation" << "\t" << ss << endl;
         cout << "-------------------------------------------------------------------------" << endl;
         cout << "-------------------------------------------------------------------------" << endl;
         cout << "-------------------------------------------------------------------------" << endl;
-        sim.at(ss).run_simulation(num_teams, team_sizes, waypoint_telem, max_flight_velocity, delta_t, max_travel_dist, current_telem, time_max, num_waypoints, max_x_dim, max_y_dim, max_z_dim, target_waypoint, dist_to_target_waypoint, current_travel_speed, ca_max_travel_dist, projected_telem, inc_projected_telem, ca_inc, ca_radius, ca_flight_speed);
+         */
+        sim.at(ss).run_simulation(num_teams, team_sizes, waypoint_telem, max_flight_velocity, delta_t, max_travel_dist, current_telem, time_max, num_waypoints, max_x_dim, max_y_dim, max_z_dim, target_waypoint, dist_to_target_waypoint, current_travel_speed, ca_max_travel_dist, projected_telem, inc_projected_telem, ca_inc, ca_radius, ca_flight_speed, agent_fitness);
     }
+    get_agent_fitness(pop_size, num_teams, team_sizes, current_telem, waypoint_telem, num_waypoints);
 }
 
 
