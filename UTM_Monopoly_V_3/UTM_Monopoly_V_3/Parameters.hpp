@@ -56,7 +56,7 @@ public:
     
     //Team Settings
     int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 10;
+    int team_0 = 4;
     int team_1 = 100;
     int team_2 = 50;
     int team_3 = 80;
@@ -66,6 +66,7 @@ public:
     int team_7 = 80;
     int team_8 = 10;
     int team_9 = 20;
+    int num_policies = 2;
     int num_waypoints = 1;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
@@ -73,7 +74,8 @@ public:
     void set_team_sizes();
     
     //CCEA Settings
-    int pop_size = 1;
+    //int pop_size = 1;
+    int gen_max = 1;
     
     
     
