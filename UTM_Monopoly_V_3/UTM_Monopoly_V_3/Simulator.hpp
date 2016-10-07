@@ -32,6 +32,7 @@ class Simulator
     friend class Parameters;
     friend class Team;
     friend class Individual;
+    friend class Policy;
     friend class Waypoint;
     
 protected:
@@ -70,7 +71,12 @@ public:
     
     
     //Simulation Main
-    void run_simulation(int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double agent_fitness);
+    void run_simulation(vector<Policy>* sim_team);
+    
+    
+    
+    
+    
     
     //Test Fucntions
     //One Simulator
@@ -113,7 +119,8 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////// Current Issues
-//
+//Calling the right team for simulation
+//Getting fitness values for ach policy for a team for simulation
 //////// Resloved Issues
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -596,8 +603,17 @@ void Simulator::get_agent_destination_fitness(int pp, vector<int> team_sizes, ve
 
 /////////////////////////////////////////////////////////////////
 //Runs Entire Simulation
-void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double agent_fitness)
+void Simulator::run_simulation(vector<Policy>* sim_team)
 {
+    double d = rand() % 50;
+    for (int p=0; p<sim_team->size(); p++)
+    {
+        cout << "in" << endl;
+        sim_team->at(p).policy_fitness = d;
+    }
+    
+    
+    /*
     for (int pp=0; pp < num_teams; pp++)
     {
         set_initial_telem(pp, team_sizes);
@@ -634,8 +650,11 @@ void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<dou
                         cout << system.at(pp).agents.at(jj).projected_telem.at(ll) << "\t";
                     }
                     cout << endl;
-                     */
-                        
+     
+    
+    
+    
+    
                     //gets the new telemetry based on the flight speed from the CA
                     get_new_telem(pp, jj, current_travel_speed, max_flight_velocity, ca_flight_speed, current_telem, projected_telem, waypoint_telem, delta_t, target_waypoint, dist_to_target_waypoint, max_travel_dist, num_waypoints, ca_max_travel_dist);
                     //cout << system.at(ii).agents.at(jj).target_waypoint << endl;
@@ -651,7 +670,7 @@ void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<dou
                     cout << endl;
                     cout << "current travel speed" << "\t" << system.at(pp).agents.at(jj).current_travel_speed << endl;
                     cout << endl;
-                     */
+     
                 }
             }
             current_time = current_time + delta_t;
@@ -659,10 +678,11 @@ void Simulator::run_simulation(int num_teams, vector<int> team_sizes, vector<dou
             /*
             cout << endl;
             cout << "-------------------------------------------------------------------------" << endl;
-             */
+     
         }
         get_agent_destination_fitness(pp, team_sizes, waypoint_telem, num_waypoints);
     }
+     */
 }
 
 

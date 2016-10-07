@@ -1,13 +1,14 @@
 //
 //  Waypoint.hpp
-//  UTM_Monopoly
+//  UTM_Monoploy_V2
 //
-//  Created by Scott S Forer on 6/2/16.
+//  Created by Scott S Forer on 8/8/16.
 //  Copyright © 2016 Scott S Forer. All rights reserved.
 //
 
 #ifndef Waypoint_hpp
 #define Waypoint_hpp
+
 
 #include <iostream>
 #include <cstdlib>
@@ -29,6 +30,8 @@ class Waypoint
     friend class Individual;
     friend class Simulator;
     friend class Parameters;
+    friend class CCEA;
+    friend class Policy;
     
 protected:
     

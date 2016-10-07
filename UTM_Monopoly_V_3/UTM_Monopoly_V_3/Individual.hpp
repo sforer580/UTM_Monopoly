@@ -12,7 +12,7 @@
 //#include "Parameters.hpp"
 //#include "Team.hpp"
 //#include "Simulator.hpp"
-#include "Waypoint.hpp"
+#include "Policy.hpp"
 
 using namespace std;
 
@@ -24,7 +24,7 @@ class Individual
     friend class Simulator;
     friend class Waypoint;
     friend class CCEA;
-    
+    friend class Policy;
 protected:
     
     
@@ -34,6 +34,7 @@ public:
     double agent_fitness = 0;
     double current_travel_speed;
     
+    vector<Policy> policies;
     vector<Waypoint> check_points;
     vector<double> current_telem;
     vector<double> projected_telem;
