@@ -92,7 +92,7 @@ void CCEA::create_population()
             {
                 Policy Po;
                 corp.at(ii).agents.at(jj).policies.push_back(Po);
-                for (int ww=0; ww < pP->num_waypoints; ww++)
+                for (int ww=0; ww < pP->num_waypoints+2; ww++)
                 {
                     Waypoint W;
                     corp.at(ii).agents.at(jj).policies.at(pp).check_points.push_back(W);
@@ -109,35 +109,38 @@ void CCEA::create_population()
 //sets the starting telemetry for each policy for each agent in each team
 void CCEA::create_sarting_telem()
 {
-    for (int ii=0; ii < pP->num_teams; ii++)
+    for (int ii=0; ii<pP->num_teams; ii++)
     {
-        for (int jj=0; jj<pP->team_sizes.at(ii); ii++)
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
         {
-            double x_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_x_dim);
-            double y_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_y_dim);
-            //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
-            //int x_waypoint = 2;
-            //int y_waypoint = 4;
-            double z_waypoint = 0;
-            
-            //comment out for test fucntions
-            //{
-            corp.at(ii).agents.at(jj).policies.at(0).check_points.at(0).waypoint_telem.at(0)=x_waypoint;
-            corp.at(ii).agents.at(jj).policies.at(0).check_points.at(0).waypoint_telem.at(1)=y_waypoint;
-            corp.at(ii).agents.at(jj).policies.at(0).check_points.at(0).waypoint_telem.at(2)=z_waypoint;
+            for (int po=0; po<1; po++)
+            {
+                double x_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_x_dim);
+                double y_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_y_dim);
+                //int z_waypoint = abs(((double)rand()/RAND_MAX)*max_z_dim);
+                //int x_waypoint = 2;
+                //int y_waypoint = 4;
+                double z_waypoint = 0;
+                
+                //comment out for test fucntions
+                //{
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(0).waypoint_telem.at(0)=x_waypoint;
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(0).waypoint_telem.at(1)=y_waypoint;
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(0).waypoint_telem.at(2)=z_waypoint;
+            }
         }
     }
     
     //makes each starting telemetry for each policy for each agent the same
     for (int ii=0; ii < pP->num_teams; ii++)
     {
-        for (int jj=0; jj < pP->team_sizes.at(ii); jj++)
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
         {
-            for (int pp=1;  pp < pP->num_policies; pp++)
+            for (int po=1;  po<pP->num_policies; po++)
             {
-                corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(0).waypoint_telem.at(0) = corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(0).waypoint_telem.at(0);
-                corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(0).waypoint_telem.at(1) = corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(0).waypoint_telem.at(1);
-                corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(0).waypoint_telem.at(2) = corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(0).waypoint_telem.at(2);
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(0).waypoint_telem.at(0) = corp.at(ii).agents.at(jj).policies.at(0).check_points.at(0).waypoint_telem.at(0);
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(0).waypoint_telem.at(1) = corp.at(ii).agents.at(jj).policies.at(0).check_points.at(0).waypoint_telem.at(1);
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(0).waypoint_telem.at(2) = corp.at(ii).agents.at(jj).policies.at(0).check_points.at(0).waypoint_telem.at(2);
             }
         }
     }
@@ -149,13 +152,13 @@ void CCEA::create_sarting_telem()
 //sets the telemetry for each intermediate waypoint for each policy for each agent in each team
 void CCEA::create_checkpoints()
 {
-    for (int ii=0; ii < pP->num_teams; ii++)
+    for (int ii=0; ii<pP->num_teams; ii++)
     {
-        for (int jj=0; jj < pP->team_sizes.at(ii); jj++)
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
         {
-            for (int pp=1;  pp < pP->num_policies; pp++)
+            for (int po=0;  po<pP->num_policies; po++)
             {
-                for (int ww=1; ww <pP->num_waypoints+1; ww++)
+                for (int ww=0; ww<pP->num_waypoints; ww++)
                 {
                     double x_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_x_dim);
                     double y_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_y_dim);
@@ -166,9 +169,9 @@ void CCEA::create_checkpoints()
                     
                     //comment out for test fucntions
                     //{
-                    corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(ww).waypoint_telem.at(0) = x_waypoint;
-                    corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(ww).waypoint_telem.at(1) = y_waypoint;
-                    corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(ww).waypoint_telem.at(2) = z_waypoint;
+                    corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww+1).waypoint_telem.at(0) = x_waypoint;
+                    corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww+1).waypoint_telem.at(1) = y_waypoint;
+                    corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww+1).waypoint_telem.at(2) = z_waypoint;
                 }
             }
         }
@@ -181,9 +184,9 @@ void CCEA::create_checkpoints()
 //sets the final telemetry for each policy for each agent in each team
 void CCEA::create_target_telem()
 {
-    for (int ii=0; ii < pP->num_teams; ii++)
+    for (int ii=0; ii<pP->num_teams; ii++)
     {
-        for (int jj=0; jj<pP->team_sizes.at(ii); ii++)
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
         {
             double x_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_x_dim);
             double y_waypoint = abs(((double)rand()/RAND_MAX)*pP->max_y_dim);
@@ -201,15 +204,15 @@ void CCEA::create_target_telem()
     }
     
     //makes each ending telemetry for each policy for each agent the same
-    for (int ii=0; ii < pP->num_teams; ii++)
+    for (int ii=0; ii<pP->num_teams; ii++)
     {
-        for (int jj=0; jj < pP->team_sizes.at(ii); jj++)
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
         {
-            for (int pp=1;  pp < pP->num_policies; pp++)
+            for (int po=1;  po<pP->num_policies; po++)
             {
-                corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(pP->num_waypoints+1).waypoint_telem.at(0) = corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(pP->num_waypoints+1).waypoint_telem.at(0);
-                corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(pP->num_waypoints+1).waypoint_telem.at(1) = corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(pP->num_waypoints+1).waypoint_telem.at(1);
-                corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(pP->num_waypoints+1).waypoint_telem.at(2) = corp.at(ii).agents.at(jj).policies.at(pp).check_points.at(pP->num_waypoints+1).waypoint_telem.at(2);
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(pP->num_waypoints+1).waypoint_telem.at(0) = corp.at(ii).agents.at(jj).policies.at(0).check_points.at(pP->num_waypoints+1).waypoint_telem.at(0);
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(pP->num_waypoints+1).waypoint_telem.at(1) = corp.at(ii).agents.at(jj).policies.at(0).check_points.at(pP->num_waypoints+1).waypoint_telem.at(1);
+                corp.at(ii).agents.at(jj).policies.at(po).check_points.at(pP->num_waypoints+1).waypoint_telem.at(2) = corp.at(ii).agents.at(jj).policies.at(0).check_points.at(pP->num_waypoints+1).waypoint_telem.at(2);
             }
         }
     }
@@ -318,13 +321,13 @@ void CCEA::build_team()
     {
         for (int indv=0; indv<pP->team_sizes.at(team); indv++)
         {
-            cout << "agent" << "\t" << indv << endl;
+            //cout << "agent" << "\t" << indv << endl;
             for (int p=0; p<pP->num_policies; p++)
             {
-                cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).team_selected << endl;
-                cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                //cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).team_selected << endl;
+                //cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
             }
-            cout << endl;
+            //cout << endl;
         }
     }
 }
@@ -337,7 +340,37 @@ void CCEA::build_team()
 //
 void CCEA::run_CCEA()
 {
-    create_population();
+    build_world();
+    
+    
+    for (int ii=0; ii<pP->num_teams; ii++)
+    {
+        cout << "team" << "\t" << ii << endl;
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
+        {
+            cout << "agent" << "\t" << jj << endl;
+            for (int po=0;  po<pP->num_policies; po++)
+            {
+                cout << "policy" << "\t" << po << endl;
+                for (int ww=0; ww<pP->num_waypoints+2; ww++)
+                {
+                    cout << "waypoint" << "\t" << ww << "\t" << "telem" << endl;
+                    for (int te=0; te<3; te++)
+                    {
+                     cout << corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww).waypoint_telem.at(te) << "\t";
+                    }
+                    cout << endl;
+                }
+            }
+            cout << endl;
+        }
+    }
+    
+                
+                
+                
+                
+    
     for (int gen=0; gen<pP->gen_max; gen++)
     {
         build_team();

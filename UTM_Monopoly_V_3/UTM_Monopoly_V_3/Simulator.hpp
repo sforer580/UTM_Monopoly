@@ -41,11 +41,13 @@ protected:
 public:
     vector<Team> system;
     
+    Parameters* pP;
+    
     //Simulator Setup
-    void create_starting_flight_velocity(int num_teams, vector<int> team_sizes, double max_flight_velocity);
+    void create_starting_flight_velocity(vector<Policy>* sim_team);
     
     //Intialize Simulation
-    void set_initial_telem(int pp, vector<int> team_sizes);
+    void set_initial_telem(vector<Policy>* sim_team);
     
     //Gather Information
     void get_dist_to_target_waypoint(vector<double> waypoint_telem, vector<double> current_telem, int pp, int jj, int target_waypoint, double dist_to_target_waypoint);
@@ -130,15 +132,11 @@ private:
 /////////////////////////////////////////////////////////////////
 //Create Starting Flight Velocity
 //sets the current travel speed for each agent in each team
-void Simulator::create_starting_flight_velocity(int num_teams, vector<int> team_sizes, double max_flight_velocity)
+void Simulator::create_starting_flight_velocity(vector<Policy>* sim_team)
 {
-    for (int jj=0; jj < num_teams; jj++)
+    for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
     {
-        for (int kk=0; kk < team_sizes.at(jj); kk++)
-        {
-            //intital travel speed set to max flight vleocity
-            system.at(jj).agents.at(kk).current_travel_speed = max_flight_velocity;
-        }
+        //sim_team->at(sim_p).current_travel_speed = pP->max_flight_velocity;
     }
 }
 
@@ -152,38 +150,40 @@ void Simulator::create_starting_flight_velocity(int num_teams, vector<int> team_
 /////////////////////////////////////////////////////////////////
 //Set The Starting Telemetry
 //sets the current telemetry to the starting telemetry
-void Simulator::set_initial_telem(int pp, vector<int> team_sizes)
+
+void Simulator::set_initial_telem(vector<Policy>* sim_team)
 {
     cout << "current time" << "\t" << 0.0 << endl;
-        for (int jj=0; jj < team_sizes.at(pp); jj++)
+        for (int sim_p=0; sim_p<sim_p<sim_team->size(); sim_p++)
         {
             double current_x;
             double current_y;
             double current_z;
-            current_x = system.at(pp).agents.at(jj).check_points.at(0).waypoint_telem.at(0);
-            current_y = system.at(pp).agents.at(jj).check_points.at(0).waypoint_telem.at(1);
-            current_z = system.at(pp).agents.at(jj).check_points.at(0).waypoint_telem.at(2);
-            system.at(pp).agents.at(jj).current_telem.push_back(current_x);
-            system.at(pp).agents.at(jj).current_telem.push_back(current_y);
-            system.at(pp).agents.at(jj).current_telem.push_back(current_z);
-            /*
-            cout << "team" << "\t" << pp << "\t" << "agent" << "\t" << jj << endl;
+            current_x = sim_team->at(sim_p).check_points.at(0).waypoint_telem.at(0);
+            current_y = sim_team->at(sim_p).check_points.at(0).waypoint_telem.at(1);
+            current_z = sim_team->at(sim_p).check_points.at(0).waypoint_telem.at(2);
+            sim_team->at(sim_p).current_telem.push_back(current_x);
+            sim_team->at(sim_p).current_telem.push_back(current_y);
+            sim_team->at(sim_p).current_telem.push_back(current_z);
+ 
+            cout << "agent" << "\t" << sim_p << endl;
             cout << "current telem" << endl;
             for (int ll=0; ll < 3; ll++)
             {
-                cout << system.at(pp).agents.at(jj).current_telem.at(ll) << "\t";
+                cout << sim_team->at(sim_p).current_telem.at(ll) << "\t";
             }
             cout << endl;
-            cout << "current travel speed" << "\t" << system.at(pp).agents.at(jj).current_travel_speed << endl;
+            cout << "current travel speed" << "\t" << sim_team->at(sim_p).current_travel_speed << endl;
             cout << endl;
-             */
+ 
         }
-    /*
+
         cout << endl;
     cout << "-------------------------------------------------------------------------" << endl;
     cout << endl;
-     */
+     
 }
+
 
 
 /////////////////////////////////////////////////////////////////
@@ -605,12 +605,21 @@ void Simulator::get_agent_destination_fitness(int pp, vector<int> team_sizes, ve
 //Runs Entire Simulation
 void Simulator::run_simulation(vector<Policy>* sim_team)
 {
+    cout << sim_team->size() << endl;
+    for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
+    {
+        sim_team->at(sim_p).current_travel_speed = 5;
+        cout << sim_team->at(sim_p).current_travel_speed << endl;
+    }
     double d = rand() % 10;
     for (int p=0; p<sim_team->size(); p++)
     {
         //cout << "in" << endl;
         sim_team->at(p).policy_fitness = d;
     }
+    
+    create_starting_flight_velocity(sim_team);
+    //set_initial_telem(sim_team);
     
     
     /*
