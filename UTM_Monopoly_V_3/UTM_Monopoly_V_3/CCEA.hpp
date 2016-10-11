@@ -258,15 +258,21 @@ void CCEA::build_world()
 void CCEA::simulate_team(vector<Policy>* psim_team)
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     Simulator S;
     Parameters P;
     S.pP = &P;
     S.run_simulation(sim_team);
 =======
+=======
+>>>>>>> origin/UTM_Monopoly_V3
    Simulator S;
     /// @SF: At this point, Simulator S has nothing associated with it.
     /// @SF: The error comes from the pP, which currently points to nothing.
     S.run_simulation(psim_team);
+<<<<<<< HEAD
+>>>>>>> origin/UTM_Monopoly_V3
+=======
 >>>>>>> origin/UTM_Monopoly_V3
 }
 
