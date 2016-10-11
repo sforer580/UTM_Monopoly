@@ -602,62 +602,68 @@ void Simulator::get_agent_destination_fitness(int pp, vector<int> team_sizes, ve
 
 /////////////////////////////////////////////////////////////////
 //Runs Entire Simulation
-void Simulator::run_simulation(vector<Policy>* sim_team)
+void Simulator::run_simulation(vector<Policy>* psim_team)
 {
-    cout << sim_team->size() << endl;
+<<<<<<< HEAD
+    //cout << sim_team->size() << endl;
     for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
+=======
+    cout << psim_team->size() << endl;
+    for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
+>>>>>>> origin/UTM_Monopoly_V3
     {
-        sim_team->at(sim_p).current_travel_speed = pP->max_flight_velocity;
+        psim_team->at(sim_p).current_travel_speed = pP->max_flight_velocity;
+                                                ////^ Error pP does not point to anything.
         //cout << sim_team->at(sim_p).current_travel_speed << endl;
     }
     double d = rand() % 10;
-    for (int p=0; p<sim_team->size(); p++)
+    for (int p=0; p<psim_team->size(); p++)
     {
         //cout << "in" << endl;
-        sim_team->at(p).policy_fitness = d;
+        psim_team->at(p).policy_fitness = d;
     }
     
     
     //runs the acutal simulation
-    create_starting_flight_velocity(sim_team);
-    set_initial_telem(sim_team);
+    create_starting_flight_velocity(psim_team);
+    set_initial_telem(psim_team);
     double current_time = pP->delta_t;
     while (current_time < pP->time_max)
     {
         //checks for crash avoidance
-        crash_avoidance(sim_team);
+        crash_avoidance(psim_team);
         cout << "current time" << "\t" << current_time << endl;
-        for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
+        for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
         {
             //only considers agent who have not reached their final destination
-            if (sim_team->at(sim_p).target_waypoint < pP->num_waypoints + 2)
+            if (psim_team->at(sim_p).target_waypoint < pP->num_waypoints + 2)
             {
                 cout << "agent" << "\t" << sim_p << endl;
                 cout << "current telem" << endl;
                 for (int ll=0; ll < 3; ll++)
                 {
-                    cout << sim_team->at(sim_p).current_telem.at(ll) << "\t";
+                    cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
                     cout << endl;
                     
-                    cout << "target waypoint" << "\t" << sim_team->at(sim_p).target_waypoint << endl;
+                    cout << "target waypoint" << "\t" << psim_team->at(sim_p).target_waypoint << endl;
                     
-                    cout << "distance to target waypoint" << "\t" << sim_team->at(sim_p).dist_to_target_waypoint << endl;
+                    cout << "distance to target waypoint" << "\t" << psim_team->at(sim_p).dist_to_target_waypoint << endl;
                     
                     cout << "projected telem" << endl;
                     for (int ll=0; ll < 3; ll++)
                     {
-                        cout << sim_team->at(sim_p).projected_telem.at(ll) << "\t";
+                        cout << psim_team->at(sim_p).projected_telem.at(ll) << "\t";
                     }
                     cout << endl;
                     
                     
                     
                     //gets the new telemetry based on the flight speed from the CA
-                    get_new_telem(sim_team, sim_p);
+                    get_new_telem(psim_team, sim_p);
                     //cout << system.at(ii).agents.at(jj).target_waypoint << endl;
                     
                     //runs a check to see if the agent has reached their target waypoint
-                    check_if_at_waypoint(sim_team, sim_p);
+                    check_if_at_waypoint(psim_team, sim_p);
                     /*
                      cout << "new telem" << endl;
                      for (int ll=0; ll < 3; ll++)
@@ -671,6 +677,7 @@ void Simulator::run_simulation(vector<Policy>* sim_team)
                 }
             }
         }
+        current_time += pP->delta_t;
     }
     
     

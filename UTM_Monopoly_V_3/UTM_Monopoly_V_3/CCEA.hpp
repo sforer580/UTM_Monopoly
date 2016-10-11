@@ -38,9 +38,10 @@ public:
     //CCEA Setup
     vector<Team> corp;
     Parameters* pP;
+    vector<Policy> sim_team;
     
     void create_population();
-    void create_sarting_telem();
+    void create_starting_telem();
     void create_checkpoints();
     void create_target_telem();
     void build_world();
@@ -107,7 +108,7 @@ void CCEA::create_population()
 /////////////////////////////////////////////////////////////////
 //Create Starting Coordinates
 //sets the starting telemetry for each policy for each agent in each team
-void CCEA::create_sarting_telem()
+void CCEA::create_starting_telem()
 {
     for (int ii=0; ii<pP->num_teams; ii++)
     {
@@ -225,7 +226,7 @@ void CCEA::create_target_telem()
 void CCEA::build_world()
 {
     create_population();
-    create_sarting_telem();
+    create_starting_telem();
     create_checkpoints();
     create_target_telem();
     for (int ii=0; ii<pP->num_teams; ii++)
@@ -254,10 +255,19 @@ void CCEA::build_world()
 
 
 
-void CCEA::simulate_team(vector<Policy>* sim_team)
+void CCEA::simulate_team(vector<Policy>* psim_team)
 {
-   Simulator S;
+<<<<<<< HEAD
+    Simulator S;
+    Parameters P;
+    S.pP = &P;
     S.run_simulation(sim_team);
+=======
+   Simulator S;
+    /// @SF: At this point, Simulator S has nothing associated with it.
+    /// @SF: The error comes from the pP, which currently points to nothing.
+    S.run_simulation(psim_team);
+>>>>>>> origin/UTM_Monopoly_V3
 }
 
 
@@ -285,8 +295,7 @@ void CCEA::build_team()
         //builds teams for simulation of randomly selected policies from each agent
         for (int po=0; po<pP->num_policies; po++)
         {
-            vector<Policy> sim_team;
-            vector<Policy>* psim_team = &sim_team;
+            
             for (int indv=0; indv<pP->team_sizes.at(team); indv++)
             {
                 int rand_select = 0;
@@ -314,6 +323,8 @@ void CCEA::build_team()
                     //build team vector for simulation
                 }
             }
+            
+            vector<Policy>* psim_team = &sim_team;
             simulate_team(psim_team);
             
             double sum = 0;
@@ -419,7 +430,7 @@ void CCEA::run_CCEA()
     }
     */
     
-    //create_sarting_telem(pop_size, num_teams, team_sizes, waypoint_telem, max_x_dim, max_y_dim, max_z_dim);
+    //create_starting_telem(pop_size, num_teams, team_sizes, waypoint_telem, max_x_dim, max_y_dim, max_z_dim);
     //create_checkpoints(pop_size, num_teams, team_sizes, waypoint_telem, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
     //create_target_telem(pop_size, num_teams, team_sizes, waypoint_telem, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
     /*
