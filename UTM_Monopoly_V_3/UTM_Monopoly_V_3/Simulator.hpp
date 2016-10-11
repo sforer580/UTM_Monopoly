@@ -154,6 +154,26 @@ void Simulator::create_starting_flight_velocity(vector<Policy>* sim_team)
 void Simulator::set_initial_telem(vector<Policy>* sim_team)
 {
     cout << "current time" << "\t" << 0.0 << endl;
+    cout << "check simulation policies" << endl;
+    for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
+    {
+        cout << "agent" << "\t" << sim_p << endl;
+        for (int ww=0; ww<pP->num_waypoints+2; ww++)
+        {
+            cout << "waypoint" << "\t" << ww << "\t" << "telem" << endl;
+            for (int te=0; te<3; te++)
+            {
+                cout << sim_team->at(sim_p).check_points.at(ww).waypoint_telem.at(te) << "\t";
+            }
+            cout << endl;
+        }
+        cout << endl;
+    }
+    cout << endl;
+    cout << endl;
+    
+    
+    
         for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
         {
             double current_x;
@@ -606,10 +626,6 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
 {
     //cout << sim_team->size() << endl;
     for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
-    cout << psim_team->size() << endl;
-    for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
-    cout << psim_team->size() << endl;
-    for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
     {
         psim_team->at(sim_p).current_travel_speed = pP->max_flight_velocity;
                                                 ////^ Error pP does not point to anything.
@@ -626,34 +642,34 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
     //runs the acutal simulation
     create_starting_flight_velocity(psim_team);
     set_initial_telem(psim_team);
-    double current_time = pP->delta_t;
+    double current_time = 0;
     while (current_time < pP->time_max)
     {
         //checks for crash avoidance
         crash_avoidance(psim_team);
-        cout << "current time" << "\t" << current_time << endl;
+        //cout << "current time" << "\t" << current_time << endl;
         for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
         {
             //only considers agent who have not reached their final destination
             if (psim_team->at(sim_p).target_waypoint < pP->num_waypoints + 2)
             {
-                cout << "agent" << "\t" << sim_p << endl;
-                cout << "current telem" << endl;
+                //cout << "agent" << "\t" << sim_p << endl;
+                //cout << "current telem" << endl;
                 for (int ll=0; ll < 3; ll++)
                 {
-                    cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
-                    cout << endl;
+                    //cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
+                    //cout << endl;
                     
-                    cout << "target waypoint" << "\t" << psim_team->at(sim_p).target_waypoint << endl;
+                    //cout << "target waypoint" << "\t" << psim_team->at(sim_p).target_waypoint << endl;
                     
-                    cout << "distance to target waypoint" << "\t" << psim_team->at(sim_p).dist_to_target_waypoint << endl;
+                    //cout << "distance to target waypoint" << "\t" << psim_team->at(sim_p).dist_to_target_waypoint << endl;
                     
-                    cout << "projected telem" << endl;
+                    //cout << "projected telem" << endl;
                     for (int ll=0; ll < 3; ll++)
                     {
-                        cout << psim_team->at(sim_p).projected_telem.at(ll) << "\t";
+                        //cout << psim_team->at(sim_p).projected_telem.at(ll) << "\t";
                     }
-                    cout << endl;
+                    //cout << endl;
                     
                     
                     

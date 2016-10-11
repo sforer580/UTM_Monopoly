@@ -56,7 +56,7 @@ public:
     
     //Team Settings
     int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 4;
+    int team_0 = 2;
     int team_1 = 100;
     int team_2 = 50;
     int team_3 = 80;

@@ -284,11 +284,11 @@ void CCEA::build_team()
             }
         }
         
-        
         //builds teams for simulation of randomly selected policies from each agent
         for (int po=0; po<pP->num_policies; po++)
         {
-            
+            cout << "-----------------------------------------------------------------------------------" << endl;
+            cout << "-----------------------------------------------------------------------------------" << endl;
             for (int indv=0; indv<pP->team_sizes.at(team); indv++)
             {
                 int rand_select = 0;
@@ -339,6 +339,7 @@ void CCEA::build_team()
                     }
                 }
             }
+            sim_team.erase(sim_team.begin(), sim_team.end());
             
         }
     }
