@@ -228,6 +228,28 @@ void CCEA::build_world()
     create_sarting_telem();
     create_checkpoints();
     create_target_telem();
+    for (int ii=0; ii<pP->num_teams; ii++)
+    {
+        cout << "team" << "\t" << ii << endl;
+        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
+        {
+            cout << "agent" << "\t" << jj << endl;
+            for (int po=0;  po<pP->num_policies; po++)
+            {
+                cout << "policy" << "\t" << po << endl;
+                for (int ww=0; ww<pP->num_waypoints+2; ww++)
+                {
+                    cout << "waypoint" << "\t" << ww << "\t" << "telem" << endl;
+                    for (int te=0; te<3; te++)
+                    {
+                        cout << corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww).waypoint_telem.at(te) << "\t";
+                    }
+                    cout << endl;
+                }
+            }
+            cout << endl;
+        }
+    }
 }
 
 
@@ -343,33 +365,6 @@ void CCEA::run_CCEA()
     build_world();
     
     
-    for (int ii=0; ii<pP->num_teams; ii++)
-    {
-        cout << "team" << "\t" << ii << endl;
-        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
-        {
-            cout << "agent" << "\t" << jj << endl;
-            for (int po=0;  po<pP->num_policies; po++)
-            {
-                cout << "policy" << "\t" << po << endl;
-                for (int ww=0; ww<pP->num_waypoints+2; ww++)
-                {
-                    cout << "waypoint" << "\t" << ww << "\t" << "telem" << endl;
-                    for (int te=0; te<3; te++)
-                    {
-                     cout << corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww).waypoint_telem.at(te) << "\t";
-                    }
-                    cout << endl;
-                }
-            }
-            cout << endl;
-        }
-    }
-    
-                
-                
-                
-                
     
     for (int gen=0; gen<pP->gen_max; gen++)
     {

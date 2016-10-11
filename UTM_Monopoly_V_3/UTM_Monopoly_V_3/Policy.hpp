@@ -31,6 +31,7 @@ public:
     double current_travel_speed;
     int team_selected;
     int selected;       //0 if not yet seleceted, 1 for selected
+    int target_waypoint = 1;                    //agents proceeds to target waypoint and starts at waypoint 0
     
     vector<double> current_telem;
     vector<double> projected_telem;

@@ -41,7 +41,7 @@ public:
     int max_y_dim = 100;
     int min_z_dim = 0;
     int max_z_dim = 50;
-    int time_max = 60;                                         //max time simulator will run
+    int time_max = 20;                                         //max time simulator will run
     double delta_t = 0.1;                                         //simulator time step
     double max_flight_velocity = 5.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step

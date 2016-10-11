@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UTM_Monopoly_V_3/CCEA.hpp"
-            timestampString = "497898499.050628"
+            timestampString = "497899144.003638"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "274"
-            endingLineNumber = "274"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
             landmarkName = "CCEA::build_team()"
             landmarkType = "7">
          </BreakpointContent>
@@ -38,32 +38,64 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UTM_Monopoly_V_3/Simulator.hpp"
-            timestampString = "497897774.277173"
+            timestampString = "497903781.959487"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "185"
-            endingLineNumber = "185"
-            landmarkName = "Simulator::set_initial_telem(vector&lt;Policy&gt;* sim_team)"
+            startingLineNumber = "426"
+            endingLineNumber = "426"
+            landmarkName = "Simulator::crash_avoidance(vector&lt;Policy&gt;* sim_team)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "UTM_Monopoly_V_3/CCEA.hpp"
-            timestampString = "497898499.050628"
+            filePath = "UTM_Monopoly_V_3/Simulator.hpp"
+            timestampString = "497901535.535061"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "369"
-            endingLineNumber = "369"
-            landmarkName = "CCEA::run_CCEA()"
+            startingLineNumber = "357"
+            endingLineNumber = "357"
+            landmarkName = "Simulator::check_for_collisions(vector&lt;Policy&gt;* sim_team, int sim_p)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "UTM_Monopoly_V_3/Simulator.hpp"
+            timestampString = "497901751.12178"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "406"
+            endingLineNumber = "406"
+            landmarkName = "Simulator::compare_agents_projected_telem(vector&lt;Policy&gt;* sim_team, int sim_p, int sim_pp, int kk)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "UTM_Monopoly_V_3/Simulator.hpp"
+            timestampString = "497901752.328439"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "412"
+            endingLineNumber = "412"
+            landmarkName = "Simulator::compare_agents_projected_telem(vector&lt;Policy&gt;* sim_team, int sim_p, int sim_pp, int kk)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
