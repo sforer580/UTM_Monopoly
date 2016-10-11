@@ -604,18 +604,12 @@ void Simulator::get_agent_destination_fitness(int pp, vector<int> team_sizes, ve
 //Runs Entire Simulation
 void Simulator::run_simulation(vector<Policy>* psim_team)
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     //cout << sim_team->size() << endl;
-    for (int sim_p=0; sim_p<sim_team->size(); sim_p++)
-=======
+    for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
     cout << psim_team->size() << endl;
     for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
->>>>>>> origin/UTM_Monopoly_V3
-=======
     cout << psim_team->size() << endl;
     for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
->>>>>>> origin/UTM_Monopoly_V3
     {
         psim_team->at(sim_p).current_travel_speed = pP->max_flight_velocity;
                                                 ////^ Error pP does not point to anything.
