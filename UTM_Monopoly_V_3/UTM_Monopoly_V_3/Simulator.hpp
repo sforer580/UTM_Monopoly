@@ -605,10 +605,10 @@ void Simulator::get_agent_destination_fitness(int pp, vector<int> team_sizes, ve
 //Runs Entire Simulation
 void Simulator::run_simulation(vector<Policy>* sim_team)
 {
-    double d = rand() % 50;
+    double d = rand() % 10;
     for (int p=0; p<sim_team->size(); p++)
     {
-        cout << "in" << endl;
+        //cout << "in" << endl;
         sim_team->at(p).policy_fitness = d;
     }
     

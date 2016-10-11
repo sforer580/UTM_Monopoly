@@ -268,16 +268,16 @@ void CCEA::build_team()
                 rand_select = rand () % pP->num_policies;       //radomly picks a policy
                 for (int p=0; p<pP->num_policies; p++)
                 {
-                    cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
+                    //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
                     while (corp.at(team).agents.at(indv).policies.at(rand_select).selected != -1)
                     {
                         rand_select = rand () % pP->num_policies;       //randomly selects another policy if previous selected policy has already been selected
-                        if (corp.at(team).agents.at(indv).policies.at(rand_select).selected == 1)
-                        {
-                            cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
-                        }
+                        //if (corp.at(team).agents.at(indv).policies.at(rand_select).selected == 1)
+                        //{
+                            //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
+                        //}
                     }
-                    cout << po << endl;
+                    //cout << po << endl;
                     corp.at(team).agents.at(indv).policies.at(rand_select).team_selected = po;    //sets team selection identifier
                     
                     sim_team.push_back(corp.at(team).agents.at(indv).policies.at(rand_select));
@@ -290,6 +290,41 @@ void CCEA::build_team()
                 }
             }
             simulate_team(psim_team);
+            
+            double sum = 0;
+            for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+            {
+                sum += sim_team.at(indv).policy_fitness;
+            }
+            
+            for (int team=0; team<pP->num_teams; team++)
+            {
+                for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+                {
+                    for (int p=0; p<pP->num_policies; p++)
+                    {
+                      if (corp.at(team).agents.at(indv).policies.at(p).team_selected == po)
+                      {
+                          corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                      }
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            cout << "agent" << "\t" << indv << endl;
+            for (int p=0; p<pP->num_policies; p++)
+            {
+                cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).team_selected << endl;
+                cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+            }
+            cout << endl;
         }
     }
 }
