@@ -665,6 +665,7 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
                 cout << "target waypoint" << "\t" << psim_team->at(sim_p).target_waypoint << endl;
                 
                 cout << "distance to target waypoint" << "\t" << psim_team->at(sim_p).dist_to_target_waypoint << endl;
+                cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
                 cout << "current telem" << endl;
                 for (int ll=0; ll < 3; ll++)
                 {
