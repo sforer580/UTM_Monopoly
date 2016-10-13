@@ -17,7 +17,6 @@
 #include <iomanip>
 
 #include "Parameters.hpp"
-#include "World.hpp"
 #include "Team.hpp"
 #include "Individual.hpp"
 #include "Policy.hpp"

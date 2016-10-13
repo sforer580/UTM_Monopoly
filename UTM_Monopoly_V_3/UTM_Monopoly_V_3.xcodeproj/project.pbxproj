@@ -23,7 +23,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		D227AC431D9454DB00E9B3B4 /* World.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = World.hpp; sourceTree = "<group>"; };
 		D227AC461D94579100E9B3B4 /* Policy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Policy.hpp; sourceTree = "<group>"; };
 		D2808A1F1D94541500DA555E /* UTM_Monopoly_V_3 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UTM_Monopoly_V_3; sourceTree = BUILT_PRODUCTS_DIR; };
 		D2808A221D94541500DA555E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -71,7 +70,6 @@
 				D227AC461D94579100E9B3B4 /* Policy.hpp */,
 				D2808A2B1D94545400DA555E /* Parameters.hpp */,
 				D2808A2C1D94545400DA555E /* Simulator.hpp */,
-				D227AC431D9454DB00E9B3B4 /* World.hpp */,
 				D2808A2D1D94545400DA555E /* Team.hpp */,
 				D2808A2E1D94545400DA555E /* Waypoint.hpp */,
 			);
