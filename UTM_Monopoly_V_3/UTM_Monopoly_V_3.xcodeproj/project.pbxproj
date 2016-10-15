@@ -32,6 +32,7 @@
 		D2808A2C1D94545400DA555E /* Simulator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Simulator.hpp; sourceTree = "<group>"; };
 		D2808A2D1D94545400DA555E /* Team.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Team.hpp; sourceTree = "<group>"; };
 		D2808A2E1D94545400DA555E /* Waypoint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Waypoint.hpp; sourceTree = "<group>"; };
+		D2C8156C1DB2B7A800AC7151 /* Sim_team.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Sim_team.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +67,7 @@
 			children = (
 				D2808A221D94541500DA555E /* main.cpp */,
 				D2808A291D94545400DA555E /* CCEA.hpp */,
+				D2C8156C1DB2B7A800AC7151 /* Sim_team.hpp */,
 				D2808A2A1D94545400DA555E /* Individual.hpp */,
 				D227AC461D94579100E9B3B4 /* Policy.hpp */,
 				D2808A2B1D94545400DA555E /* Parameters.hpp */,

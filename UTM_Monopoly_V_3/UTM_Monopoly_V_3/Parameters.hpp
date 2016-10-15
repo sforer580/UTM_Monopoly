@@ -66,7 +66,7 @@ public:
     int team_7 = 80;
     int team_8 = 10;
     int team_9 = 20;
-    int num_policies = 2;
+    int num_policies = 1;
     int num_waypoints = 1;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;

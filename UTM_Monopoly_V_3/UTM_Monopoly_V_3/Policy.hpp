@@ -29,7 +29,7 @@ public:
     double dist_to_target_waypoint;
     double policy_fitness;
     double current_travel_speed;
-    int team_selected;
+    int simulation_id;
     int selected;       //0 if not yet seleceted, 1 for selected
     int target_waypoint = 1;                    //agents proceeds to target waypoint and starts at waypoint 0
     

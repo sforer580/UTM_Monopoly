@@ -627,26 +627,31 @@ void Simulator::get_agent_destination_fitness(vector<Policy>* sim_team)
 
 /////////////////////////////////////////////////////////////////
 //Runs Entire Simulation
-void Simulator::run_simulation(vector<Policy>* psim_team)
+void Simulator::run_simulation(vector<Policy>* ps_team)
 {
-    for (int p=0; p<psim_team->size(); p++)
+    for (int ps=0; ps<pP->num_teams; ps++)
     {
-        psim_team->at(p).policy_fitness = 0;
+        for (int pps=0; pps<ps_team->at(ps).s_pol.size(); pps++)
+        {
+         ps_team->at(ps).s_pol.at(pps).policy_fitness = 0;
+        }
     }
     
     
-    create_starting_flight_velocity(psim_team);
-    //cout << sim_team->size() << endl;
-    
-    //double d = rand() % 10;
-    
-    //for (int p=0; p<psim_team->size(); p++)
-    //{
-        //cout << "in" << endl;
-        //psim_team->at(p).policy_fitness = d;
-    //}
+    //create_starting_flight_velocity(psim_team);
     
     
+    cout << ps_team->size() << endl;
+    
+    double d = rand() % 10;
+    
+    for (int p=0; p<ps_team->size(); p++)
+    {
+        cout << "in" << endl;
+        ps_team->at(p).policy_fitness = d;
+    }
+    
+    /*
     //runs the acutal simulation
     create_starting_flight_velocity(psim_team);
     set_initial_telem(psim_team);
@@ -689,6 +694,8 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
                 
                 //runs a check to see if the agent has reached their target waypoint
                 check_if_at_waypoint(psim_team, sim_p);
+                
+                */
                 /*
                  cout << "new telem" << endl;
                  for (int ll=0; ll < 3; ll++)
@@ -699,6 +706,7 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
                  cout << "current travel speed" << "\t" << system.at(pp).agents.at(jj).current_travel_speed << endl;
                  cout << endl;
                  */
+    /*
             }
             cout << endl;
         }
@@ -716,6 +724,8 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
     {
         cout << "agent" << p << "\t" << "fitness" << "\t" << psim_team->at(p).policy_fitness << endl;
     }
+     */
+
     
     
     
