@@ -47,8 +47,10 @@ public:
     void build_world();
     
     
-    
     void build_team();
+    void reset_selection_identifiers(int team);
+    void build_sim_team(int team, int po);
+    void get_policy_fitness(int team, int po);
     void simulate_team(vector<Policy>* sim_team);
     
     void run_CCEA();
@@ -271,7 +273,8 @@ void CCEA::build_world()
 }
 
 
-
+/////////////////////////////////////////////////////////////////
+//simulates the radomly generated sim_team
 void CCEA::simulate_team(vector<Policy>* psim_team)
 {
     Simulator S;
@@ -281,83 +284,105 @@ void CCEA::simulate_team(vector<Policy>* psim_team)
 }
 
 
-
-
+/////////////////////////////////////////////////////////////////
+//resets the selection identifier
+void CCEA::reset_selection_identifiers(int team)
+{
+    //resets each agents policy selection identifier
+    for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+    {
+        for (int p=0; p<pP->num_policies; p++)
+        {
+            corp.at(team).agents.at(indv).policies.at(p).selected = -1;
+        }
+    }
+}
 
 
 /////////////////////////////////////////////////////////////////
-//Build Teams for Simulation
-//randomly selects a policy of each agent in the corp
-void CCEA::build_team()
+//build the randomly generated sim_team
+void CCEA::build_sim_team(int team, int po)
 {
+    for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+    {
+        int rand_select = 0;
+        rand_select = rand () % pP->num_policies;       //radomly picks a policy
+        for (int p=0; p<pP->num_policies; p++)
+        {
+            //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
+            while (corp.at(team).agents.at(indv).policies.at(rand_select).selected != -1)
+            {
+                rand_select = rand () % pP->num_policies;       //randomly selects another policy if previous selected policy has already been selected
+                //if (corp.at(team).agents.at(indv).policies.at(rand_select).selected == 1)
+                //{
+                //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
+                //}
+            }
+            //cout << po << endl;
+            corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
+            
+            sim_team.at(indv) = (corp.at(team).agents.at(indv).policies.at(rand_select));
+            
+            corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
+            break;
+            
+            //select that policy for team
+            //build team vector for simulation
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
+//build the randomly generated sim_team
+void CCEA::get_policy_fitness(int team, int po)
+{
+    double sum = 0;
+    for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+    {
+        sum += sim_team.at(indv).policy_fitness;
+    }
+    
     for (int team=0; team<pP->num_teams; team++)
     {
-        //resets each agents policy selection identifier
         for (int indv=0; indv<pP->team_sizes.at(team); indv++)
         {
             for (int p=0; p<pP->num_policies; p++)
             {
-                corp.at(team).agents.at(indv).policies.at(p).selected = -1;      //resets the selection identifier
+                if (corp.at(team).agents.at(indv).policies.at(p).simulation_id == po)
+                {
+                    corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                }
             }
         }
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////
+//runs the entire build and simulation for each sim_team
+void CCEA::build_team()
+{
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        reset_selection_identifiers(team);
         
         //builds teams for simulation of randomly selected policies from each agent
         for (int po=0; po<pP->num_policies; po++)
         {
+            sim_team.resize(pP->team_sizes.at(team));
             cout << "-----------------------------------------------------------------------------------" << endl;
             cout << "-----------------------------------------------------------------------------------" << endl;
-            for (int indv=0; indv<pP->team_sizes.at(team); indv++)
-            {
-                int rand_select = 0;
-                rand_select = rand () % pP->num_policies;       //radomly picks a policy
-                for (int p=0; p<pP->num_policies; p++)
-                {
-                    //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
-                    while (corp.at(team).agents.at(indv).policies.at(rand_select).selected != -1)
-                    {
-                        rand_select = rand () % pP->num_policies;       //randomly selects another policy if previous selected policy has already been selected
-                        //if (corp.at(team).agents.at(indv).policies.at(rand_select).selected == 1)
-                        //{
-                        //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
-                        //}
-                    }
-                    //cout << po << endl;
-                    corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
-                    
-                    sim_team.push_back(corp.at(team).agents.at(indv).policies.at(rand_select));
-                    
-                    corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
-                    break;
-                    
-                    //select that policy for team
-                    //build team vector for simulation
-                }
-            }
+            
+            build_sim_team(team, po);
             
             vector<Policy>* psim_team = &sim_team;
             simulate_team(psim_team);
             
-            double sum = 0;
-            for (int indv=0; indv<pP->team_sizes.at(team); indv++)
-            {
-                sum += sim_team.at(indv).policy_fitness;
-            }
+            get_policy_fitness(team, po);
             
-            for (int team=0; team<pP->num_teams; team++)
-            {
-                for (int indv=0; indv<pP->team_sizes.at(team); indv++)
-                {
-                    for (int p=0; p<pP->num_policies; p++)
-                    {
-                        if (corp.at(team).agents.at(indv).policies.at(p).simulation_id == po)
-                        {
-                            corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
-                        }
-                    }
-                }
-            }
             sim_team.erase(sim_team.begin(), sim_team.end());
-            
         }
     }
     
@@ -365,13 +390,13 @@ void CCEA::build_team()
     {
         for (int indv=0; indv<pP->team_sizes.at(team); indv++)
         {
-            //cout << "agent" << "\t" << indv << endl;
+            cout << "agent" << "\t" << indv << endl;
             for (int p=0; p<pP->num_policies; p++)
             {
-                //cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).team_selected << endl;
-                //cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).simulation_id << endl;
+                cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
             }
-            //cout << endl;
+            cout << endl;
         }
     }
 }
@@ -389,122 +414,8 @@ void CCEA::run_CCEA()
     
     for (int gen=0; gen<pP->gen_max; gen++)
     {
-        build_team();
+        build_team();       //runs the entire build and simulation for each sim_team
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    //uncomment for loop for test fucntions
-    /*
-     for (int ss=0; ss < pop_size; ss++)
-     {
-     /////////////////////////////
-     //test functions
-     
-     //note that when running test with two different teams that agents will be on differnt simulations as to meet the CCEA criteria
-     
-     //read fucntion parameters before running
-     //sim.at(ss).two_agents_same_team_collide(waypoint_telem);
-     //sim.at(ss).two_agents_same_team_near_miss(waypoint_telem);
-     //sim.at(ss).two_agents_same_team_exact_miss(waypoint_telem);
-     //sim.at(ss).two_agents_same_team_close_parallel(waypoint_telem);
-     //sim.at(ss).two_agents_same_team_exact_parallel(waypoint_telem);
-     //sim.at(ss).two_agents_same_team_far_parallel(waypoint_telem);
-     //sim.at(ss).two_agents_diff_team_collide(waypoint_telem);
-     //sim.at(ss).two_agents_diff_team_near_miss(waypoint_telem);
-     //sim.at(ss).two_agents_diff_team_exact_miss(waypoint_telem);
-     //sim.at(ss).two_agents_diff_team_close_parallel(waypoint_telem);
-     //sim.at(ss).two_agents_diff_team_exact_parallel(waypoint_telem);
-     //sim.at(ss).two_agents_diff_team_far_parallel(waypoint_telem);
-     //
-     //sim.at(ss).two_sims_two_agents_same_team_collide(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_same_team_near_miss(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_same_team_exact_miss(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_same_team_close_parallel(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_same_team_exact_parallel(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_same_team_far_parallel(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_diff_team_collide(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_diff_team_near_miss(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_diff_team_exact_miss(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_diff_team_close_parallel(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_diff_team_exact_parallel(waypoint_telem);
-     //sim.at(ss).two_sims_two_agents_diff_team_far_parallel(waypoint_telem);
-     /////////////////////////////
-     }
-     */
-    
-    //create_starting_telem(pop_size, num_teams, team_sizes, waypoint_telem, max_x_dim, max_y_dim, max_z_dim);
-    //create_checkpoints(pop_size, num_teams, team_sizes, waypoint_telem, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
-    //create_target_telem(pop_size, num_teams, team_sizes, waypoint_telem, num_waypoints, max_x_dim, max_y_dim, max_z_dim);
-    /*
-     for (int ii=0; ii < pop_size; ii++)
-     {
-     sim.at(ii).create_starting_flight_velocity(num_teams, team_sizes, max_flight_velocity);
-     }
-     */
-    
-    /*
-     cout << "number of simulations" << "\t" << sim.size() << endl;
-     for (int ii=0; ii < pop_size; ii++)
-     {
-     cout << "simulation" << "\t" << ii << endl;
-     cout << "total number of teams" << "\t" << sim.at(ii).system.size() << endl;
-     for(int i=0; i < num_teams; i++)
-     {
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << endl;
-     cout << "team" << "\t" << i << "\t" << "has" << "\t" << sim.at(ii).system.at(i).agents.size() << "\t" << "agents" << endl;
-     cout << endl;
-     for (int j=0; j < sim.at(ii).system.at(i).agents.size(); j++)
-     {
-     cout << "team" << "\t" << i << "\t" << "agent" << "\t" << j << endl;
-     for (int k=0; k < num_waypoints+2; k++)
-     {
-     if (k == 0)
-     {
-     cout << "Starting Telemetry" << "\t";
-     }
-     if (k > 0)
-     {
-     if (k < num_waypoints+1)
-     {
-     cout << "Waypoint" << "\t" << k << "\t" << "Telemetry" << "\t";
-     }
-     }
-     if (k == num_waypoints+1)
-     {
-     cout << "Final Destination Telemetry" << "\t";
-     }
-     for (int h=0; h < 3; h++)
-     {
-     cout << sim.at(ii).system.at(i).agents.at(j).check_points.at(k).waypoint_telem.at(h) << "\t";
-     }
-     cout << endl;
-     }
-     cout << "Starting Flight Velocity" << "\t" << sim.at(ii).system.at(i).agents.at(j).current_travel_speed << endl;
-     cout << endl;
-     }
-     }
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << endl;
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << endl;
-     }
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << endl;
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << "-------------------------------------------------------------------------" << endl;
-     cout << endl;
-     */
 }
 
 
@@ -1070,7 +981,7 @@ void CCEA::Simulator_test_functions()
     //read test function parameters before running test
     
     //One Policy Same Team
-    two_agents_one_policy_same_team_collide();
+    //two_agents_one_policy_same_team_collide();
     //two_agents_one_policy_same_team_near_miss();
     //two_agents_one_policy_same_team_exact_miss();
     //two_agents_one_policy_same_team_close_parallel();
