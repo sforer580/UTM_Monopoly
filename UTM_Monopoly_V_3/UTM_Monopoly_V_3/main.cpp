@@ -24,7 +24,6 @@
 #include "Simulator.hpp"
 #include "CCEA.hpp"
 #include "Sim_team.hpp"
-#include "Sim_policy.hpp"
 
 using namespace std;
 
