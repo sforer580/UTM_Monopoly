@@ -35,28 +35,30 @@ protected:
     
     
 public:
-    //CCEA Setup
     vector<Team> corp;
     Parameters* pP;
     vector<Policy> sim_team;
     
+    //CCEA build funcitons
     void create_population();
     void create_starting_telem();
     void create_checkpoints();
     void create_target_telem();
     void build_world();
     
-    
+    //Functions for Simulation
     void build_team();
     void reset_selection_identifiers(int team);
     void build_sim_team(int team, int po);
     void get_policy_fitness(int team, int po);
     void simulate_team(vector<Policy>* sim_team);
     
-    void run_CCEA();
+    //Binary Selection Funcitons
+    struct less_than_policy_fitness;
+    void sort_agent_policies();
     
-    //Fitness Functions
-    void get_agent_fitness(int pop_size, int num_teams, vector<int> team_sizes, vector<double> current_telem, vector<double> waypoint_telem, int num_waypoints);
+    //CCEA main
+    void run_CCEA();
     
     
     //Simulator Test Functions
@@ -75,8 +77,6 @@ public:
     void two_agents_two_policy_same_team_exact_parallel();
     void two_agents_two_policy_same_team_far_parallel();
     
-    //void run_inner_CCEA(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double agent_fitness);
-    
 private:
     
     
@@ -86,11 +86,12 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////// Current Issues
-//Clean up build_team
+//
 //////// Resloved Issues
 ////Contructing a temporary vector containing a team for simulation
 //Setting up pointers for the simulator
 //Getting the fitness for each policy of a team for simulation
+//Clean up build_team
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -111,6 +112,8 @@ void CCEA::create_population()
             {
                 Policy Po;
                 corp.at(ii).agents.at(jj).policies.push_back(Po);
+                corp.at(ii).agents.at(jj).policies.at(pp).policy_id = pp;
+                
                 for (int ww=0; ww < pP->num_waypoints+2; ww++)
                 {
                     Waypoint W;
@@ -248,6 +251,7 @@ void CCEA::build_world()
     create_checkpoints();
     create_target_telem();
     
+    /*
     for (int ii=0; ii<pP->num_teams; ii++)
     {
         cout << "team" << "\t" << ii << endl;
@@ -270,6 +274,7 @@ void CCEA::build_world()
             cout << endl;
         }
     }
+    */
 }
 
 
@@ -372,8 +377,8 @@ void CCEA::build_team()
         for (int po=0; po<pP->num_policies; po++)
         {
             sim_team.resize(pP->team_sizes.at(team));
-            cout << "-----------------------------------------------------------------------------------" << endl;
-            cout << "-----------------------------------------------------------------------------------" << endl;
+            //cout << "-----------------------------------------------------------------------------------" << endl;
+            //cout << "-----------------------------------------------------------------------------------" << endl;
             
             build_sim_team(team, po);
             
@@ -393,13 +398,55 @@ void CCEA::build_team()
             cout << "agent" << "\t" << indv << endl;
             for (int p=0; p<pP->num_policies; p++)
             {
-                cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).simulation_id << endl;
+                cout << "policy" << "\t" << corp.at(team).agents.at(indv).policies.at(p).policy_id << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).simulation_id << endl;
                 cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
             }
             cout << endl;
         }
     }
 }
+
+
+//-----------------------------------------------------------
+//sorts the population based on their fitness from lowest to highest
+struct CCEA::less_than_policy_fitness
+{
+    inline bool operator() (const Policy& struct1, const Policy& struct2)
+    {
+        return (struct1.policy_fitness < struct2.policy_fitness);
+    }
+};
+
+
+/////////////////////////////////////////////////////////////////
+//sorts each agents policy based on their fitness
+void CCEA::sort_agent_policies()
+{
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            sort(corp.at(team).agents.at(indv).policies.begin(), corp.at(team).agents.at(indv).policies.end(), less_than_policy_fitness());
+        }
+    }
+    
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            cout << "agent" << "\t" << indv << endl;
+            for (int p=0; p<pP->num_policies; p++)
+            {
+                cout << "policy" << "\t" << corp.at(team).agents.at(indv).policies.at(p).policy_id << "\t" << "selected team" << "\t" << corp.at(team).agents.at(indv).policies.at(p).simulation_id << endl;
+                cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+            }
+            cout << endl;
+        }
+    }
+}
+
+
+
 
 
 
@@ -414,82 +461,14 @@ void CCEA::run_CCEA()
     
     for (int gen=0; gen<pP->gen_max; gen++)
     {
+        cout << "-----------------------------------------------------------------------------------" << endl;
+        cout << "generation" << "\t" << gen << endl;
+        cout << endl;
         build_team();       //runs the entire build and simulation for each sim_team
+        cout << "-----------------------------------------------------------------------------------" << endl;
+        sort_agent_policies();
     }
 }
-
-
-/////////////////////////////////////////////////////////////////
-//Fitness functions
-//gets the fitness for each agent in each team
-/*
- void CCEA::get_agent_fitness(int pop_size, int num_teams, vector<int> team_sizes, vector<double> current_telem, vector<double> waypoint_telem, int num_waypoints)
- {
- for (int ss=0; ss < pop_size; ss++)
- {
- for (int ii=0; ii < num_teams; ii++)
- {
- for (int jj=0; jj < team_sizes.at(ii); jj++)
- {
- cout << endl;
- cout << endl;
- if (sim.at(ss).system.at(ii).agents.at(jj).current_telem.at(0) == sim.at(ss).system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.at(0))
- {
- if (sim.at(ss).system.at(ii).agents.at(jj).current_telem.at(1) == sim.at(ss).system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.at(1))
- {
- if (sim.at(ss).system.at(ii).agents.at(jj).current_telem.at(2) == sim.at(ss).system.at(ii).agents.at(jj).check_points.at(num_waypoints+1).waypoint_telem.at(2))
- {
- cout << "simulation" << "\t" << ss << "\t" << "team" << "\t" << ii << "\t" << "agent" << "\t" << jj << "\t" << "has reached its final destination" << endl;
- cout << "fitness" << "\t" << sim.at(ss).system.at(ii).agents.at(jj).agent_fitness;
- continue;
- }
- else
- {
- continue;
- }
- }
- else
- {
- continue;
- }
- }
- else
- {
- cout << "simulation" << "\t" << ss << "\t" << "team" << "\t" << ii << "\t" << "agent" << "\t" << jj << "\t" << "has not reached its final destination" << endl;
- cout << "fitness" << "\t" << sim.at(ss).system.at(ii).agents.at(jj).agent_fitness;
- }
- }
- }
- }
- cout << endl;
- }
- */
-
-
-/*
- /////////////////////////////////////////////////////////////////
- //Run Inner CCEA
- //executes the inner CCEA
- void CCEA::run_inner_CCEA(int pop_size, int num_teams, vector<int> team_sizes, vector<double> waypoint_telem, double max_flight_velocity, double delta_t, double max_travel_dist, vector<double> current_telem, int time_max, int num_waypoints, int max_x_dim, int max_y_dim, int max_z_dim, int target_waypoint, double dist_to_target_waypoint, double current_travel_speed, double ca_max_travel_dist, vector<double> projected_telem, vector<double> inc_projected_telem, int ca_inc, int ca_radius, double ca_flight_speed, double agent_fitness)
- {
- for (int ss=0; ss < pop_size; ss++)
- {
- */
-/*
- cout << "simulation" << "\t" << ss << endl;
- cout << "-------------------------------------------------------------------------" << endl;
- cout << "-------------------------------------------------------------------------" << endl;
- cout << "-------------------------------------------------------------------------" << endl;
- */
-/*
- sim.at(ss).run_simulation(num_teams, team_sizes, waypoint_telem, max_flight_velocity, delta_t, max_travel_dist, current_telem, time_max, num_waypoints, max_x_dim, max_y_dim, max_z_dim, target_waypoint, dist_to_target_waypoint, current_travel_speed, ca_max_travel_dist, projected_telem, inc_projected_telem, ca_inc, ca_radius, ca_flight_speed, agent_fitness);
- }
- get_agent_fitness(pop_size, num_teams, team_sizes, current_telem, waypoint_telem, num_waypoints);
- }
- */
-
-
-
 
 
 
