@@ -56,6 +56,11 @@ public:
     //Binary Selection Funcitons
     struct less_than_policy_fitness;
     void sort_agent_policies();
+    int binary_selection(int team, int indv);
+    void natural_selection();
+    int kill;
+    void mutation(Policy &MP);
+    void check_new_telem(Policy &MP, int w);
     
     //CCEA main
     void run_CCEA();
@@ -391,6 +396,7 @@ void CCEA::build_team()
         }
     }
     
+    /*
     for (int team=0; team<pP->num_teams; team++)
     {
         for (int indv=0; indv<pP->team_sizes.at(team); indv++)
@@ -404,10 +410,11 @@ void CCEA::build_team()
             cout << endl;
         }
     }
+    */
 }
 
 
-//-----------------------------------------------------------
+/////////////////////////////////////////////////////////////////
 //sorts the population based on their fitness from lowest to highest
 struct CCEA::less_than_policy_fitness
 {
@@ -430,6 +437,7 @@ void CCEA::sort_agent_policies()
         }
     }
     
+    /*
     for (int team=0; team<pP->num_teams; team++)
     {
         for (int indv=0; indv<pP->team_sizes.at(team); indv++)
@@ -443,9 +451,151 @@ void CCEA::sort_agent_policies()
             cout << endl;
         }
     }
+    */
 }
 
 
+/////////////////////////////////////////////////////////////////
+//Randomly picks two policies for each agent and compares their fitness
+int CCEA::binary_selection(int team, int indv)
+{
+    int loser;
+    int index_1 = rand() % corp.at(team).agents.at(indv).policies.size();
+    int index_2 = rand() % corp.at(team).agents.at(indv).policies.size();
+    while (index_1 == index_2)
+    {
+       index_2 = rand() % corp.at(team).agents.at(indv).policies.size();
+    }
+    int f1 = corp.at(team).agents.at(indv).policies.at(index_1).policy_fitness;
+    int f2 = corp.at(team).agents.at(indv).policies.at(index_2).policy_fitness;
+    if (f1 < f2)
+    {
+        loser = index_2;
+    }
+    else
+    {
+        loser = index_1;
+    }
+    return loser;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//checks that the mutate telemetry is within the bounds of the simulator map parameters
+void CCEA::check_new_telem(Policy &MP, int w)
+{
+    for (int ww=0; ww<3; ww++)
+    {
+        if (ww == 0)
+        {
+            if (MP.check_points.at(w).waypoint_telem.at(ww) < pP->min_x_dim)
+            {
+                MP.check_points.at(w).waypoint_telem.at(ww) = pP->min_x_dim;
+            }
+            if (MP.check_points.at(w).waypoint_telem.at(ww) > pP->max_x_dim)
+            {
+                MP.check_points.at(w).waypoint_telem.at(ww) = pP->max_x_dim;
+            }
+        }
+        if (ww == 1)
+        {
+            if (MP.check_points.at(w).waypoint_telem.at(ww) < pP->min_y_dim)
+            {
+                MP.check_points.at(w).waypoint_telem.at(ww) = pP->min_y_dim;
+            }
+            if (MP.check_points.at(w).waypoint_telem.at(ww) > pP->max_y_dim)
+            {
+                MP.check_points.at(w).waypoint_telem.at(ww) = pP->max_y_dim;
+            }
+        }
+        if (ww == 2)
+        {
+            if (MP.check_points.at(w).waypoint_telem.at(ww) < pP->min_z_dim)
+            {
+                MP.check_points.at(w).waypoint_telem.at(ww) = pP->min_z_dim;
+            }
+            if (MP.check_points.at(w).waypoint_telem.at(ww) > pP->max_z_dim)
+            {
+                MP.check_points.at(w).waypoint_telem.at(ww) = pP->max_z_dim;
+            }
+        }
+    }
+}
+
+
+
+/////////////////////////////////////////////////////////////////
+//Runs the mutation for a selected policy
+void CCEA::mutation(Policy &MP)
+{
+    //will only mutate the intermediate waypoints (not the staring or ending waypoints)
+    for (int w=1; w<pP->num_waypoints+1; w++)
+    {
+        double rand_num = 0;
+        rand_num = ((double) rand() / (RAND_MAX));       //double between 0 and 1
+        //will only mutate the number of intermediate waypoints with a likelyhood = mutate_percentage
+        if (rand_num<=pP->mutate_percentage/100)
+        {
+            for (int ww=0; ww<3; ww++)
+            {
+                double rand_sign = 0;
+                rand_sign = ((double) rand() / (RAND_MAX));       //double between 0 and 1
+                //if true will switch rand_sign to -1 else rand_sign = 1
+                if (rand_sign<=0.5)
+                {
+                    rand_sign = -1;
+                }
+                else
+                {
+                    rand_sign = 1;
+                }
+                double original = 0;
+                original = MP.check_points.at(w).waypoint_telem.at(ww);
+                original = original + (rand_sign)*(pP->mutation_range);
+                MP.check_points.at(w).waypoint_telem.at(ww) = original;
+            }
+            check_new_telem(MP, w);
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Runs the entire selection and mutation process
+void CCEA::natural_selection()
+{
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            //will only run for half the num_policies
+            for (int p=0; p<pP->to_kill; p++)
+            {
+                kill = 0;
+                kill = binary_selection(team, indv);
+                //will erase the losing policy
+                corp.at(team).agents.at(indv).policies.erase(corp.at(team).agents.at(indv).policies.begin() + kill);
+            }
+        }
+    }
+    
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            //will only run for half the num_policies
+            for (int p=0; p<pP->to_replicate; p++)
+            {
+                Policy MP;
+                int spot = 0;
+                spot = rand() % corp.at(team).agents.at(indv).policies.size();
+                MP = corp.at(team).agents.at(indv).policies.at(spot);
+                mutation(MP);
+                corp.at(team).agents.at(indv).policies.push_back(MP);
+            }
+        }
+    }
+}
 
 
 
@@ -453,7 +603,6 @@ void CCEA::sort_agent_policies()
 
 /////////////////////////////////////////////////////////////////
 //Runs the entire CCEA process
-//
 void CCEA::run_CCEA()
 {
     build_world();
@@ -461,14 +610,77 @@ void CCEA::run_CCEA()
     
     for (int gen=0; gen<pP->gen_max; gen++)
     {
-        cout << "-----------------------------------------------------------------------------------" << endl;
-        cout << "generation" << "\t" << gen << endl;
-        cout << endl;
-        build_team();       //runs the entire build and simulation for each sim_team
-        cout << "-----------------------------------------------------------------------------------" << endl;
-        sort_agent_policies();
+        if (gen < pP->gen_max-1)
+        {
+            cout << "-----------------------------------------------------------------------------------" << endl;
+            cout << "generation" << "\t" << gen << endl;
+            cout << endl;
+            build_team();       //runs the entire build and simulation for each sim_team
+            //cout << "---------------------------------------------" << endl;
+            if (gen == 0)
+            {
+                cout << "First Generation" << endl;
+                for (int team=0; team<pP->num_teams; team++)
+                {
+                    for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+                    {
+                        cout << "agent" << "\t" << indv << endl;
+                        for (int p=0; p<pP->num_policies; p++)
+                        {
+                            cout << "policy" << "\t" << p << endl;
+                            cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                        }
+                        cout << endl;
+                    }
+                }
+            }
+            natural_selection();
+            /*
+            cout << "check nautral seclection" << endl;
+            for (int team=0; team<pP->num_teams; team++)
+            {
+                for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+                {
+                    cout << "agent" << "\t" << indv << endl;
+                    for (int p=0; p<pP->num_policies; p++)
+                    {
+                        cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << p << endl;
+                        cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                    }
+                    cout << endl;
+                }
+            }
+            */
+        }
+        if (gen == pP->gen_max-1)
+        {
+            cout << "-----------------------------------------------------------------------------------" << endl;
+            cout << "-----------------------------------------------------------------------------------" << endl;
+            cout << "Final Generation" << endl;
+            build_team();       //runs the entire build and simulation for each sim_team
+            cout << "---------------------------------------------" << endl;
+            sort_agent_policies();
+            for (int team=0; team<pP->num_teams; team++)
+            {
+                for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+                {
+                    cout << "agent" << "\t" << indv << endl;
+                    for (int p=0; p<pP->num_policies; p++)
+                    {
+                        cout << "policy" << "\t" << p << endl;
+                        cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                    }
+                    cout << endl;
+                }
+            }
+        }
     }
 }
+
+
+
+
+
 
 
 

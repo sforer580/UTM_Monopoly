@@ -36,14 +36,14 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 50;
+    int max_x_dim = 100;
     int min_y_dim = 0;
-    int max_y_dim = 50;
+    int max_y_dim = 100;
     int min_z_dim = 0;
-    int max_z_dim = 10;
-    int time_max = 40;                                         //max time simulator will run
+    int max_z_dim = 100;
+    int time_max = 120;                                         //max time simulator will run
     double delta_t = 0.1;                                         //simulator time step
-    double max_flight_velocity = 5.0;                           //max velocity at which any given agetn can travel
+    double max_flight_velocity = 30.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
     int ca_radius = 5;                                         //collision avoidance radius
     int ca_inc = 100;                                           //amount of increments between the current telem and projected telem
@@ -56,7 +56,7 @@ public:
     
     //Team Settings
     int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 6;
+    int team_0 = 20;
     int team_1 = 100;
     int team_2 = 50;
     int team_3 = 80;
@@ -66,15 +66,19 @@ public:
     int team_7 = 80;
     int team_8 = 10;
     int team_9 = 20;
-    int num_policies = 2;
-    int num_waypoints = 1;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
+    int num_policies = 20;
+    int num_waypoints = 10;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
     
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 1;
+    int gen_max = 10;
+    int to_kill = num_policies/2;
+    int to_replicate = to_kill;
+    double mutate_percentage = 50;
+    double mutation_range = 1;
     
 private:
     
