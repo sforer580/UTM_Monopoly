@@ -65,6 +65,13 @@ public:
     //CCEA main
     void run_CCEA();
     
+    //Statistics
+    vector<double> min_team_fitness;
+    vector<double> ave_team_fitness;
+    vector<double> max_team_fitness;
+    void get_statistics();
+    void write_statistics_to_file();
+    
     
     //Simulator Test Functions
     //read the test fucntion parameters
@@ -91,7 +98,7 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////// Current Issues
-//
+//Min_team_fitness not currently converging
 //////// Resloved Issues
 ////Contructing a temporary vector containing a team for simulation
 //Setting up pointers for the simulator
@@ -599,6 +606,43 @@ void CCEA::natural_selection()
 
 
 
+/////////////////////////////////////////////////////////////////
+//Runs the entire CCEA process
+void CCEA::get_statistics()
+{
+    min_team_fitness.push_back(corp.at(0).agents.at(0).policies.at(0).policy_fitness);
+    double ave = 0;
+    double sum = 0;
+    for (int p=0; p<pP->num_policies; p++)
+    {
+        sum += corp.at(0).agents.at(0).policies.at(p).policy_fitness;
+    }
+    ave = sum/pP->num_policies;
+    ave_team_fitness.push_back(ave);
+    max_team_fitness.push_back(corp.at(0).agents.at(0).policies.at(pP->num_policies-1).policy_fitness);
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Runs the entire CCEA process
+void CCEA::write_statistics_to_file()
+{
+    ofstream File1;
+    File1.open("Min Fitness For All Gens.txt");
+    ofstream File2;
+    File2.open("Ave Fitness For All Gens.txt");
+    ofstream File3;
+    File3.open("Max Fitness For All Gens.txt");
+    for (int i=0; i<pP->gen_max; i++)
+    {
+        File1 << min_team_fitness.at(i) << endl;
+        File2 << ave_team_fitness.at(i) << endl;
+        File3 << max_team_fitness.at(i) << endl;
+    }
+    File1.close();
+    File2.close();
+    File3.close();
+}
 
 
 /////////////////////////////////////////////////////////////////
@@ -617,6 +661,9 @@ void CCEA::run_CCEA()
             cout << endl;
             build_team();       //runs the entire build and simulation for each sim_team
             //cout << "---------------------------------------------" << endl;
+            sort_agent_policies();
+            get_statistics();
+            
             if (gen == 0)
             {
                 cout << "First Generation" << endl;
@@ -660,6 +707,7 @@ void CCEA::run_CCEA()
             build_team();       //runs the entire build and simulation for each sim_team
             cout << "---------------------------------------------" << endl;
             sort_agent_policies();
+            get_statistics();
             for (int team=0; team<pP->num_teams; team++)
             {
                 for (int indv=0; indv<pP->team_sizes.at(team); indv++)
@@ -675,6 +723,7 @@ void CCEA::run_CCEA()
             }
         }
     }
+    write_statistics_to_file();
 }
 
 
@@ -697,7 +746,7 @@ void CCEA::run_CCEA()
 //One Simulation Two Agents One Policy Same Team On A Collision Course
 void CCEA::two_agents_one_policy_same_team_collide()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -725,7 +774,7 @@ void CCEA::two_agents_one_policy_same_team_collide()
 //One Simulation Two Agents One Policy Same Team Near Miss
 void CCEA::two_agents_one_policy_same_team_near_miss()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -753,7 +802,7 @@ void CCEA::two_agents_one_policy_same_team_near_miss()
 //One Simulation Two Agents One Policy Same Team Exact Miss
 void CCEA::two_agents_one_policy_same_team_exact_miss()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -781,7 +830,7 @@ void CCEA::two_agents_one_policy_same_team_exact_miss()
 //One Simulation Two Agents One Policy Same Team Close Parallel
 void CCEA::two_agents_one_policy_same_team_close_parallel()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -809,7 +858,7 @@ void CCEA::two_agents_one_policy_same_team_close_parallel()
 //One Simulation Two Agents One Policy Same Team Exact Parallel
 void CCEA::two_agents_one_policy_same_team_exact_parallel()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -837,7 +886,7 @@ void CCEA::two_agents_one_policy_same_team_exact_parallel()
 //One Simulation Two Agents One Policy Same Team Far Parallel
 void CCEA::two_agents_one_policy_same_team_far_parallel()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=1, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -868,7 +917,7 @@ void CCEA::two_agents_one_policy_same_team_far_parallel()
 //One Simulation Two Agents Two Policy Same Team On A Collision Course
 void CCEA::two_agents_two_policy_same_team_collide()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -918,7 +967,7 @@ void CCEA::two_agents_two_policy_same_team_collide()
 //One Simulation Two Agents Two Policy Same Team Near Miss
 void CCEA::two_agents_two_policy_same_team_near_miss()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -969,7 +1018,7 @@ void CCEA::two_agents_two_policy_same_team_near_miss()
 //One Simulation Two Agents Two Policy Same Team Exact Miss
 void CCEA::two_agents_two_policy_same_team_exact_miss()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -1020,7 +1069,7 @@ void CCEA::two_agents_two_policy_same_team_exact_miss()
 //One Simulation Two Agents Two Policy Same Team Close Parallel
 void CCEA::two_agents_two_policy_same_team_close_parallel()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -1070,7 +1119,7 @@ void CCEA::two_agents_two_policy_same_team_close_parallel()
 //One Simulation Two Agents Two Policy Same Team Exact Parallel
 void CCEA::two_agents_two_policy_same_team_exact_parallel()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
@@ -1120,7 +1169,7 @@ void CCEA::two_agents_two_policy_same_team_exact_parallel()
 //One Simulation Two Agents Two Policy Same Team Far Parallel
 void CCEA::two_agents_two_policy_same_team_far_parallel()
 {
-    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2;
+    //set num_teams=1, team_0=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
     corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;

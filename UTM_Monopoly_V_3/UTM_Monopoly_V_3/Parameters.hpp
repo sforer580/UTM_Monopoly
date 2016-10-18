@@ -41,7 +41,7 @@ public:
     int max_y_dim = 100;
     int min_z_dim = 0;
     int max_z_dim = 100;
-    int time_max = 120;                                         //max time simulator will run
+    int time_max = 200;                                         //max time simulator will run
     double delta_t = 0.1;                                         //simulator time step
     double max_flight_velocity = 30.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
@@ -74,11 +74,11 @@ public:
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 10;
+    int gen_max = 20;
     int to_kill = num_policies/2;
     int to_replicate = to_kill;
     double mutate_percentage = 50;
-    double mutation_range = 1;
+    double mutation_range = 5;
     
 private:
     
