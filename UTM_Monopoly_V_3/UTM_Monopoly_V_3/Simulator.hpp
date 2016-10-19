@@ -57,6 +57,7 @@ public:
     
     //Crash Avoidance
     void check_for_collisions(vector<Policy>* sim_team);
+    double get_distance_to_other_agent(vector<Policy>* sim_team, int sim_p, int sim_pp, double distance);
     void compare_agents_projected_telem(vector<Policy>* sim_team, int sim_p, int sim_pp, int kk);
     void crash_avoidance(vector<Policy>* sim_team);
     
@@ -86,7 +87,7 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////// Current Issues
-//
+//~35% of the run time is spent in calc_projected_telem
 //////// Resloved Issues
 //Calling the right team for simulation
 //Getting fitness values for each policy for a team for simulation
@@ -328,6 +329,32 @@ void Simulator::get_inc_projected_telem(vector<Policy>* sim_team, int sim_p)
 /////////////////////////////////////////////////////////////////
 //Checks For Possible Collisions
 //checks the distance of each agents projected telemetry against one another
+double Simulator::get_distance_to_other_agent(vector<Policy>* sim_team, int sim_p, int sim_pp, double distance)
+{
+    double x;
+    double x_mag;
+    double y;
+    double y_mag;
+    double z;
+    double z_mag;
+    double r;
+    x = sim_team->at(sim_p).current_telem.at(0)-sim_team->at(sim_pp).current_telem.at(0);
+    y = sim_team->at(sim_p).current_telem.at(1)-sim_team->at(sim_pp).current_telem.at(1);
+    z = sim_team->at(sim_p).current_telem.at(2)-sim_team->at(sim_pp).current_telem.at(2);
+    x_mag = x*x;
+    y_mag = y*y;
+    z_mag = z*z;
+    r = x_mag+y_mag+z_mag;
+    return r;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////
+//Checks For Possible Collisions
+//checks the distance of each agents projected telemetry against one another
 void Simulator::check_for_collisions(vector<Policy>* sim_team)
 {
     for (int sim_p=0; sim_p< sim_team->size(); sim_p++)
@@ -335,6 +362,49 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
         //only considers agent who have not reached their final destination
         if (sim_team->at(sim_p).target_waypoint < pP->num_waypoints + 2)
         {
+            for (int sim_pp=0; sim_pp < sim_team->size(); sim_pp++)
+            {
+                //only considers agent who have not reached their final destination
+                if (sim_team->at(sim_pp).target_waypoint < pP->num_waypoints + 2)
+                {
+                    if (sim_p!=sim_pp)
+                    {
+                        double distance = 0;
+                        //get distance to other agent
+                        distance = get_distance_to_other_agent(sim_team, sim_p, sim_pp, distance);
+                        if (distance<=4*(2*pP->max_travel_dist+2*pP->ca_radius))
+                        {
+                            for (int kk=0; kk < pP->ca_inc+2; kk++)
+                            {
+                                compare_agents_projected_telem(sim_team, sim_p, sim_pp, kk);
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+        else
+        {
+            continue;
+        }
+    }
+}
+
+        
+        
+            /*
             for (int kk=0; kk < pP->ca_inc+2; kk++)
             {
                 for (int sim_pp=0; sim_pp < sim_team->size(); sim_pp++)
@@ -361,7 +431,7 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                     }
                 }
             }
-        }
+        
         //will not compare agents who have reached their final destination
         else
         {
@@ -369,6 +439,7 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
         }
     }
 }
+*/
 
 
 /////////////////////////////////////////////////////////////////
@@ -376,6 +447,7 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
 //gets distnace from one agents projected telemetry to another
 void Simulator::compare_agents_projected_telem(vector<Policy>* sim_team, int sim_p, int sim_pp, int kk)
 {
+    
     double x;
     double x_mag;
     double y;

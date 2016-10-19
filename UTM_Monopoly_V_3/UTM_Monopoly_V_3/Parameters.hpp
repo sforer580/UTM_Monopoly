@@ -74,7 +74,7 @@ public:
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 20;
+    int gen_max = 100;
     int to_kill = num_policies/2;
     int to_replicate = to_kill;
     double mutate_percentage = 50;
