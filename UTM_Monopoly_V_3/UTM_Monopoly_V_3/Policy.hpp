@@ -27,7 +27,7 @@ public:
     vector<Waypoint> check_points;
     
     double dist_to_target_waypoint;
-    double policy_fitness;
+    double policy_fitness = 10000000000;
     double current_travel_speed;
     int simulation_id;
     int selected;       //0 if not yet seleceted, 1 for selected

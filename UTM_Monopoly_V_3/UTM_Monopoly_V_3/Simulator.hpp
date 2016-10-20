@@ -87,7 +87,7 @@ private:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////// Current Issues
-//~35% of the run time is spent in calc_projected_telem
+//
 //////// Resloved Issues
 //Calling the right team for simulation
 //Getting fitness values for each policy for a team for simulation
@@ -184,18 +184,19 @@ void Simulator::set_initial_telem(vector<Policy>* sim_team)
 void Simulator::get_dist_to_target_waypoint(vector<Policy>* sim_team, int sim_p)
 {
     sim_team->at(sim_p).dist_to_target_waypoint = 0;
-    vector <double> V;
-    V.resize(3);
+    double V_1;
+    double V_2;
+    double V_3;
     double V_mag_1;
     double V_mag_2;
     double V_mag_3;
     int P1 = sim_team->at(sim_p).target_waypoint;
-    V.at(0) = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(0) - sim_team->at(sim_p).current_telem.at(0));
-    V.at(1) = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(1) - sim_team->at(sim_p).current_telem.at(1));
-    V.at(2) = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(2) - sim_team->at(sim_p).current_telem.at(2));
-    V_mag_1 = V.at(0)*V.at(0);
-    V_mag_2 = V.at(1)*V.at(1);
-    V_mag_3 = V.at(2)*V.at(2);
+    V_1 = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(0) - sim_team->at(sim_p).current_telem.at(0));
+    V_2 = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(1) - sim_team->at(sim_p).current_telem.at(1));
+    V_3 = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(2) - sim_team->at(sim_p).current_telem.at(2));
+    V_mag_1 = V_1*V_1;
+    V_mag_2 = V_2*V_2;
+    V_mag_3 = V_3*V_3;
     sim_team->at(sim_p).dist_to_target_waypoint = sqrt(V_mag_1 + V_mag_2 + V_mag_3);
 }
 
@@ -256,10 +257,12 @@ void Simulator::get_new_telem_option_1(vector<Policy>* sim_team, int sim_p)
 //gets the projected telemetry using an agents current travel speed
 void Simulator::calc_projected_telem(vector<Policy>* sim_team, int sim_p)
 {
-    vector <double> V;
-    V.resize(3);
-    vector <double> D;
-    D.resize(3);
+    double V_1;
+    double V_2;
+    double V_3;
+    double D_1;
+    double D_2;
+    double D_3;
     double V_mag_1;
     double V_mag_2;
     double V_mag_3;
@@ -271,30 +274,27 @@ void Simulator::calc_projected_telem(vector<Policy>* sim_team, int sim_p)
     int P1 = sim_team->at(sim_p).target_waypoint;
     int P2 = sim_team->at(sim_p).target_waypoint -1;
     
-    static int counter;
-    counter++;
-    
     //Calculates the travel distance
     travel_dist = pP->max_travel_dist;
     
     //Creates Vector Between Waypoints
-    V.at(0) = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(0) - sim_team->at(sim_p).check_points.at(P2).waypoint_telem.at(0));
-    V.at(1) = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(1) - sim_team->at(sim_p).check_points.at(P2).waypoint_telem.at(1));
-    V.at(2) = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(2) - sim_team->at(sim_p).check_points.at(P2).waypoint_telem.at(2));
-    V_mag_1 = V.at(0)*V.at(0);
-    V_mag_2 = V.at(1)*V.at(1);
-    V_mag_3 = V.at(2)*V.at(2);
+    V_1 = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(0) - sim_team->at(sim_p).check_points.at(P2).waypoint_telem.at(0));
+    V_2 = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(1) - sim_team->at(sim_p).check_points.at(P2).waypoint_telem.at(1));
+    V_3 = (sim_team->at(sim_p).check_points.at(P1).waypoint_telem.at(2) - sim_team->at(sim_p).check_points.at(P2).waypoint_telem.at(2));
+    V_mag_1 = V_1*V_1;
+    V_mag_2 = V_2*V_2;
+    V_mag_3 = V_3*V_3;
     V_mag = sqrt(V_mag_1 + V_mag_2 + V_mag_3);
     
     //Creates Unit Vector Between Waypoints
-    D.at(0) = (V.at(0)/V_mag);
-    D.at(1) = (V.at(1)/V_mag);
-    D.at(2) = (V.at(2)/V_mag);
+    D_1 = (V_1/V_mag);
+    D_2 = (V_2/V_mag);
+    D_3 = (V_3/V_mag);
     
     //Calculates current telemetry
-    current_x = sim_team->at(sim_p).current_telem.at(0) + travel_dist*D.at(0);
-    current_y = sim_team->at(sim_p).current_telem.at(1) + travel_dist*D.at(1);
-    current_z = sim_team->at(sim_p).current_telem.at(2) + travel_dist*D.at(2);
+    current_x = sim_team->at(sim_p).current_telem.at(0) + travel_dist*D_1;
+    current_y = sim_team->at(sim_p).current_telem.at(1) + travel_dist*D_2;
+    current_z = sim_team->at(sim_p).current_telem.at(2) + travel_dist*D_3;
     sim_team->at(sim_p).projected_telem.empty();
     sim_team->at(sim_p).projected_telem.at(0) = current_x;
     sim_team->at(sim_p).projected_telem.at(1) = current_y;
@@ -309,6 +309,7 @@ void Simulator::calc_projected_telem(vector<Policy>* sim_team, int sim_p)
 void Simulator::get_inc_projected_telem(vector<Policy>* sim_team, int sim_p)
 {
     sim_team->at(sim_p).inc_projected_telem.clear();        //clears previous incremented projected telemetry
+    sim_team->at(sim_p).inc_projected_telem.resize(3*(pP->ca_inc+2));
     double x_inc_movement;
     double y_inc_movement;
     double z_inc_movement;
@@ -318,12 +319,12 @@ void Simulator::get_inc_projected_telem(vector<Policy>* sim_team, int sim_p)
     y_inc_movement = (sim_team->at(sim_p).projected_telem.at(1) - sim_team->at(sim_p).current_telem.at(1))/pP->ca_inc;
     z_inc_movement = (sim_team->at(sim_p).projected_telem.at(2) - sim_team->at(sim_p).current_telem.at(2))/pP->ca_inc;
     
-    //pushes the incremented projected telemetry into a vector
-    for (int iii=0; iii < pP->ca_inc+2; iii++)
+    //puts the incremented projected telemetry into a vector
+    for (int iii=0; iii<pP->ca_inc+2; iii++)
     {
-        sim_team->at(sim_p).inc_projected_telem.push_back(sim_team->at(sim_p).current_telem.at(0) + iii*x_inc_movement);
-        sim_team->at(sim_p).inc_projected_telem.push_back(sim_team->at(sim_p).current_telem.at(1) + iii*y_inc_movement);
-        sim_team->at(sim_p).inc_projected_telem.push_back(sim_team->at(sim_p).current_telem.at(2) + iii*z_inc_movement);
+        sim_team->at(sim_p).inc_projected_telem.at(iii*3) = (sim_team->at(sim_p).current_telem.at(0) + iii*x_inc_movement);
+        sim_team->at(sim_p).inc_projected_telem.at(iii*3+1) = (sim_team->at(sim_p).current_telem.at(1) + iii*y_inc_movement);
+        sim_team->at(sim_p).inc_projected_telem.at(iii*3+2) = (sim_team->at(sim_p).current_telem.at(2) + iii*z_inc_movement);
     }
 }
 
@@ -350,9 +351,6 @@ double Simulator::get_distance_to_other_agent(vector<Policy>* sim_team, int sim_
 }
 
 
-
-
-
 /////////////////////////////////////////////////////////////////
 //Checks For Possible Collisions
 //checks the distance of each agents projected telemetry against one another
@@ -373,6 +371,7 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                         double distance = 0;
                         //get distance to other agent
                         distance = get_distance_to_other_agent(sim_team, sim_p, sim_pp, distance);
+                        //4*(2*pP->max_travel_dist+2*pP->ca_radius)
                         if (distance<=4*(2*pP->max_travel_dist+2*pP->ca_radius))
                         {
                             //this is where the get_inc_projected_telem should be called
@@ -404,44 +403,6 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
     }
 }
 
-        
-        
-            /*
-            for (int kk=0; kk < pP->ca_inc+2; kk++)
-            {
-                for (int sim_pp=0; sim_pp < sim_team->size(); sim_pp++)
-                {
-                    //only considers agent who have not reached their final destination
-                    if (sim_team->at(sim_pp).target_waypoint < pP->num_waypoints + 2)
-                    {
-                        //will not compare agents with itself
-                        if (sim_p!=sim_pp)
-                        {
-                            if (sim_team->at(sim_p).current_travel_speed == pP->ca_flight_speed)
-                            {
-                                continue;
-                            }
-                            else
-                            {
-                                compare_agents_projected_telem(sim_team, sim_p, sim_pp, kk);
-                            }
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-        
-        //will not compare agents who have reached their final destination
-        else
-        {
-            continue;
-        }
-    }
-}
-*/
 
 
 /////////////////////////////////////////////////////////////////
@@ -513,9 +474,9 @@ void Simulator::check_if_at_waypoint(vector<Policy>* sim_team, int sim_p)
     //cout <<system.at(pp).agents.at(jj).dist_to_target_waypoint << endl;
     if (sim_team->at(sim_p).dist_to_target_waypoint == 0)
     {
-        /*
-         cout << "reached waypoint" << "\t" << system.at(pp).agents.at(jj).target_waypoint << endl;
-         */
+        
+        //cout << "reached waypoint" << "\t" << sim_team->at(sim_p).target_waypoint << endl;
+        
         //calc_new_telem(waypoint_telem, max_travel_dist, current_telem, pp, jj, target_waypoint);
         //cout << system.at(pp).agents.at(jj).target_waypoint << endl;
         sim_team->at(sim_p).target_waypoint++;
@@ -723,25 +684,24 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
                 */
                 
                 
-                
-                
-                
                 //gets the new telemetry based on the flight speed from the CA
                 get_new_telem(psim_team, sim_p);
                 //cout << system.at(ii).agents.at(jj).target_waypoint << endl;
                 
                 //runs a check to see if the agent has reached their target waypoint
                 check_if_at_waypoint(psim_team, sim_p);
+                
                 /*
-                 cout << "new telem" << endl;
-                 for (int ll=0; ll < 3; ll++)
-                 {
-                 cout << system.at(pp).agents.at(jj).current_telem.at(ll) << "\t";
-                 }
-                 cout << endl;
-                 cout << "current travel speed" << "\t" << system.at(pp).agents.at(jj).current_travel_speed << endl;
-                 cout << endl;
-                 */
+                cout << "new telem" << endl;
+                for (int ll=0; ll < 3; ll++)
+                {
+                    cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
+                }
+                cout << endl;
+                cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
+                cout << endl;
+                */
+                
             }
             //cout << endl;
         }

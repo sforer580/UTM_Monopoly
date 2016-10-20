@@ -50,7 +50,7 @@ public:
     void build_team();
     void reset_selection_identifiers(int team);
     void build_sim_team(int team, int po);
-    void get_policy_fitness(int team, int po);
+    void get_policy_fitness(int team, int po, int len);
     void simulate_team(vector<Policy>* sim_team);
     
     //Binary Selection Funcitons
@@ -311,6 +311,7 @@ void CCEA::reset_selection_identifiers(int team)
         for (int p=0; p<pP->num_policies; p++)
         {
             corp.at(team).agents.at(indv).policies.at(p).selected = -1;
+            corp.at(team).agents.at(indv).policies.at(p).simulation_id = -1;
         }
     }
 }
@@ -324,8 +325,6 @@ void CCEA::build_sim_team(int team, int po)
     {
         int rand_select = 0;
         rand_select = rand () % pP->num_policies;       //radomly picks a policy
-        for (int p=0; p<pP->num_policies; p++)
-        {
             //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
             while (corp.at(team).agents.at(indv).policies.at(rand_select).selected != -1)
             {
@@ -341,18 +340,16 @@ void CCEA::build_sim_team(int team, int po)
             sim_team.at(indv) = (corp.at(team).agents.at(indv).policies.at(rand_select));
             
             corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
-            break;
             
             //select that policy for team
-            //build team vector for simulation
-        }
+            //build team vector for simulation   
     }
 }
 
 
 /////////////////////////////////////////////////////////////////
 //build the randomly generated sim_team
-void CCEA::get_policy_fitness(int team, int po)
+void CCEA::get_policy_fitness(int team, int po, int len)
 {
     double sum = 0;
     for (int indv=0; indv<pP->team_sizes.at(team); indv++)
@@ -368,7 +365,17 @@ void CCEA::get_policy_fitness(int team, int po)
             {
                 if (corp.at(team).agents.at(indv).policies.at(p).simulation_id == po)
                 {
-                    corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                    if(len==0)
+                    {
+                       corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                    }
+                    if (len>0)
+                    {
+                        if(corp.at(team).agents.at(indv).policies.at(p).policy_fitness>sum)
+                        {
+                            corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                        }
+                    }
                 }
             }
         }
@@ -381,27 +388,31 @@ void CCEA::get_policy_fitness(int team, int po)
 //runs the entire build and simulation for each sim_team
 void CCEA::build_team()
 {
-    for (int team=0; team<pP->num_teams; team++)
+    for (int len=0; len<pP->num_policies/2; len++)
     {
-        reset_selection_identifiers(team);
-        
-        //builds teams for simulation of randomly selected policies from each agent
-        for (int po=0; po<pP->num_policies; po++)
+        for (int team=0; team<pP->num_teams; team++)
         {
-            sim_team.resize(pP->team_sizes.at(team));
-            //cout << "-----------------------------------------------------------------------------------" << endl;
-            //cout << "-----------------------------------------------------------------------------------" << endl;
+            reset_selection_identifiers(team);
             
-            build_sim_team(team, po);
-            
-            vector<Policy>* psim_team = &sim_team;
-            simulate_team(psim_team);
-            
-            get_policy_fitness(team, po);
-            
-            sim_team.erase(sim_team.begin(), sim_team.end());
+            //builds teams for simulation of randomly selected policies from each agent
+            for (int po=0; po<pP->num_policies; po++)
+            {
+                sim_team.resize(pP->team_sizes.at(team));
+                //cout << "-----------------------------------------------------------------------------------" << endl;
+                //cout << "-----------------------------------------------------------------------------------" << endl;
+                
+                build_sim_team(team, po);
+                
+                vector<Policy>* psim_team = &sim_team;
+                simulate_team(psim_team);
+                
+                get_policy_fitness(team, po, len);
+                
+                sim_team.erase(sim_team.begin(), sim_team.end());
+            }
         }
     }
+    
     
     /*
     for (int team=0; team<pP->num_teams; team++)
@@ -682,22 +693,29 @@ void CCEA::run_CCEA()
                 }
             }
             natural_selection();
-            /*
-            cout << "check nautral seclection" << endl;
-            for (int team=0; team<pP->num_teams; team++)
+            sort_agent_policies();
+            
+            //cout << "check nautral seclection" << endl;
+            if (gen>0)
             {
-                for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+                if (gen<pP->gen_max-1)
                 {
-                    cout << "agent" << "\t" << indv << endl;
-                    for (int p=0; p<pP->num_policies; p++)
+                    for (int team=0; team<pP->num_teams; team++)
                     {
-                        cout << "policy" << "\t" << p << "\t" << "selected team" << "\t" << p << endl;
-                        cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+                        {
+                            cout << "agent" << "\t" << indv << endl;
+                            for (int p=0; p<pP->num_policies; p++)
+                            {
+                                cout << "policy" << "\t" << p << endl;
+                                cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                            }
+                            cout << endl;
+                        }
                     }
-                    cout << endl;
                 }
             }
-            */
+            
         }
         if (gen == pP->gen_max-1)
         {

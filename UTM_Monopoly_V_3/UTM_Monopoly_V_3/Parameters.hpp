@@ -43,7 +43,7 @@ public:
     int max_z_dim = 100;
     int time_max = 200;                                         //max time simulator will run
     double delta_t = 0.1;                                         //simulator time step
-    double max_flight_velocity = 30.0;                           //max velocity at which any given agetn can travel
+    double max_flight_velocity = 3.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
     int ca_radius = 5;                                         //collision avoidance radius
     int ca_inc = 100;                                           //amount of increments between the current telem and projected telem
@@ -66,7 +66,7 @@ public:
     int team_7 = 80;
     int team_8 = 10;
     int team_9 = 20;
-    int num_policies = 20;
+    int num_policies = 10;
     int num_waypoints = 10;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
@@ -74,7 +74,7 @@ public:
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 100;
+    int gen_max = 20;
     int to_kill = num_policies/2;
     int to_replicate = to_kill;
     double mutate_percentage = 50;
