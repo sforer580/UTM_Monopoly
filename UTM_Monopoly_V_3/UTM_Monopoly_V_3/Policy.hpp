@@ -33,6 +33,7 @@ public:
     int selected;       //0 if not yet seleceted, 1 for selected
     int target_waypoint = 1;                    //agents proceeds to target waypoint and starts at waypoint 0
     int policy_id;
+    int selection_counter;
     
     vector<double> current_telem;
     vector<double> projected_telem;

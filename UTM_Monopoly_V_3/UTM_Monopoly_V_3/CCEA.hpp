@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
+#include <cassert>
 
 
 using namespace std;
@@ -262,31 +263,6 @@ void CCEA::build_world()
     create_starting_telem();
     create_checkpoints();
     create_target_telem();
-    
-    /*
-    for (int ii=0; ii<pP->num_teams; ii++)
-    {
-        cout << "team" << "\t" << ii << endl;
-        for (int jj=0; jj<pP->team_sizes.at(ii); jj++)
-        {
-            cout << "agent" << "\t" << jj << endl;
-            for (int po=0;  po<pP->num_policies; po++)
-            {
-                cout << "policy" << "\t" << po << endl;
-                for (int ww=0; ww<pP->num_waypoints+2; ww++)
-                {
-                    cout << "waypoint" << "\t" << ww << "\t" << "telem" << endl;
-                    for (int te=0; te<3; te++)
-                    {
-                        cout << corp.at(ii).agents.at(jj).policies.at(po).check_points.at(ww).waypoint_telem.at(te) << "\t";
-                    }
-                    cout << endl;
-                }
-            }
-            cout << endl;
-        }
-    }
-    */
 }
 
 
@@ -336,7 +312,8 @@ void CCEA::build_sim_team(int team, int po)
             }
             //cout << po << endl;
             corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
-            
+        corp.at(team).agents.at(indv).policies.at(rand_select).selection_counter += 1;
+        
             sim_team.at(indv) = (corp.at(team).agents.at(indv).policies.at(rand_select));
             
             corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
@@ -365,6 +342,9 @@ void CCEA::get_policy_fitness(int team, int po, int len)
             {
                 if (corp.at(team).agents.at(indv).policies.at(p).simulation_id == po)
                 {
+                    //corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                    
+                    //for use with leniency
                     if(len==0)
                     {
                        corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
@@ -376,6 +356,7 @@ void CCEA::get_policy_fitness(int team, int po, int len)
                             corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
                         }
                     }
+                    
                 }
             }
         }
@@ -388,6 +369,18 @@ void CCEA::get_policy_fitness(int team, int po, int len)
 //runs the entire build and simulation for each sim_team
 void CCEA::build_team()
 {
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            for (int po=0; po<pP->num_policies; po++)
+            {
+                corp.at(team).agents.at(indv).policies.at(po).selection_counter = 0;
+            }
+        }
+    }
+    
+    //pP->num_policies/2
     for (int len=0; len<pP->num_policies/2; len++)
     {
         for (int team=0; team<pP->num_teams; team++)
@@ -428,6 +421,8 @@ void CCEA::build_team()
             cout << endl;
         }
     }
+    cout << endl;
+    cout << endl;
     */
 }
 
@@ -709,6 +704,7 @@ void CCEA::run_CCEA()
                             {
                                 cout << "policy" << "\t" << p << endl;
                                 cout << "\t" << "fitness" << "\t" <<  corp.at(team).agents.at(indv).policies.at(p).policy_fitness << endl;
+                                assert(corp.at(team).agents.at(indv).policies.at(p).selection_counter == pP->num_policies/2);
                             }
                             cout << endl;
                         }
