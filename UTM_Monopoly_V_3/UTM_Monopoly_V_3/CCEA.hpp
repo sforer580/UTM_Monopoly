@@ -49,6 +49,7 @@ public:
     
     //Functions for Simulation
     void build_team();
+    void reset_selction_counter();
     void reset_selection_identifiers(int team);
     void build_sim_team(int team, int po);
     void get_policy_fitness(int team, int po, int len);
@@ -72,6 +73,7 @@ public:
     vector<double> max_team_fitness;
     void get_statistics();
     void write_statistics_to_file();
+    void write_parameters_to_file();
     
     
     //Simulator Test Functions
@@ -293,6 +295,24 @@ void CCEA::reset_selection_identifiers(int team)
 }
 
 
+
+/////////////////////////////////////////////////////////////////
+//resets the selection identifier
+void CCEA::reset_selction_counter()
+{
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            for (int po=0; po<pP->num_policies; po++)
+            {
+                corp.at(team).agents.at(indv).policies.at(po).selection_counter = 0;
+            }
+        }
+    }
+}
+
+
 /////////////////////////////////////////////////////////////////
 //build the randomly generated sim_team
 void CCEA::build_sim_team(int team, int po)
@@ -342,21 +362,26 @@ void CCEA::get_policy_fitness(int team, int po, int len)
             {
                 if (corp.at(team).agents.at(indv).policies.at(p).simulation_id == po)
                 {
-                    //corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
-                    
-                    //for use with leniency
-                    if(len==0)
+                    //without leniency
+                    if (pP->leniency == 0)
                     {
-                       corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                     corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
                     }
-                    if (len>0)
+                    //with leniency
+                    if (pP->leniency ==1)
                     {
-                        if(corp.at(team).agents.at(indv).policies.at(p).policy_fitness>sum)
+                        if(len==0)
                         {
                             corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
                         }
+                        if (len>0)
+                        {
+                            if(corp.at(team).agents.at(indv).policies.at(p).policy_fitness>sum)
+                            {
+                                corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
+                            }
+                        }
                     }
-                    
                 }
             }
         }
@@ -369,19 +394,19 @@ void CCEA::get_policy_fitness(int team, int po, int len)
 //runs the entire build and simulation for each sim_team
 void CCEA::build_team()
 {
-    for (int team=0; team<pP->num_teams; team++)
+    reset_selction_counter();
+    
+    int ll;
+    if (pP->leniency == 1)
     {
-        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
-        {
-            for (int po=0; po<pP->num_policies; po++)
-            {
-                corp.at(team).agents.at(indv).policies.at(po).selection_counter = 0;
-            }
-        }
+        ll = pP->num_policies/2;
+    }
+    if (pP->leniency ==0)
+    {
+        ll = 1;
     }
     
-    //pP->num_policies/2
-    for (int len=0; len<pP->num_policies/2; len++)
+    for (int len=0; len<ll; len++)
     {
         for (int team=0; team<pP->num_teams; team++)
         {
@@ -653,6 +678,62 @@ void CCEA::write_statistics_to_file()
 
 /////////////////////////////////////////////////////////////////
 //Runs the entire CCEA process
+void CCEA::write_parameters_to_file()
+{
+    ofstream File4;
+    File4.open("Parameters.txt");
+    File4 << "Simulation Parameters" << endl;
+    File4 << "Map parameters x y z" << endl;
+    File4 << pP->min_x_dim << "\t" << pP->max_x_dim << "\t" << pP->min_y_dim << "\t" << pP->max_y_dim << "\t" << pP->min_z_dim << "\t" <<pP->max_z_dim << endl;
+    File4 << " " << endl;
+    File4 << "Time parameters" << endl;
+    File4 << "time max" << "\t" << pP->time_max << endl;
+    File4 << "sampling time" << "\t" << pP->delta_t << endl;
+    File4 << " " << endl;
+    File4 << "velocity parameters" << endl;
+    File4 << "max velocity" << "\t" << pP->max_flight_velocity << endl;
+    File4 << "ca velocity" << "\t" << pP->ca_flight_speed << endl;
+    File4 << " " << endl;
+    File4 << "CA parameters" << endl;
+    File4 << "ca radius" << "\t" << pP->ca_radius << endl;
+    File4 << "ca incrementation" << "\t" << pP->ca_inc << endl;
+    File4 << " " << endl;
+    File4 << " " << endl;
+    File4 << " " << endl;
+    File4 << "CCEA Parameters" << endl;
+    File4 << "Team parameters" << endl;
+    File4 << "number of teams" << "\t" << pP->num_teams << endl;
+    for (int team=0; team<pP->num_teams; team++)
+    {
+        File4 << "team" << "\t" << "number of agents" << "\t" << pP->team_sizes.at(team) << endl;
+    }
+    File4 << "number of policies" << "\t" << pP->num_policies << endl;
+    File4 << "number of waypoints" << "\t" << pP->num_waypoints << endl;
+    File4 << " " << endl;
+    File4 << "EA parameters" << endl;
+    File4 << "gerneration max" << "\t" << pP->gen_max << endl;
+    File4 << "mutation percentage" << "\t" << pP->mutate_percentage << endl;
+    File4 << "mutation range" << "\t" << pP->mutation_range << endl;
+    File4 << " " << endl;
+    if (pP->leniency == 0)
+    {
+        File4 << "leniency off" << endl;
+    }
+    if (pP->leniency == 1)
+    {
+        File4 << "leniency on" << endl;
+    }
+    File4.close();
+}
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////
+//Runs the entire CCEA process
 void CCEA::run_CCEA()
 {
     build_world();
@@ -691,6 +772,7 @@ void CCEA::run_CCEA()
             sort_agent_policies();
             
             //cout << "check nautral seclection" << endl;
+            /*
             if (gen>0)
             {
                 if (gen<pP->gen_max-1)
@@ -711,6 +793,7 @@ void CCEA::run_CCEA()
                     }
                 }
             }
+            */
             
         }
         if (gen == pP->gen_max-1)
@@ -738,6 +821,7 @@ void CCEA::run_CCEA()
         }
     }
     write_statistics_to_file();
+    write_parameters_to_file();
 }
 
 
