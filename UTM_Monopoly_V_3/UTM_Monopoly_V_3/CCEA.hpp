@@ -352,10 +352,15 @@ void CCEA::get_fair_statistics()
 {
     vector<double> temp;
     temp.resize(pP->team_sizes.at(0));
-    for (int ss=0; ss<pP->team_sizes.at(0); ss++)
+    for (int indv=0; indv<pP->team_sizes.at(0); indv++)
     {
-        temp.at(ss) = corp.at(0).agents.at(indv).policies.at(0).policy_fitness;
+        for (int pp=0; pp<pP->num_policies; pp++)
+        {
+         temp.at(indv+pp) = corp.at(0).agents.at(indv).policies.at(pp).policy_fitness;
+        }
     }
+    
+    sort_temp_policies();
     
     
     
@@ -409,7 +414,7 @@ void CCEA::get_policy_fitness(int po, int len)
                 }
                 
                 
-                //with leniency no fair trial
+                //with leniency
                 if (pP->leniency == 1)
                 {
                     if (pP->fair_trail == 0)
@@ -427,27 +432,6 @@ void CCEA::get_policy_fitness(int po, int len)
                         }
                     }
                 }
-                
-                //with leniency and fair trial
-                if (pP->leniency == 1)
-                {
-                    if (pP->fair_trail == 1)
-                    {
-                        if(len==0)
-                        {
-                            corp.at(0).agents.at(indv).policies.at(p).policy_fitness = sum;
-                            
-                        }
-                        if (len>0)
-                        {
-                            if(corp.at(0).agents.at(indv).policies.at(p).policy_fitness>sum)
-                            {
-                                corp.at(0).agents.at(indv).policies.at(p).policy_fitness = sum;
-                            }
-                        }
-                    }
-                }
-                
             }
         }
     }
