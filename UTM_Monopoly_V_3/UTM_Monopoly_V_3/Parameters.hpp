@@ -48,7 +48,7 @@ public:
     int ca_radius = 5;                                         //collision avoidance radius
     int ca_inc = 100;                                           //amount of increments between the current telem and projected telem
     double ca_flight_speed = max_flight_velocity/2;             //collision avoidance speed
-    double ca_max_travel_dist = ca_flight_speed*delta_t;        //max distance any agent can travel when collision avoidance is on
+    double ca_max_travel_dist = ca_flight_speed*delta_t;        //max distance any agent can travel when collision avoidance is acitvated
     
     vector<int> sim_dim;
     
@@ -57,15 +57,15 @@ public:
     //Team Settings
     int num_teams = 1;          //must be an interger 0-10
     int team_0 = 16;
-    int team_1 = 100;
-    int team_2 = 50;
-    int team_3 = 80;
-    int team_4 = 70;
-    int team_5 = 44;
-    int team_6 = 50;
-    int team_7 = 80;
-    int team_8 = 10;
-    int team_9 = 20;
+    int team_1 = 8;
+    int team_2 = 0;
+    int team_3 = 0;
+    int team_4 = 0;
+    int team_5 = 0;
+    int team_6 = 0;
+    int team_7 = 0;
+    int team_8 = 0;
+    int team_9 = 0;
     int num_policies = 10;
     int num_waypoints = 5;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
@@ -80,6 +80,7 @@ public:
     double mutate_percentage = 50;
     double mutation_range = 1;
     int leniency = 1;           //0=off, 1=on
+    int fair_trail = 1;         //0=off, 1=on
     
 private:
     
