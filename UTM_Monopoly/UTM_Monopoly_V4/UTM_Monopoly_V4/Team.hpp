@@ -1,8 +1,8 @@
 //
 //  Team.hpp
-//  UTM_Monopoly
+//  UTM_Monoploy_V2
 //
-//  Created by Scott S Forer on 5/31/16.
+//  Created by Scott S Forer on 8/8/16.
 //  Copyright © 2016 Scott S Forer. All rights reserved.
 //
 
@@ -30,7 +30,9 @@ class Team
 {
     friend class Parameters;
     friend class Individual;
-    //friend class Simulator;
+    friend class Simulator;
+    friend class World;
+    friend class CCEA;
     
 protected:
     

@@ -1,13 +1,13 @@
 //
-//  Paramters.hpp
-//  UTM_Monopoly
+//  Parameters.hpp
+//  UTM_Monoploy_V2
 //
-//  Created by Scott S Forer on 5/31/16.
+//  Created by Scott S Forer on 8/8/16.
 //  Copyright © 2016 Scott S Forer. All rights reserved.
 //
 
-#ifndef Paramters_hpp
-#define Paramters_hpp
+#ifndef Parameters_hpp
+#define Parameters_hpp
 
 #include <iostream>
 #include <cstdlib>
@@ -28,6 +28,7 @@ class Parameters
     friend class Team;
     friend class Individual;
     friend class Simulator;
+    friend class CCEA;
     
 protected:
     
@@ -35,42 +36,51 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 50;
+    int max_x_dim = 100;
     int min_y_dim = 0;
-    int max_y_dim = 50;
+    int max_y_dim = 100;
     int min_z_dim = 0;
-    int max_z_dim = 10;
-    int time_max = 40;                                         //max time simulator will run
+    int max_z_dim = 100;
+    int time_max = 200;                                         //max time simulator will run
     double delta_t = 0.1;                                         //simulator time step
     double max_flight_velocity = 5.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
     int ca_radius = 5;                                         //collision avoidance radius
     int ca_inc = 100;                                           //amount of increments between the current telem and projected telem
     double ca_flight_speed = max_flight_velocity/2;             //collision avoidance speed
-    double ca_max_travel_dist = ca_flight_speed*delta_t;        //max distance any agent can travel when collision avoidance is on
+    double ca_max_travel_dist = ca_flight_speed*delta_t;        //max distance any agent can travel when collision avoidance is acitvated
     
     vector<int> sim_dim;
     
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 2;          //must be an interger 0-10
-    int team_0 = 1;
-    int team_1 = 1;
-    int team_2 = 50;
-    int team_3 = 80;
-    int team_4 = 70;
-    int team_5 = 44;
-    int team_6 = 50;
-    int team_7 = 80;
-    int team_8 = 10;
-    int team_9 = 20;
-    int num_waypoints = 1;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
+    int num_teams = 1;          //must be an interger 0-10
+    int team_0 = 16;
+    int team_1 = 8;
+    int team_2 = 0;
+    int team_3 = 0;
+    int team_4 = 0;
+    int team_5 = 0;
+    int team_6 = 0;
+    int team_7 = 0;
+    int team_8 = 0;
+    int team_9 = 0;
+    int num_policies = 10;
+    int num_waypoints = 5;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
     
     void set_team_sizes();
     
+    //CCEA Settings
+    int gen_max = 50;
+    int to_kill = num_policies/2;
+    int to_replicate = to_kill;
+    double mutate_percentage = 50;
+    double mutation_range = 1;
+    int leniency = 1;           //0=off, 1=on
+    int fair_trail = 1;         //0=off, 1=on
     
 private:
     
@@ -107,4 +117,4 @@ void Parameters::set_team_sizes()
     team_sizes.push_back(team_9);
 }
 
-#endif /* Paramters_hpp */
+#endif /* Parameters_hpp */
