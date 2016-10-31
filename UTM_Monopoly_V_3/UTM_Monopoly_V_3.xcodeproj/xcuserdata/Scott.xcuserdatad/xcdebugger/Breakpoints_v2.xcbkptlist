@@ -10,26 +10,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UTM_Monopoly_V_3/Simulator.hpp"
-            timestampString = "498597799.037265"
+            timestampString = "498678012.084268"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "419"
-            endingLineNumber = "419">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "UTM_Monopoly_V_3/Simulator.hpp"
-            timestampString = "498597799.037265"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
-            landmarkName = "Simulator::crash_avoidance(vector&lt;Policy&gt;* sim_team)"
+            startingLineNumber = "151"
+            endingLineNumber = "151"
+            landmarkName = "Simulator::set_initial_telem(vector&lt;Policy&gt;* sim_team)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -334,7 +334,7 @@ void CCEA::build_sim_team(int team, int po)
             }
             //cout << po << endl;
             corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
-        corp.at(team).agents.at(indv).policies.at(rand_select).selection_counter += 1;
+            corp.at(team).agents.at(indv).policies.at(rand_select).selection_counter += 1;
         
             sim_team.at(indv) = (corp.at(team).agents.at(indv).policies.at(rand_select));
             
@@ -351,43 +351,58 @@ void CCEA::build_sim_team(int team, int po)
 void CCEA::get_fair_statistics()
 {
     vector<double> temp;
-    temp.resize(pP->team_sizes.at(0));
+    temp.resize(pP->team_sizes.at(0)*pP->num_policies);
     for (int indv=0; indv<pP->team_sizes.at(0); indv++)
     {
         for (int pp=0; pp<pP->num_policies; pp++)
         {
-         temp.at(indv+pp) = corp.at(0).agents.at(indv).policies.at(pp).policy_fitness;
+         temp.at(indv*pP->num_policies+pp) = corp.at(0).agents.at(indv).policies.at(pp).policy_fitness;
         }
     }
     
-    sort_temp_policies();
-    
-    
-    
-    
-    double min_sum = 0;
-    for (int indv=0; indv<pP->team_sizes.at(0); indv++)
+    //check sort
+    /*
+    cout << "temp size" << "\t" << temp.size() << endl;
+    for (int i=0; i<pP->team_sizes.at(0)*pP->num_policies; i++)
     {
-        min_sum += corp.at(0).agents.at(indv).policies.at(0).policy_fitness;
+        cout << temp.at(i) << endl;
     }
-    min_team_fitness.push_back(min_sum/pP->team_sizes.at(0));
+    */
+    
+    double min = 1000000;
+    for (int i=0; i<temp.size(); i++)
+    {
+        if (temp.at(i) < min)
+        {
+            min = temp.at(i);
+        }
+    }
+    min_team_fitness.push_back(min);
+    //cout << endl;
+    //cout << min << endl;
     
     double ave_sum = 0;
     for (int indv=0; indv<pP->team_sizes.at(0); indv++)
     {
-        for (int p=0; p<pP->num_policies; p++)
+        for (int pp=0; pp<pP->num_policies; pp++)
         {
-            ave_sum += corp.at(0).agents.at(indv).policies.at(p).policy_fitness;
+            ave_sum += temp.at(indv*pP->num_policies+pp);
         }
     }
     ave_team_fitness.push_back(ave_sum/(pP->team_sizes.at(0)*pP->num_policies));
     
-    double max_sum = 0;
-    for (int indv=0; indv<pP->team_sizes.at(0); indv++)
+    
+    double max = -1;
+    for (int i=0; i<temp.size(); i++)
     {
-        max_sum += corp.at(0).agents.at(indv).policies.at(pP->num_policies-1).policy_fitness;
+        if (temp.at(i) > max)
+        {
+            max = temp.at(i);
+        }
     }
-    max_team_fitness.push_back(max_sum/pP->team_sizes.at(0));
+    max_team_fitness.push_back(max);
+    //cout << max << endl;
+    temp.clear();
 }
 
 
@@ -417,18 +432,15 @@ void CCEA::get_policy_fitness(int po, int len)
                 //with leniency
                 if (pP->leniency == 1)
                 {
-                    if (pP->fair_trail == 0)
+                    if(len==0)
                     {
-                        if(len==0)
+                        corp.at(0).agents.at(indv).policies.at(p).policy_fitness = sum;
+                    }
+                    if (len>0)
+                    {
+                        if(corp.at(0).agents.at(indv).policies.at(p).policy_fitness>sum)
                         {
                             corp.at(0).agents.at(indv).policies.at(p).policy_fitness = sum;
-                        }
-                        if (len>0)
-                        {
-                            if(corp.at(0).agents.at(indv).policies.at(p).policy_fitness>sum)
-                            {
-                                corp.at(0).agents.at(indv).policies.at(p).policy_fitness = sum;
-                            }
                         }
                     }
                 }
@@ -454,44 +466,41 @@ void CCEA::build_team()
         ll = 1;
     }
     
-    if (pP->leniency == 1)
+    if (pP->fair_trail == 1)
     {
-        if (pP->fair_trail == 1)
+        if (fcount<pP->gen_max)
         {
-            if (fcount<pP->gen_max)
+            for (int len=0; len<ll; len++)
             {
-                for (int len=0; len<ll; len++)
+                if (fcount == pP->gen_max)
                 {
-                    if (fcount == pP->gen_max)
-                    {
-                        exit(1);
-                    }
-                    for (int team=0; team<pP->num_teams; team++)
-                    {
-                        reset_selection_identifiers(team);
-                        
-                        //builds teams for simulation of randomly selected policies from each agent
-                        for (int po=0; po<pP->num_policies; po++)
-                        {
-                            sim_team.resize(pP->team_sizes.at(team));
-                            //cout << "-----------------------------------------------------------------------------------" << endl;
-                            //cout << "-----------------------------------------------------------------------------------" << endl;
-                            
-                            build_sim_team(team, po);
-                            
-                            vector<Policy>* psim_team = &sim_team;
-                            simulate_team(psim_team);
-                            
-                            get_policy_fitness(po, len);
-                            
-                            sim_team.erase(sim_team.begin(), sim_team.end());
-                        }
-                    }
-                    get_fair_statistics();
-                    fcount += 1;
-                    cout << "check counter" << endl;
-                    cout << fcount << endl;
+                    exit(1);
                 }
+                for (int team=0; team<pP->num_teams; team++)
+                {
+                    reset_selection_identifiers(team);
+                    
+                    //builds teams for simulation of randomly selected policies from each agent
+                    for (int po=0; po<pP->num_policies; po++)
+                    {
+                        sim_team.resize(pP->team_sizes.at(team));
+                        //cout << "-----------------------------------------------------------------------------------" << endl;
+                        //cout << "-----------------------------------------------------------------------------------" << endl;
+                        
+                        build_sim_team(team, po);
+                        
+                        vector<Policy>* psim_team = &sim_team;
+                        simulate_team(psim_team);
+                        
+                        get_policy_fitness(po, len);
+                        
+                        sim_team.erase(sim_team.begin(), sim_team.end());
+                    }
+                }
+                get_fair_statistics();
+                fcount += 1;
+                cout << "check counter" << endl;
+                cout << fcount << endl;
             }
         }
     }
