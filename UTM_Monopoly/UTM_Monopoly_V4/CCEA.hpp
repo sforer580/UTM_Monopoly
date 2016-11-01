@@ -354,10 +354,9 @@ void CCEA::build_sim_team(int po)
             corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
             corp.at(team).agents.at(indv).policies.at(rand_select).corp_id = team;        //sets the corporation id for that policy
             corp.at(team).agents.at(indv).policies.at(rand_select).selection_counter += 1;
+            corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
             
             sim_team.push_back(corp.at(team).agents.at(indv).policies.at(rand_select));
-            
-            corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
             
             //select that policy for team
             //build team vector for simulation
@@ -1641,6 +1640,44 @@ void CCEA::four_agents_one_policy_different_team_collide_same_team()
 void CCEA::four_agents_one_policy_different_team_near_miss_same_team()
 {
     //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 4;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 3;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 10;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 10;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 4;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 3;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 20;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 20;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 4;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 3;
 }
 
 
@@ -1649,6 +1686,44 @@ void CCEA::four_agents_one_policy_different_team_near_miss_same_team()
 void CCEA::four_agents_one_policy_different_team_exact_miss_same_team()
 {
     //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 4;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 4;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 10;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 10;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 4;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 4;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 20;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 20;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 4;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 4;
 }
 
 
@@ -1700,13 +1775,13 @@ void CCEA::Simulator_test_functions()
     //two_agents_two_policy_same_team_far_parallel();
     
     //One Policy Different Teams
-    //two_agents_one_policy_different_team_collide();
+    two_agents_one_policy_different_team_collide();
     //two_agents_one_policy_different_team_near_miss();
     //two_agents_one_policy_different_team_exact_miss();
     //two_agents_one_policy_different_team_close_parallel();
     //two_agents_one_policy_different_team_exact_parallel();
     //two_agents_one_policy_different_team_far_parallel();
-    four_agents_one_policy_different_team_collide_same_team();
+    //four_agents_one_policy_different_team_collide_same_team();
     //four_agents_one_policy_different_team_near_miss_same_team();
     //four_agents_one_policy_different_team_exact_miss_same_team();
     //four_agents_one_policy_different_team_close_parallel_same_team();
