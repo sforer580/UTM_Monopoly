@@ -19,7 +19,7 @@ class Policy
     friend class Team;
     friend class Individual;
     friend class Waypoint;
-    
+
 protected:
     
     
@@ -34,6 +34,8 @@ public:
     int target_waypoint = 1;                    //agents proceeds to target waypoint and starts at waypoint 0
     int policy_id;
     int selection_counter;
+    int corp_id;
+    int at_final_destination;
     
     vector<double> current_telem;
     vector<double> projected_telem;

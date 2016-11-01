@@ -34,7 +34,6 @@ class Simulator
     friend class Individual;
     friend class Policy;
     friend class Waypoint;
-    friend class Sim_Corp;
     
 protected:
     
@@ -45,28 +44,28 @@ public:
     Parameters* pP;
     
     //Simulator Setup
-    void create_starting_flight_velocity(vector<Sim_Corp>* s_team);
+    void create_starting_flight_velocity(vector<Policy>* sim_team);
     
     //Intialize Simulation
-    void set_initial_telem(vector<Sim_Corp>* s_team);
+    void set_initial_telem(vector<Policy>* sim_team);
     
     //Gather Information
-    void get_dist_to_target_waypoint(vector<Sim_Corp>* s_team, int sim_p);
-    void get_projected_telem(vector<Sim_Corp>* s_team, int sim_p);
-    void calc_projected_telem(vector<Sim_Corp>* s_team, int sim_p);
-    void get_inc_projected_telem(vector<Sim_Corp>* s_team int sim_p);
+    void get_dist_to_target_waypoint(vector<Policy>* sim_team, int sim_p);
+    void get_projected_telem(vector<Policy>* sim_team, int sim_p);
+    void calc_projected_telem(vector<Policy>* sim_team, int sim_p);
+    void get_inc_projected_telem(vector<Policy>* sim_team, int sim_p);
     
     //Crash Avoidance
-    void check_for_collisions(vector<Sim_Corp>* s_team);
-    double get_distance_to_other_agent(vector<Sim_Corp>* s_team, int sim_p, int sim_pp, double distance);
-    void compare_agents_projected_telem(vector<Sim_Corp>* s_team, int sim_p, int sim_pp, int kk);
-    void crash_avoidance(vector<Sim_Corp>* s_team);
+    void check_for_collisions(vector<Policy>* sim_team);
+    double get_distance_to_other_agent(vector<Policy>* sim_team, int sim_p, int sim_pp, double distance);
+    void compare_agents_projected_telem(vector<Policy>* sim_team, int sim_p, int sim_pp, int kk);
+    void crash_avoidance(vector<Policy>* sim_team);
     
     //New Telemetry Calculations
-    void get_new_telem(vector<Sim_Corp>* s_team, int sim_p);
-    void get_new_telem_option_1(vector<Sim_Corp>* s_team, int sim_p);
-    void check_if_at_waypoint(vector<Sim_Corp>* s_team, int sim_p);
-    void check_if_at_final_destination(vector<Sim_Corp>* s_team, int sim_p);
+    void get_new_telem(vector<Policy>* sim_team, int sim_p);
+    void get_new_telem_option_1(vector<Policy>* sim_team, int sim_p);
+    void check_if_at_waypoint(vector<Policy>* sim_team, int sim_p);
+    void check_if_at_final_destination(vector<Policy>* sim_team, int sim_p);
     
     //Fitness Calculations
     void get_agent_CA_fitness(vector<Policy>* sim_team);
@@ -74,7 +73,7 @@ public:
     
     
     //Simulation Main
-    void run_simulation(vector<Sim_Corp>* s_team);
+    void run_simulation(vector<Policy>* sim_team);
     
 private:
     
@@ -375,10 +374,13 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                         //4*(2*pP->max_travel_dist+2*pP->ca_radius)
                         if (distance<=4*(2*pP->max_travel_dist+2*pP->ca_radius))
                         {
-                            //this is where the get_inc_projected_telem should be called
                             for (int kk=0; kk < pP->ca_inc+2; kk++)
                             {
                                 compare_agents_projected_telem(sim_team, sim_p, sim_pp, kk);
+                            }
+                            if (sim_team->at(sim_p).current_travel_speed == pP->ca_flight_speed)
+                            {
+                                sim_team->at(sim_p).policy_fitness += 1;
                             }
                         }
                         else
@@ -603,24 +605,28 @@ void Simulator::get_agent_destination_fitness(vector<Policy>* sim_team)
                 if (sim_team->at(p).current_telem.at(2) == sim_team->at(p).check_points.at(pP->num_waypoints+1).waypoint_telem.at(2))
                 {
                     //cout << "agent" << "\t" << p << "\t" << "has reached its final destination" << endl;
+                    sim_team->at(p).at_final_destination = 1;
                     continue;
                 }
                 else
                 {
                     //cout << "agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
                     sim_team->at(p).policy_fitness = sim_team->at(p).policy_fitness + 10;
+                    sim_team->at(p).at_final_destination = 0;
                 }
             }
             else
             {
                 //cout << "agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
                 sim_team->at(p).policy_fitness = sim_team->at(p).policy_fitness + 10;
+                sim_team->at(p).at_final_destination = 0;
             }
         }
         else
         {
             //cout << "agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
             sim_team->at(p).policy_fitness = sim_team->at(p).policy_fitness + 10;
+            sim_team->at(p).at_final_destination = 0;
         }
     }
 }
@@ -629,15 +635,12 @@ void Simulator::get_agent_destination_fitness(vector<Policy>* sim_team)
 
 /////////////////////////////////////////////////////////////////
 //Runs Entire Simulation
-void Simulator::run_simulation(vector<Sim_Corp>* ps_team)
+void Simulator::run_simulation(vector<Policy>* psim_team)
 {
-    for (int st=0; st<pP->num_teams; st++)
+    for (int p=0; p<psim_team->size(); p++)
     {
-        for (int p=0; p<ps_team->size(); p++)
-        {
-            ps_team->at(at).s_policy.at(p).policy_fitness = 0;
-            ps_team->at(st).s_policy.at(p).projected_telem.resize(3);
-        }
+        psim_team->at(p).policy_fitness = 0;
+        psim_team->at(p).projected_telem.resize(3);
     }
     
     
@@ -668,24 +671,24 @@ void Simulator::run_simulation(vector<Sim_Corp>* ps_team)
             if (psim_team->at(sim_p).target_waypoint < pP->num_waypoints + 2)
             {
                 /*
-                cout << "agent" << "\t" << sim_p << endl;
-                cout << "target waypoint" << "\t" << psim_team->at(sim_p).target_waypoint << endl;
-                
-                cout << "distance to target waypoint" << "\t" << psim_team->at(sim_p).dist_to_target_waypoint << endl;
-                cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
-                cout << "current telem" << endl;
-                for (int ll=0; ll < 3; ll++)
-                {
-                    cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
-                }
-                cout << endl;
-                cout << "projected telem" << endl;
-                for (int ll=0; ll < 3; ll++)
-                {
-                    cout << psim_team->at(sim_p).projected_telem.at(ll) << "\t";
-                }
-                cout << endl;
-                */
+                 cout << "agent" << "\t" << sim_p << endl;
+                 cout << "target waypoint" << "\t" << psim_team->at(sim_p).target_waypoint << endl;
+                 
+                 cout << "distance to target waypoint" << "\t" << psim_team->at(sim_p).dist_to_target_waypoint << endl;
+                 cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
+                 cout << "current telem" << endl;
+                 for (int ll=0; ll < 3; ll++)
+                 {
+                 cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
+                 }
+                 cout << endl;
+                 cout << "projected telem" << endl;
+                 for (int ll=0; ll < 3; ll++)
+                 {
+                 cout << psim_team->at(sim_p).projected_telem.at(ll) << "\t";
+                 }
+                 cout << endl;
+                 */
                 
                 
                 //gets the new telemetry based on the flight speed from the CA
@@ -696,15 +699,15 @@ void Simulator::run_simulation(vector<Sim_Corp>* ps_team)
                 check_if_at_waypoint(psim_team, sim_p);
                 
                 /*
-                cout << "new telem" << endl;
-                for (int ll=0; ll < 3; ll++)
-                {
-                    cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
-                }
-                cout << endl;
-                cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
-                cout << endl;
-                */
+                 cout << "new telem" << endl;
+                 for (int ll=0; ll < 3; ll++)
+                 {
+                 cout << psim_team->at(sim_p).current_telem.at(ll) << "\t";
+                 }
+                 cout << endl;
+                 cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
+                 cout << endl;
+                 */
                 
             }
             //cout << endl;
@@ -714,18 +717,18 @@ void Simulator::run_simulation(vector<Sim_Corp>* ps_team)
         current_time += pP->delta_t;
         //cout << "current time" << "\t" << current_time << endl;
         //cout << endl;
-        get_agent_CA_fitness(psim_team);
+        //get_agent_CA_fitness(psim_team);
     }
     get_agent_destination_fitness(psim_team);
     
     /*
-    for (int p=0; p<psim_team->size(); p++)
-    {
-        cout << "agent" << p << "\t" << "fitness" << "\t" << psim_team->at(p).policy_fitness << endl;
-    }
-    cout << endl;
-    cout << endl;
-    */
+     for (int p=0; p<psim_team->size(); p++)
+     {
+     cout << "agent" << p << "\t" << "fitness" << "\t" << psim_team->at(p).policy_fitness << endl;
+     }
+     cout << endl;
+     cout << endl;
+     */
 }
 
 #endif /* Simulator_hpp */

@@ -31,7 +31,6 @@ class Team
     friend class Parameters;
     friend class Individual;
     friend class Simulator;
-    friend class World;
     friend class CCEA;
     
 protected:

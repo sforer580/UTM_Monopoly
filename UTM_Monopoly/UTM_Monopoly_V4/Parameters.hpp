@@ -55,8 +55,8 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 1;          //must be an interger 0-10
-    int team_0 = 16;
+    int num_teams = 2;          //must be an interger 0-10
+    int team_0 = 6;
     int team_1 = 8;
     int team_2 = 0;
     int team_3 = 0;
@@ -66,7 +66,7 @@ public:
     int team_7 = 0;
     int team_8 = 0;
     int team_9 = 0;
-    int num_policies = 10;
+    int num_policies = 3;
     int num_waypoints = 5;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
@@ -79,7 +79,7 @@ public:
     int to_replicate = to_kill;
     double mutate_percentage = 50;
     double mutation_range = 1;
-    int leniency = 1;           //0=off, 1=on
+    int leniency = 0;           //0=off, 1=on
     int fair_trail = 0;         //0=off, 1=on
     
 private:
