@@ -94,6 +94,18 @@ public:
     void two_agents_two_policy_same_team_close_parallel();
     void two_agents_two_policy_same_team_exact_parallel();
     void two_agents_two_policy_same_team_far_parallel();
+    void two_agents_one_policy_different_team_collide();
+    void two_agents_one_policy_different_team_near_miss();
+    void two_agents_one_policy_different_team_exact_miss();
+    void two_agents_one_policy_different_team_close_parallel();
+    void two_agents_one_policy_different_team_exact_parallel();
+    void two_agents_one_policy_different_team_far_parallel();
+    void four_agents_one_policy_different_team_collide_same_team();
+    void four_agents_one_policy_different_team_near_miss_same_team();
+    void four_agents_one_policy_different_team_exact_miss_same_team();
+    void four_agents_one_policy_different_team_close_parallel_same_team();
+    void four_agents_one_policy_different_team_exact_parallel_same_team();
+    void four_agents_one_policy_different_team_far_parallel_same_team();
     
 private:
     
@@ -526,7 +538,6 @@ void CCEA::build_team()
      }
      cout << endl;
      cout << endl;
-     
 }
 
 
@@ -1408,6 +1419,265 @@ void CCEA::two_agents_two_policy_same_team_far_parallel()
 }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//One Policies Differnt Team
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Two Agents One Policy Differnt Team On A Collision Course
+void CCEA::two_agents_one_policy_different_team_collide()
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Two Agents One Policy Differnt Team Near Miss
+void CCEA::two_agents_one_policy_different_team_near_miss()
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 4;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 4;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 4;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Two Agents One Policy Differnt Team Exact Miss
+void CCEA::two_agents_one_policy_different_team_exact_miss()
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 5;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 5;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 5;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Two Agents One Policy Differnt Team Close Parallel
+void CCEA::two_agents_one_policy_different_team_close_parallel()
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 4;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 4;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 4;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Two Agents One Policy Differnt Team Exact Parallel
+void CCEA::two_agents_one_policy_different_team_exact_parallel()
+{
+    //set num_teams=2, team_0=1, team_1=1, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 5;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 5;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 5;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Two Agents One Policy Differnt Team Far Parallel
+void CCEA::two_agents_one_policy_different_team_far_parallel()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 6;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 6;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 6;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Four Agents One Policy Differnt Team On A Collision Course For Each Team
+void CCEA::four_agents_one_policy_different_team_collide_same_team()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(1) = 50;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(0).waypoint_telem.at(2) = 0;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 10;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 10;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(0) = 25;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(1).waypoint_telem.at(2) = 0;
+    
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 20;
+    corp.at(0).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 20;
+    corp.at(0).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 50;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(0).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(0) = 0;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(1) = 40;
+    corp.at(1).agents.at(1).policies.at(0).check_points.at(2).waypoint_telem.at(2) = 0;
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Four Agents One Policy Differnt Team Near Miss For Each Team
+void CCEA::four_agents_one_policy_different_team_near_miss_same_team()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Four Agents One Policy Differnt Team Exact Miss For Each Team
+void CCEA::four_agents_one_policy_different_team_exact_miss_same_team()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Four Agents One Policy Differnt Team Close Parallel For Each Team
+void CCEA::four_agents_one_policy_different_team_close_parallel_same_team()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Four Agents One Policy Differnt Team Exact Parallel For Each Team
+void CCEA::four_agents_one_policy_different_team_exact_parallel_same_team()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+}
+
+
+/////////////////////////////////////////////////////////////////
+//One Simulation Four Agents One Policy Differnt Team Far Parallel For Each Team
+void CCEA::four_agents_one_policy_different_team_far_parallel_same_team()
+{
+    //set num_teams=2, team_0=2, team_1=2, max_x_dim=50, max_y_dim=50, max_z_dim=10, CA_radius=5, delta_t = 0.1, max_flight_velocity = 5.0, time_max = 40, num_policies=2, gen_max=1
+}
+
+
+
+
 void CCEA::Simulator_test_functions()
 {
     //uncomment a fucntion to run its test
@@ -1428,6 +1698,22 @@ void CCEA::Simulator_test_functions()
     //two_agents_two_policy_same_team_close_parallel();
     //two_agents_two_policy_same_team_exact_parallel();
     //two_agents_two_policy_same_team_far_parallel();
+    
+    //One Policy Different Teams
+    //two_agents_one_policy_different_team_collide();
+    //two_agents_one_policy_different_team_near_miss();
+    //two_agents_one_policy_different_team_exact_miss();
+    //two_agents_one_policy_different_team_close_parallel();
+    //two_agents_one_policy_different_team_exact_parallel();
+    //two_agents_one_policy_different_team_far_parallel();
+    four_agents_one_policy_different_team_collide_same_team();
+    //four_agents_one_policy_different_team_near_miss_same_team();
+    //four_agents_one_policy_different_team_exact_miss_same_team();
+    //four_agents_one_policy_different_team_close_parallel_same_team();
+    //four_agents_one_policy_different_team_exact_parallel_same_team();
+    //four_agents_one_policy_different_team_far_parallel_same_team();
+    
+    
 }
 
 
