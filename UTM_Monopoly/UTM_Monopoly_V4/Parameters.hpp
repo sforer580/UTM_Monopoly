@@ -80,7 +80,7 @@ public:
     double mutate_percentage = 50;
     double mutation_range = 1;
     int leniency = 1;           //0=off, 1=on
-    int fair_trail = 1;         //0=off, 1=on
+    int fair_trail = 0;         //0=off, 1=on
     
 private:
     

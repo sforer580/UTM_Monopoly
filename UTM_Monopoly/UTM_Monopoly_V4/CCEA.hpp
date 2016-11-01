@@ -24,6 +24,27 @@
 using namespace std;
 
 
+class Sim_Corp
+{
+    friend class Parameters;
+    friend class Team;
+    friend class Individual;
+    friend class Waypoint;
+    friend class Simulator;
+    friend class CCEA;
+    
+protected:
+    
+    
+public:
+    vector<Policy> s_policy;
+    
+private:
+    
+    
+};
+
+
 class CCEA
 {
     friend class Parameters;
@@ -31,6 +52,7 @@ class CCEA
     friend class Individual;
     friend class Waypoint;
     friend class Simulator;
+    friend class Sim_Corp;
     
 protected:
     
@@ -39,6 +61,7 @@ public:
     vector<Team> corp;
     Parameters* pP;
     vector<Policy> sim_team;
+    vector<Sim_Corp> s_team;
     
     //CCEA build funcitons
     void create_population();
@@ -50,11 +73,11 @@ public:
     //Functions for Simulation
     void build_team();
     void reset_selction_counter();
-    void reset_selection_identifiers(int team);
-    void build_sim_team(int team, int po);
+    void reset_selection_identifiers();
+    void build_sim_team(int po);
     void get_fair_statistics();
     void get_policy_fitness(int po, int len);
-    void simulate_team(vector<Policy>* sim_team);
+    void simulate_team(vector<Sim_Corp>* s_team);
     
     //Binary Selection Funcitons
     struct less_than_policy_fitness;
@@ -98,6 +121,8 @@ private:
     
     
 };
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -272,26 +297,29 @@ void CCEA::build_world()
 
 /////////////////////////////////////////////////////////////////
 //simulates the radomly generated sim_team
-void CCEA::simulate_team(vector<Policy>* psim_team)
+void CCEA::simulate_team(vector<Sim_Corp>* ps_team)
 {
     Simulator S;
     Parameters P;
     S.pP = &P;
-    S.run_simulation(psim_team);
+    S.run_simulation(ps_team);
 }
 
 
 /////////////////////////////////////////////////////////////////
 //resets the selection identifier
-void CCEA::reset_selection_identifiers(int team)
+void CCEA::reset_selection_identifiers()
 {
     //resets each agents policy selection identifier
-    for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+    for (int team=0; team<pP->num_teams; team++)
     {
-        for (int p=0; p<pP->num_policies; p++)
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
         {
-            corp.at(team).agents.at(indv).policies.at(p).selected = -1;
-            corp.at(team).agents.at(indv).policies.at(p).simulation_id = -1;
+            for (int p=0; p<pP->num_policies; p++)
+            {
+                corp.at(team).agents.at(indv).policies.at(p).selected = -1;
+                corp.at(team).agents.at(indv).policies.at(p).simulation_id = -1;
+            }
         }
     }
 }
@@ -317,12 +345,19 @@ void CCEA::reset_selction_counter()
 
 /////////////////////////////////////////////////////////////////
 //build the randomly generated sim_team
-void CCEA::build_sim_team(int team, int po)
+void CCEA::build_sim_team(int po)
 {
-    for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+    for (int team=0; team<pP->num_teams; team++)
     {
-        int rand_select = 0;
-        rand_select = rand () % pP->num_policies;       //radomly picks a policy
+        Sim_Corp ST;
+        s_team.push_back(ST);
+        
+        for (int indv=0; indv<pP->team_sizes.at(team); indv++)
+        {
+            Policy PO;
+            s_team.at(team).s_policy.push_back(PO);
+            int rand_select = 0;
+            rand_select = rand () % pP->num_policies;       //radomly picks a policy
             //cout << corp.at(team).agents.at(indv).policies.at(rand_select).selected << endl;
             while (corp.at(team).agents.at(indv).policies.at(rand_select).selected != -1)
             {
@@ -335,13 +370,14 @@ void CCEA::build_sim_team(int team, int po)
             //cout << po << endl;
             corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
             corp.at(team).agents.at(indv).policies.at(rand_select).selection_counter += 1;
-        
-            sim_team.at(indv) = (corp.at(team).agents.at(indv).policies.at(rand_select));
+            
+            s_team.at(team).s_policy.at(indv) = (corp.at(team).agents.at(indv).policies.at(rand_select));
             
             corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
             
             //select that policy for team
-            //build team vector for simulation   
+            //build team vector for simulation
+        }
     }
 }
 
@@ -510,26 +546,22 @@ void CCEA::build_team()
     {
         for (int len=0; len<ll; len++)
         {
-            for (int team=0; team<pP->num_teams; team++)
+            reset_selection_identifiers();
+            
+            //builds teams for simulation of randomly selected policies from each agent
+            for (int po=0; po<pP->num_policies; po++)
             {
-                reset_selection_identifiers(team);
+                //cout << "-----------------------------------------------------------------------------------" << endl;
+                //cout << "-----------------------------------------------------------------------------------" << endl;
                 
-                //builds teams for simulation of randomly selected policies from each agent
-                for (int po=0; po<pP->num_policies; po++)
-                {
-                    sim_team.resize(pP->team_sizes.at(team));
-                    //cout << "-----------------------------------------------------------------------------------" << endl;
-                    //cout << "-----------------------------------------------------------------------------------" << endl;
-                    
-                    build_sim_team(team, po);
-                    
-                    vector<Policy>* psim_team = &sim_team;
-                    simulate_team(psim_team);
-                    
-                    get_policy_fitness(po, len);
-                    
-                    sim_team.erase(sim_team.begin(), sim_team.end());
-                }
+                build_sim_team(po);
+                
+                vector<Sim_Corp>* ps_team = &s_team;
+                simulate_team(ps_team);
+                
+                get_policy_fitness(po, len);
+                
+                s_team.erase(s_team.begin(), s_team.end());
             }
         }
     }
