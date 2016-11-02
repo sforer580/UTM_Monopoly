@@ -340,6 +340,24 @@ double Simulator::get_distance_to_other_agent(vector<Policy>* sim_team, int sim_
     double z;
     double z_mag;
     double r;
+    
+    /*
+    cout << "agent" << "\t" << sim_p << endl;
+    cout << "current telem" << endl;
+    for (int i=0; i<3; i++)
+    {
+        cout << sim_team->at(sim_p).current_telem.at(i) << "\t";
+    }
+    cout << endl;
+    cout << "agent" << "\t" << sim_pp << endl;
+    cout << "current telem" << endl;
+    for (int i=0; i<3; i++)
+    {
+        cout << sim_team->at(sim_pp).current_telem.at(i) << "\t";
+    }
+    cout << endl;
+    */
+    
     x = sim_team->at(sim_p).current_telem.at(0)-sim_team->at(sim_pp).current_telem.at(0);
     y = sim_team->at(sim_p).current_telem.at(1)-sim_team->at(sim_pp).current_telem.at(1);
     z = sim_team->at(sim_p).current_telem.at(2)-sim_team->at(sim_pp).current_telem.at(2);
@@ -372,6 +390,7 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                         double distance = 0;
                         //get distance to other agent
                         distance = get_distance_to_other_agent(sim_team, sim_p, sim_pp, distance);
+                        cout << distance << endl;
                         //4*(2*pP->max_travel_dist+2*pP->ca_radius)
                         if (distance<=4*(2*pP->max_travel_dist+2*pP->ca_radius))
                         {
