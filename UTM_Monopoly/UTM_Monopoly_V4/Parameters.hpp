@@ -81,6 +81,7 @@ public:
     double mutation_range = 1;
     int leniency = 0;           //0=off, 1=on
     int fair_trail = 0;         //0=off, 1=on
+    int uncoop = 0;             //0=off, 1=on
     
 private:
     

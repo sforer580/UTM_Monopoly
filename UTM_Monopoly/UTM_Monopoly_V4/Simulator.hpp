@@ -401,8 +401,42 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                             }
                             if (sim_team->at(sim_p).current_travel_speed == pP->ca_flight_speed)
                             {
-                                sim_team->at(sim_p).policy_fitness += 1;
-                                cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
+                                //for cooperative teams
+                                if (pP->uncoop == 0)
+                                {
+                                    sim_team->at(sim_p).policy_fitness += 1;
+                                    cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
+                                }
+                                //for one uncooperative team
+                                if (pP->uncoop == 1)
+                                {
+                                    if (sim_team->at(sim_p).corp_id == 0)
+                                    {
+                                        if (sim_team->at(sim_p).corp_id == sim_team->at(sim_pp).corp_id)
+                                        {
+                                          sim_team->at(sim_p).policy_fitness += 1;
+                                            cout << "team 0 inner team conflict" << endl;
+                                            //team 0 will only recieve a penalty if they conflict with in their own team
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    if (sim_team->at(sim_p).corp_id == 1)
+                                    {
+                                        sim_team->at(sim_p).policy_fitness += 1;
+                                        //team 1 will recieve a penalty for all conflicts that are with their own team and the other team
+                                        if (sim_team->at(sim_p).corp_id == sim_team->at(sim_pp).corp_id)
+                                        {
+                                            cout << "team 1 inner team conflict" << endl;
+                                        }
+                                        if (sim_team->at(sim_p).corp_id != sim_team->at(sim_pp).corp_id)
+                                        {
+                                            cout << "team 1 conflict" << endl;
+                                        }
+                                    }
+                                }
                             }
                         }
                         else

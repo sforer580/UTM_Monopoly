@@ -142,7 +142,8 @@ void CCEA::create_population()
             {
                 Policy Po;
                 corp.at(ii).agents.at(jj).policies.push_back(Po);
-                corp.at(ii).agents.at(jj).policies.at(pp).policy_id = pp;
+                corp.at(ii).agents.at(jj).policies.at(pp).policy_id = pp; //sets the policy id for that policy
+                corp.at(ii).agents.at(jj).policies.at(pp).corp_id = ii; //sets the corporation id for that policy
                 
                 for (int ww=0; ww < pP->num_waypoints+2; ww++)
                 {
@@ -352,7 +353,6 @@ void CCEA::build_sim_team(int po)
             }
             //cout << po << endl;
             corp.at(team).agents.at(indv).policies.at(rand_select).simulation_id = po;    //sets team selection identifier
-            corp.at(team).agents.at(indv).policies.at(rand_select).corp_id = team;        //sets the corporation id for that policy
             corp.at(team).agents.at(indv).policies.at(rand_select).selection_counter += 1;
             corp.at(team).agents.at(indv).policies.at(rand_select).selected = 1;    //changes selection identifier to selected
             
@@ -1902,8 +1902,6 @@ void CCEA::Simulator_test_functions()
     //four_agents_one_policy_different_team_close_parallel_same_team();
     //four_agents_one_policy_different_team_exact_parallel_same_team();
     //four_agents_one_policy_different_team_far_parallel_same_team();
-    
-    
 }
 
 
