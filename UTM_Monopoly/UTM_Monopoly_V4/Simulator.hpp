@@ -390,11 +390,11 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                         double distance = 0;
                         //get distance to other agent
                         distance = get_distance_to_other_agent(sim_team, sim_p, sim_pp, distance);
-                        cout << distance << endl;
+                        //cout << distance << endl;
                         //4*(2*pP->max_travel_dist+2*pP->ca_radius)
                         if (distance<=4*(2*pP->max_travel_dist+2*pP->ca_radius))
                         {
-                            cout << sim_p << "\t" << sim_pp << endl;
+                            //cout << sim_p << "\t" << sim_pp << endl;
                             for (int kk=0; kk < pP->ca_inc+2; kk++)
                             {
                                 compare_agents_projected_telem(sim_team, sim_p, sim_pp, kk);
@@ -416,10 +416,13 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                                         {
                                           sim_team->at(sim_p).policy_fitness += 1;
                                             cout << "team 0 inner team conflict" << endl;
+                                            cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
                                             //team 0 will only recieve a penalty if they conflict with in their own team
                                         }
                                         else
                                         {
+                                            cout << "team 0 conflict" << endl;
+                                            cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
                                             continue;
                                         }
                                     }
@@ -430,10 +433,12 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team)
                                         if (sim_team->at(sim_p).corp_id == sim_team->at(sim_pp).corp_id)
                                         {
                                             cout << "team 1 inner team conflict" << endl;
+                                            cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
                                         }
                                         if (sim_team->at(sim_p).corp_id != sim_team->at(sim_pp).corp_id)
                                         {
                                             cout << "team 1 conflict" << endl;
+                                            cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
                                         }
                                     }
                                 }
@@ -660,27 +665,27 @@ void Simulator::get_agent_destination_fitness(vector<Policy>* sim_team)
             {
                 if (sim_team->at(p).current_telem.at(2) == sim_team->at(p).check_points.at(pP->num_waypoints+1).waypoint_telem.at(2))
                 {
-                    cout << "agent" << "\t" << p << "\t" << "has reached its final destination" << endl;
+                    cout << "sim agent" << "\t" << p << "\t" << "has reached its final destination" << endl;
                     sim_team->at(p).at_final_destination = 1;
                     continue;
                 }
                 else
                 {
-                    cout << "agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
+                    cout << "sim agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
                     sim_team->at(p).policy_fitness = sim_team->at(p).policy_fitness + 10;
                     sim_team->at(p).at_final_destination = 0;
                 }
             }
             else
             {
-                cout << "agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
+                cout << "sim agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
                 sim_team->at(p).policy_fitness = sim_team->at(p).policy_fitness + 10;
                 sim_team->at(p).at_final_destination = 0;
             }
         }
         else
         {
-            cout << "agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
+            cout << "sim agent" << "\t" << p << "\t" << "has not reached its final destination" << endl;
             sim_team->at(p).policy_fitness = sim_team->at(p).policy_fitness + 10;
             sim_team->at(p).at_final_destination = 0;
         }
@@ -720,7 +725,7 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
     {
         //checks for crash avoidance
         crash_avoidance(psim_team);
-        cout << "current time" << "\t" << current_time << endl;
+        //cout << "current time" << "\t" << current_time << endl;
         for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
         {
             //only considers agent who have not reached their final destination
@@ -780,7 +785,7 @@ void Simulator::run_simulation(vector<Policy>* psim_team)
     
      for (int p=0; p<psim_team->size(); p++)
      {
-     cout << "agent" << p << "\t" << "fitness" << "\t" << psim_team->at(p).policy_fitness << endl;
+     cout << "sim agent" << p << "\t" << "fitness" << "\t" << psim_team->at(p).policy_fitness << endl;
      }
      cout << endl;
      cout << endl;
