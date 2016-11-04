@@ -39,7 +39,6 @@ protected:
 public:
     vector<Individual> agents;
     void set_team_sizes();
-    double team_fitness;
     
 private:
     
