@@ -20,6 +20,7 @@
 #include <fstream>
 #include <iomanip>
 #include <cassert>
+#include <ctime>
 
 
 using namespace std;
@@ -79,7 +80,7 @@ public:
     vector<double> max_team_1_fitness;
     void get_statistics();
     void write_statistics_to_file();
-    void write_parameters_to_file();
+    void write_parameters_to_file(float seconds);
     
     
     //Simulator Test Functions
@@ -494,7 +495,7 @@ void CCEA::build_team(int gen)
     int ll = 0;
     if (pP->leniency == 1)
     {
-        ll = pP->num_policies/2;
+        ll = pP->num_policies/10;
     }
     if (pP->leniency == 0)
     {
@@ -523,6 +524,45 @@ void CCEA::build_team(int gen)
                 get_policy_fitness(po, len);
                 
                 sim_team.erase(sim_team.begin(), sim_team.end());
+            }
+        }
+    }
+    
+    
+    if (pP->fair_trial == 1)
+    {
+        if (fcount<pP->gen_max)
+        {
+            for (int len=0; len<ll; len++)
+            {
+                if (fcount == pP->gen_max)
+                {
+                    exit(1);
+                }
+                
+                reset_selection_identifiers();
+                
+                //builds teams for simulation of randomly selected policies from each agent
+                for (int po=0; po<pP->num_policies; po++)
+                {
+                    //sim_team.resize(pP->team_sizes.at(0)+pP->team_sizes.at(1));
+                    //cout << "-----------------------------------------------------------------------------------" << endl;
+                    //cout << "-----------------------------------------------------------------------------------" << endl;
+                    
+                    build_sim_team(po);
+                    
+                    vector<Policy>* psim_team = &sim_team;
+                    simulate_team(psim_team, gen);
+                    
+                    get_policy_fitness(po, len);
+                    
+                    sim_team.erase(sim_team.begin(), sim_team.end());
+                }
+                
+                get_fair_statistics();
+                fcount += 1;
+                //cout << "check counter" << endl;
+                //cout << fcount << endl;
             }
         }
     }
@@ -761,30 +801,32 @@ void CCEA::get_statistics()
     max_team_0_fitness.push_back(max_0_sum/pP->team_sizes.at(0));
     
     
-    
-    double min_1_sum = 0;
-    for (int indv=0; indv<pP->team_sizes.at(1); indv++)
+    if (pP->num_teams == 2)
     {
-        min_1_sum += corp.at(1).agents.at(indv).policies.at(0).policy_fitness;
-    }
-    min_team_1_fitness.push_back(min_1_sum/pP->team_sizes.at(1));
-    
-    double ave_1_sum = 0;
-    for (int indv=0; indv<pP->team_sizes.at(1); indv++)
-    {
-        for (int p=0; p<pP->num_policies; p++)
+        double min_1_sum = 0;
+        for (int indv=0; indv<pP->team_sizes.at(1); indv++)
         {
-            ave_1_sum += corp.at(1).agents.at(indv).policies.at(p).policy_fitness;
+            min_1_sum += corp.at(1).agents.at(indv).policies.at(0).policy_fitness;
         }
+        min_team_1_fitness.push_back(min_1_sum/pP->team_sizes.at(1));
+        
+        double ave_1_sum = 0;
+        for (int indv=0; indv<pP->team_sizes.at(1); indv++)
+        {
+            for (int p=0; p<pP->num_policies; p++)
+            {
+                ave_1_sum += corp.at(1).agents.at(indv).policies.at(p).policy_fitness;
+            }
+        }
+        ave_team_1_fitness.push_back(ave_1_sum/(pP->team_sizes.at(1)*pP->num_policies));
+        
+        double max_1_sum = 0;
+        for (int indv=0; indv<pP->team_sizes.at(1); indv++)
+        {
+            max_1_sum += corp.at(1).agents.at(indv).policies.at(pP->num_policies-1).policy_fitness;
+        }
+        max_team_1_fitness.push_back(max_1_sum/pP->team_sizes.at(1));
     }
-    ave_team_1_fitness.push_back(ave_1_sum/(pP->team_sizes.at(1)*pP->num_policies));
-    
-    double max_1_sum = 0;
-    for (int indv=0; indv<pP->team_sizes.at(1); indv++)
-    {
-        max_1_sum += corp.at(1).agents.at(indv).policies.at(pP->num_policies-1).policy_fitness;
-    }
-    max_team_1_fitness.push_back(max_1_sum/pP->team_sizes.at(1));
 }
 
 
@@ -798,33 +840,40 @@ void CCEA::write_statistics_to_file()
     File2.open("Team 0 Ave Fitness For All Gens.txt");
     ofstream File3;
     File3.open("Team 0 Max Fitness For All Gens.txt");
-    ofstream File4;
-    File4.open("Team 1 Min Fitness For All Gens.txt");
-    ofstream File5;
-    File5.open("Team 1 Ave Fitness For All Gens.txt");
-    ofstream File6;
-    File6.open("Team 1 Max Fitness For All Gens.txt");
     for (int i=0; i<pP->gen_max; i++)
     {
         File1 << min_team_0_fitness.at(i) << endl;
         File2 << ave_team_0_fitness.at(i) << endl;
         File3 << max_team_0_fitness.at(i) << endl;
-        File4 << min_team_1_fitness.at(i) << endl;
-        File5 << ave_team_1_fitness.at(i) << endl;
-        File6 << max_team_1_fitness.at(i) << endl;
     }
     File1.close();
     File2.close();
     File3.close();
-    File4.close();
-    File5.close();
-    File6.close();
+    
+    if (pP->num_teams == 2)
+    {
+        ofstream File4;
+        File4.open("Team 1 Min Fitness For All Gens.txt");
+        ofstream File5;
+        File5.open("Team 1 Ave Fitness For All Gens.txt");
+        ofstream File6;
+        File6.open("Team 1 Max Fitness For All Gens.txt");
+        for (int i=0; i<pP->gen_max; i++)
+        {
+            File4 << min_team_1_fitness.at(i) << endl;
+            File5 << ave_team_1_fitness.at(i) << endl;
+            File6 << max_team_1_fitness.at(i) << endl;
+        }
+        File4.close();
+        File5.close();
+        File6.close();
+    }
 }
 
 
 /////////////////////////////////////////////////////////////////
 //writes the parameters for the trail to a txt file
-void CCEA::write_parameters_to_file()
+void CCEA::write_parameters_to_file(float seconds)
 {
     ofstream File7;
     File7.open("Parameters.txt");
@@ -893,6 +942,8 @@ void CCEA::write_parameters_to_file()
     {
         File7 << "behavior change on" << endl;
     }
+    File7 << " " << endl;
+    File7 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;
     File7.close();
 }
 
@@ -903,6 +954,8 @@ void CCEA::write_parameters_to_file()
 //Runs the entire CCEA process
 void CCEA::run_CCEA()
 {
+    clock_t t1, t2;
+    t1 = clock();
     build_world();
     Simulator_test_functions();     //go to function to run tests
     for (int gen=0; gen<pP->gen_max; gen++)
@@ -996,8 +1049,15 @@ void CCEA::run_CCEA()
             }
         }
     }
+    t2 = clock();
+    float diff ((float)t2-(float)t1);
+    //cout<<diff<<endl;
+    //system ("pause");
+    float seconds = diff / CLOCKS_PER_SEC;
+    cout << seconds << endl;
     write_statistics_to_file();
-    write_parameters_to_file();
+    write_parameters_to_file(seconds);
+    
 }
 
 

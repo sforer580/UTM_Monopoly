@@ -55,9 +55,9 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 2;          //must be an interger 0-10
-    int team_0 = 12;
-    int team_1 = 12;
+    int num_teams = 1;          //must be an interger 0-10
+    int team_0 = 28;
+    int team_1 = 14;
     int team_2 = 0;
     int team_3 = 0;
     int team_4 = 0;
@@ -66,23 +66,25 @@ public:
     int team_7 = 0;
     int team_8 = 0;
     int team_9 = 0;
-    int num_policies = 10;
-    int num_waypoints = 5;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
+    int num_policies = 50;
+    int num_waypoints = 6;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
     
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 50;
+    int gen_max = 100;
     int to_kill = num_policies/2;
     int to_replicate = to_kill;
     double mutate_percentage = 50;
     double mutation_range = 1;
+    //Experiments
     int leniency = 1;           //0=off, 1=on
-    int fair_trial = 0;         //0=off, 1=on
-    int uncoop = 1;             //0=off, 1=on
-    int behavior_change = 0;    //0=off, 1=on       //if on team 0 will switch to uncooperative at gen_max/2
+    int fair_trial = 1;         //0=off, 1=on
+    int uncoop = 0;             //0=off, 1=on
+    int behavior_change = 0;    //0=off, 1=on       //if on team 0 will switch to uncooperative at gen_max/2    uncoop must = 0
+    int domino = 0;             //0=off, 1=on       //if on uncoop must = 0
     
 private:
     

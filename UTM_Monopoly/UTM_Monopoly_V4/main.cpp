@@ -37,5 +37,5 @@ int main()
     
     P.set_team_sizes();
     EA.run_CCEA();
-    
+
 }
