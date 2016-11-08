@@ -463,7 +463,6 @@ void CCEA::get_policy_fitness(int po, int len)
                         corp.at(team).agents.at(indv).policies.at(p).policy_fitness = sum;
                     }
                     
-                    
                     //with leniency
                     if (pP->leniency == 1)
                     {
@@ -893,8 +892,6 @@ void CCEA::write_parameters_to_file(float seconds)
     File7 << "ca radius" << "\t" << pP->ca_radius << endl;
     File7 << "ca incrementation" << "\t" << pP->ca_inc << endl;
     File7 << " " << endl;
-    File7 << " " << endl;
-    File7 << " " << endl;
     File7 << "CCEA Parameters" << endl;
     File7 << "Team parameters" << endl;
     File7 << "number of teams" << "\t" << "\t" << pP->num_teams << endl;
@@ -941,6 +938,14 @@ void CCEA::write_parameters_to_file(float seconds)
     if (pP->behavior_change == 1)
     {
         File7 << "behavior change on" << endl;
+    }
+    if (pP->domino == 0)
+    {
+        File7 << "domino off" << endl;
+    }
+    if (pP->domino == 1)
+    {
+        File7 << "domino on" << endl;
     }
     File7 << " " << endl;
     File7 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;
