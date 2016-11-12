@@ -47,6 +47,7 @@ public:
     void create_starting_telem();
     void create_checkpoints();
     void create_target_telem();
+    void set_conflict_counter();
     void build_world();
     
     //Functions for Simulation
@@ -56,7 +57,7 @@ public:
     void build_sim_team(int po);
     void get_fair_statistics();
     void get_policy_fitness(int po, int len);
-    void simulate_team(vector<Policy>* sim_team, int gen);
+    void simulate_team(vector<Policy>* sim_team, int gen, vector<int> &conflict_counter);
     
     //Binary Selection Funcitons
     struct less_than_policy_fitness;
@@ -78,6 +79,8 @@ public:
     vector<double> min_team_1_fitness;
     vector<double> ave_team_1_fitness;
     vector<double> max_team_1_fitness;
+    vector<int> conflict_counter;          //0_0, 0_0, 1_0, 1_1
+    //conflict_counter* pCC;
     void get_statistics();
     void write_statistics_to_file();
     void write_parameters_to_file(float seconds);
@@ -278,6 +281,19 @@ void CCEA::create_target_telem()
 
 
 /////////////////////////////////////////////////////////////////
+//Sets the conflict counters for the stat run to 0
+void CCEA::set_conflict_counter()
+{
+    conflict_counter.resize(4);
+    //cout << conflict_counter.size() << endl;
+    for (int i=0; i<conflict_counter.size(); i++)
+    {
+        conflict_counter.at(i) = 0;
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
 //Build World for CCEA
 //creates the instaces for the enitre population with memory alocation and creates the waypoint paths for each policy of each agent of each team
 void CCEA::build_world()
@@ -286,17 +302,19 @@ void CCEA::build_world()
     create_starting_telem();
     create_checkpoints();
     create_target_telem();
+    set_conflict_counter();
 }
 
 
 /////////////////////////////////////////////////////////////////
 //simulates the radomly generated sim_team
-void CCEA::simulate_team(vector<Policy>* psim_team, int gen)
+void CCEA::simulate_team(vector<Policy>* psim_team, int gen, vector<int> &conflict_counter)
 {
     Simulator S;
     Parameters P;
+    vector<int>* pconflict_counter = &conflict_counter;
     S.pP = &P;
-    S.run_simulation(psim_team, gen);
+    S.run_simulation(psim_team, gen, pconflict_counter);
 }
 
 
@@ -317,7 +335,6 @@ void CCEA::reset_selection_identifiers()
         }
     }
 }
-
 
 
 /////////////////////////////////////////////////////////////////
@@ -518,7 +535,7 @@ void CCEA::build_team(int gen)
                 build_sim_team(po);
                 
                 vector<Policy>* psim_team = &sim_team;
-                simulate_team(psim_team, gen);
+                simulate_team(psim_team, gen, conflict_counter);
                 
                 get_policy_fitness(po, len);
                 
@@ -551,7 +568,7 @@ void CCEA::build_team(int gen)
                     build_sim_team(po);
                     
                     vector<Policy>* psim_team = &sim_team;
-                    simulate_team(psim_team, gen);
+                    simulate_team(psim_team, gen, conflict_counter);
                     
                     get_policy_fitness(po, len);
                     
@@ -1054,12 +1071,17 @@ void CCEA::run_CCEA()
             }
         }
     }
+    cout << "0_0 conflicts" << "\t" << conflict_counter.at(0) << endl;
+    cout << "1_0 conflicts" << "\t" << conflict_counter.at(1) << endl;
+    cout << "0_1 conflicts" << "\t" << conflict_counter.at(2) << endl;
+    cout << "1_1 conflicts" << "\t" << conflict_counter.at(3) << endl;
+    cout << endl;
     t2 = clock();
     float diff ((float)t2-(float)t1);
     //cout<<diff<<endl;
     //system ("pause");
     float seconds = diff / CLOCKS_PER_SEC;
-    cout << seconds << endl;
+    cout << "run time" << "\t" << seconds << endl;
     write_statistics_to_file();
     write_parameters_to_file(seconds);
     
@@ -2076,7 +2098,7 @@ void CCEA::Simulator_test_functions()
     //two_agents_one_policy_different_team_close_parallel();
     //two_agents_one_policy_different_team_exact_parallel();
     //two_agents_one_policy_different_team_far_parallel();
-    four_agents_one_policy_different_team_collide_same_team();
+    //four_agents_one_policy_different_team_collide_same_team();
     //four_agents_one_policy_different_team_near_miss_same_team();
     //four_agents_one_policy_different_team_exact_miss_same_team();
     //four_agents_one_policy_different_team_close_parallel_same_team();

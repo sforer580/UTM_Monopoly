@@ -85,7 +85,6 @@ public:
     int uncoop = 0;             //0=off, 1=on
     int behavior_change = 0;    //0=off, 1=on       //if on team 0 will switch to uncooperative at gen_max/2    uncoop must = 0
     int domino = 1;             //0=off, 1=on       //if on uncoop must = 0
-    int c_count = 0;
     
 private:
     

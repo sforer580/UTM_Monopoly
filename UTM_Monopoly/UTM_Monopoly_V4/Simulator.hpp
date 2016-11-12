@@ -34,6 +34,7 @@ class Simulator
     friend class Individual;
     friend class Policy;
     friend class Waypoint;
+    friend class CCEA;
     
 protected:
     
@@ -56,12 +57,13 @@ public:
     void get_inc_projected_telem(vector<Policy>* sim_team, int sim_p);
     
     //Crash Avoidance
-    void check_for_collisions(vector<Policy>* sim_team, int gen);
+    void check_for_collisions(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter);
     double get_distance_to_other_agent(vector<Policy>* sim_team, int sim_p, int sim_pp, double distance);
     void compare_agents_projected_telem(vector<Policy>* sim_team, int sim_p, int sim_pp, int kk);
-    void crash_avoidance(vector<Policy>* sim_team, int gen);
+    void crash_avoidance(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter);
     
     //Experiment Fucntions
+    void run_conflict_counter(vector<Policy>* sim_team, int sim_p, int sim_pp, vector<int>* pconflict_counter);
     void run_cooperative_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     void run_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     void run_uncoop_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
@@ -79,7 +81,7 @@ public:
     
     
     //Simulation Main
-    void run_simulation(vector<Policy>* sim_team, int gen);
+    void run_simulation(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter);
     
 private:
     
@@ -376,6 +378,49 @@ double Simulator::get_distance_to_other_agent(vector<Policy>* sim_team, int sim_
 
 
 /////////////////////////////////////////////////////////////////
+//runs the domino effect case
+void Simulator::run_conflict_counter(vector<Policy>* sim_team, int sim_p, int sim_pp, vector<int>* pconflict_counter)
+{
+    //conflict case 0_0
+    if (sim_team->at(sim_p).corp_id == 0)
+    {
+        if (sim_team->at(sim_pp).corp_id == 0)
+        {
+            pconflict_counter->at(0) += 1;
+            //cout << "conflict counter 0_0" << "\t" << pconflict_counter->at(0) << endl;
+        }
+    }
+    //conflict case 0_1
+    if (sim_team->at(sim_p).corp_id == 0)
+    {
+        if (sim_team->at(sim_pp).corp_id == 1)
+        {
+            pconflict_counter->at(1) += 1;
+            //cout << "conflict counter 0_1" << "\t" << pconflict_counter->at(1) << endl;
+        }
+    }
+    //conflict case 1_0
+    if (sim_team->at(sim_p).corp_id == 1)
+    {
+        if (sim_team->at(sim_pp).corp_id == 0)
+        {
+            pconflict_counter->at(2) += 1;
+            //cout << "conflict counter 1_0" << "\t" << pconflict_counter->at(2) << endl;
+        }
+    }
+    //conflict case 1_1
+    if (sim_team->at(sim_p).corp_id == 1)
+    {
+        if (sim_team->at(sim_pp).corp_id == 1)
+        {
+            pconflict_counter->at(3) += 1;
+            //cout << "conflict counter 1_1" << "\t" << pconflict_counter->at(3) << endl;
+        }
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
 //runs a strictly cooperative case
 void Simulator::run_cooperative_case(vector<Policy>* sim_team, int sim_p, int sim_pp)
 {
@@ -405,8 +450,6 @@ void Simulator::run_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp)
                 if (sim_team->at(tt).corp_id == 0)
                 {
                     sim_team->at(tt).policy_fitness = sim_team->at(tt).policy_fitness - 1/pP->team_sizes.at(0);
-                    pP->c_count += 1;
-                    cout << pP->c_count << endl;
                 }
             }
             */
@@ -503,7 +546,7 @@ void Simulator::run_behavorial_change_case(vector<Policy>* sim_team, int gen, in
 /////////////////////////////////////////////////////////////////
 //Checks For Possible Collisions
 //checks the distance of each agents projected telemetry against one another
-void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen)
+void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter)
 {
     //cout << sim_team->size() << endl;
     for (int sim_p=0; sim_p< sim_team->size(); sim_p++)
@@ -561,6 +604,7 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen)
                                 {
                                     run_behavorial_change_case(sim_team, gen, sim_p, sim_pp);
                                 }
+                                run_conflict_counter(sim_team, sim_p, sim_pp, pconflict_counter);
                                 
                             }
                         }
@@ -626,7 +670,7 @@ void Simulator::compare_agents_projected_telem(vector<Policy>* sim_team, int sim
 /////////////////////////////////////////////////////////////////
 //Runs The Crash Avoidance Check
 //crash avoidance main function
-void Simulator::crash_avoidance(vector<Policy>* sim_team, int gen)
+void Simulator::crash_avoidance(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter)
 {
     for (int sim_p=0; sim_p< sim_team->size(); sim_p++)
     {
@@ -644,7 +688,7 @@ void Simulator::crash_avoidance(vector<Policy>* sim_team, int gen)
             get_inc_projected_telem(sim_team, sim_p);
         }
     }
-    check_for_collisions(sim_team, gen);
+    check_for_collisions(sim_team, gen, pconflict_counter);
 }
 
 
@@ -816,7 +860,7 @@ void Simulator::get_agent_destination_fitness(vector<Policy>* sim_team)
 
 /////////////////////////////////////////////////////////////////
 //Runs Entire Simulation
-void Simulator::run_simulation(vector<Policy>* psim_team, int gen)
+void Simulator::run_simulation(vector<Policy>* psim_team, int gen, vector<int>* pconflict_counter)
 {
     //cout << gen << endl;
     for (int p=0; p<psim_team->size(); p++)
@@ -845,7 +889,7 @@ void Simulator::run_simulation(vector<Policy>* psim_team, int gen)
     while (current_time < pP->time_max)
     {
         //checks for crash avoidance
-        crash_avoidance(psim_team, gen);
+        crash_avoidance(psim_team, gen, pconflict_counter);
         //cout << "current time" << "\t" << current_time << endl;
         for (int sim_p=0; sim_p<psim_team->size(); sim_p++)
         {
@@ -890,8 +934,6 @@ void Simulator::run_simulation(vector<Policy>* psim_team, int gen)
                  cout << "current travel speed" << "\t" << psim_team->at(sim_p).current_travel_speed << endl;
                  cout << endl;
                 */
-                
-                
             }
             //cout << endl;
         }
@@ -911,7 +953,6 @@ void Simulator::run_simulation(vector<Policy>* psim_team, int gen)
      cout << endl;
      cout << endl;
      */
-    
 }
 
 #endif /* Simulator_hpp */
