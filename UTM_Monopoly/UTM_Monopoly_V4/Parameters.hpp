@@ -56,8 +56,8 @@ public:
     
     //Team Settings
     int num_teams = 2;          //must be an interger 0-10
-    int team_0 = 2;
-    int team_1 = 2;
+    int team_0 = 14;
+    int team_1 = 14;
     int team_2 = 0;
     int team_3 = 0;
     int team_4 = 0;
@@ -66,20 +66,21 @@ public:
     int team_7 = 0;
     int team_8 = 0;
     int team_9 = 0;
-    int num_policies = 1;
-    int num_waypoints = 1;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
+    int num_policies = 50;
+    int num_waypoints = 6;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
     
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 1;
+    int gen_max = 100;
     int to_kill = num_policies/2;
     int to_replicate = to_kill;
     double mutate_percentage = 50;
     double mutation_range = 1;
-    int leniency = 0;           //0=off, 1=on
+    int leniency = 1;           //0=off, 1=on
+    int amount_lenient = 5;
     int fair_trial = 0;         //0=off, 1=on
     //Experiments
     int uncoop = 0;             //0=off, 1=on
@@ -87,8 +88,6 @@ public:
     int domino = 1;             //0=off, 1=on       //if on uncoop must = 0
     
 private:
-    
-    
 };
 
 

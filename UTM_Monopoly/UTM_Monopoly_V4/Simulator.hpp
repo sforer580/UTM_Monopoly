@@ -57,13 +57,13 @@ public:
     void get_inc_projected_telem(vector<Policy>* sim_team, int sim_p);
     
     //Crash Avoidance
-    void check_for_collisions(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter);
+    void check_for_collisions(vector<Policy>* sim_team, int gen, vector<double>* pconflict_counter);
     double get_distance_to_other_agent(vector<Policy>* sim_team, int sim_p, int sim_pp, double distance);
     void compare_agents_projected_telem(vector<Policy>* sim_team, int sim_p, int sim_pp, int kk);
-    void crash_avoidance(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter);
+    void crash_avoidance(vector<Policy>* sim_team, int gen, vector<double>* pconflict_counter);
     
     //Experiment Fucntions
-    void run_conflict_counter(vector<Policy>* sim_team, int sim_p, int sim_pp, vector<int>* pconflict_counter);
+    void run_conflict_counter(vector<Policy>* sim_team, int sim_p, int sim_pp, vector<double>* pconflict_counter);
     void run_cooperative_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     void run_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     void run_uncoop_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
@@ -81,7 +81,7 @@ public:
     
     
     //Simulation Main
-    void run_simulation(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter);
+    void run_simulation(vector<Policy>* sim_team, int gen, vector<double>* pconflict_counter);
     
 private:
     
@@ -379,7 +379,7 @@ double Simulator::get_distance_to_other_agent(vector<Policy>* sim_team, int sim_
 
 /////////////////////////////////////////////////////////////////
 //runs the domino effect case
-void Simulator::run_conflict_counter(vector<Policy>* sim_team, int sim_p, int sim_pp, vector<int>* pconflict_counter)
+void Simulator::run_conflict_counter(vector<Policy>* sim_team, int sim_p, int sim_pp, vector<double>* pconflict_counter)
 {
     //conflict case 0_0
     if (sim_team->at(sim_p).corp_id == 0)
@@ -546,7 +546,7 @@ void Simulator::run_behavorial_change_case(vector<Policy>* sim_team, int gen, in
 /////////////////////////////////////////////////////////////////
 //Checks For Possible Collisions
 //checks the distance of each agents projected telemetry against one another
-void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter)
+void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<double>* pconflict_counter)
 {
     //cout << sim_team->size() << endl;
     for (int sim_p=0; sim_p< sim_team->size(); sim_p++)
@@ -670,7 +670,7 @@ void Simulator::compare_agents_projected_telem(vector<Policy>* sim_team, int sim
 /////////////////////////////////////////////////////////////////
 //Runs The Crash Avoidance Check
 //crash avoidance main function
-void Simulator::crash_avoidance(vector<Policy>* sim_team, int gen, vector<int>* pconflict_counter)
+void Simulator::crash_avoidance(vector<Policy>* sim_team, int gen, vector<double>* pconflict_counter)
 {
     for (int sim_p=0; sim_p< sim_team->size(); sim_p++)
     {
@@ -860,7 +860,7 @@ void Simulator::get_agent_destination_fitness(vector<Policy>* sim_team)
 
 /////////////////////////////////////////////////////////////////
 //Runs Entire Simulation
-void Simulator::run_simulation(vector<Policy>* psim_team, int gen, vector<int>* pconflict_counter)
+void Simulator::run_simulation(vector<Policy>* psim_team, int gen, vector<double>* pconflict_counter)
 {
     //cout << gen << endl;
     for (int p=0; p<psim_team->size(); p++)

@@ -57,7 +57,7 @@ public:
     void build_sim_team(int po);
     void get_fair_statistics();
     void get_policy_fitness(int po, int len);
-    void simulate_team(vector<Policy>* sim_team, int gen, vector<int> &conflict_counter);
+    void simulate_team(vector<Policy>* sim_team, int gen, vector<double> &conflict_counter);
     
     //Binary Selection Funcitons
     struct less_than_policy_fitness;
@@ -79,10 +79,15 @@ public:
     vector<double> min_team_1_fitness;
     vector<double> ave_team_1_fitness;
     vector<double> max_team_1_fitness;
-    vector<int> conflict_counter;          //0_0, 0_0, 1_0, 1_1
-    //conflict_counter* pCC;
+    vector<double> conflict_counter;          //0_0, 0_0, 1_0, 1_1
+    vector<double> ave_0_0_conflict;
+    vector<double> ave_0_1_conflict;
+    vector<double> ave_1_0_conflict;
+    vector<double> ave_1_1_conflict;
+    void store_ave_conflict_data();
     void get_statistics();
     void write_statistics_to_file();
+    void write_conflict_data_to_file();
     void write_parameters_to_file(float seconds);
     
     
@@ -302,17 +307,16 @@ void CCEA::build_world()
     create_starting_telem();
     create_checkpoints();
     create_target_telem();
-    set_conflict_counter();
 }
 
 
 /////////////////////////////////////////////////////////////////
 //simulates the radomly generated sim_team
-void CCEA::simulate_team(vector<Policy>* psim_team, int gen, vector<int> &conflict_counter)
+void CCEA::simulate_team(vector<Policy>* psim_team, int gen, vector<double> &conflict_counter)
 {
     Simulator S;
     Parameters P;
-    vector<int>* pconflict_counter = &conflict_counter;
+    vector<double>* pconflict_counter = &conflict_counter;
     S.pP = &P;
     S.run_simulation(psim_team, gen, pconflict_counter);
 }
@@ -511,11 +515,12 @@ void CCEA::build_team(int gen)
     int ll = 0;
     if (pP->leniency == 1)
     {
-        ll = pP->num_policies/10;
+        ll = pP->amount_lenient;
     }
     if (pP->leniency == 0)
     {
-        ll = 1;
+        pP->amount_lenient = 1;
+        ll = pP->amount_lenient;
     }
     
     
@@ -789,6 +794,21 @@ void CCEA::natural_selection()
 
 
 /////////////////////////////////////////////////////////////////
+//gets and sotres the average conflict data
+void CCEA::store_ave_conflict_data()
+{
+    ave_0_0_conflict.push_back(conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient));
+    cout << "average 0_0 conflict" << "\t" << ave_0_0_conflict.at(ave_0_0_conflict.size()-1) << endl;
+    ave_0_1_conflict.push_back(conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient));
+    cout << "average 0_1 conflict" << "\t" << ave_0_1_conflict.at(ave_0_1_conflict.size()-1) << endl;
+    ave_1_0_conflict.push_back(conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient));
+    cout << "average 1_0 conflict" << "\t" << ave_1_0_conflict.at(ave_1_0_conflict.size()-1) << endl;
+    ave_1_1_conflict.push_back(conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient));
+    cout << "average 1_1 conflict" << "\t" << ave_1_1_conflict.at(ave_1_1_conflict.size()-1) << endl;
+}
+
+
+/////////////////////////////////////////////////////////////////
 //gets the statistical data for the trail
 void CCEA::get_statistics()
 {
@@ -888,91 +908,127 @@ void CCEA::write_statistics_to_file()
 
 
 /////////////////////////////////////////////////////////////////
+//writes the conflict data for the trail to a txt file
+void CCEA::write_conflict_data_to_file()
+{
+    ofstream File7;
+    File7.open("0_0 Conflict Data.txt");
+    ofstream File8;
+    File8.open("0_1 Conflict Data.txt");
+    ofstream File9;
+    File9.open("1_0 Conflict Data.txt");
+    ofstream File10;
+    File10.open("1_1 Conflict Data.txt");
+    for (int i=0; i<ave_0_0_conflict.size(); i++)
+    {
+        File7 << ave_0_0_conflict.at(i) << endl;
+    }
+    for (int i=0; i<ave_0_1_conflict.size(); i++)
+    {
+        File8 << ave_0_1_conflict.at(i) << endl;
+    }
+    for (int i=0; i<ave_1_0_conflict.size(); i++)
+    {
+        File9 << ave_1_0_conflict.at(i) << endl;
+    }
+    for (int i=0; i<ave_1_1_conflict.size(); i++)
+    {
+        File10 << ave_1_1_conflict.at(i) << endl;
+    }
+    File7.close();
+    File8.close();
+    File9.close();
+    File10.close();
+}
+
+
+
+/////////////////////////////////////////////////////////////////
 //writes the parameters for the trail to a txt file
 void CCEA::write_parameters_to_file(float seconds)
 {
-    ofstream File7;
-    File7.open("Parameters.txt");
-    File7 << "Simulation Parameters" << endl;
-    File7 << "Map parameters x y z" << endl;
-    File7 << pP->min_x_dim << "\t" << pP->max_x_dim << "\t" << pP->min_y_dim << "\t" << pP->max_y_dim << "\t" << pP->min_z_dim << "\t" <<pP->max_z_dim << endl;
-    File7 << " " << endl;
-    File7 << "Time parameters" << endl;
-    File7 << "time max" << "\t" << pP->time_max << endl;
-    File7 << "sampling time" << "\t" << pP->delta_t << endl;
-    File7 << " " << endl;
-    File7 << "velocity parameters" << endl;
-    File7 << "max velocity" << "\t" << pP->max_flight_velocity << endl;
-    File7 << "ca velocity" << "\t" << pP->ca_flight_speed << endl;
-    File7 << " " << endl;
-    File7 << "CA parameters" << endl;
-    File7 << "ca radius" << "\t" << pP->ca_radius << endl;
-    File7 << "ca incrementation" << "\t" << pP->ca_inc << endl;
-    File7 << " " << endl;
-    File7 << "CCEA Parameters" << endl;
-    File7 << "Team parameters" << endl;
-    File7 << "number of teams" << "\t" << "\t" << pP->num_teams << endl;
+    ofstream File11;
+    File11.open("Parameters.txt");
+    File11 << "Simulation Parameters" << endl;
+    File11 << "Map parameters x y z" << endl;
+    File11 << pP->min_x_dim << "\t" << pP->max_x_dim << "\t" << pP->min_y_dim << "\t" << pP->max_y_dim << "\t" << pP->min_z_dim << "\t" <<pP->max_z_dim << endl;
+    File11 << " " << endl;
+    File11 << "Time parameters" << endl;
+    File11 << "time max" << "\t" << pP->time_max << endl;
+    File11 << "sampling time" << "\t" << pP->delta_t << endl;
+    File11 << " " << endl;
+    File11 << "velocity parameters" << endl;
+    File11 << "max velocity" << "\t" << pP->max_flight_velocity << endl;
+    File11 << "ca velocity" << "\t" << pP->ca_flight_speed << endl;
+    File11 << " " << endl;
+    File11 << "CA parameters" << endl;
+    File11 << "ca radius" << "\t" << pP->ca_radius << endl;
+    File11 << "ca incrementation" << "\t" << pP->ca_inc << endl;
+    File11 << " " << endl;
+    File11 << "CCEA Parameters" << endl;
+    File11 << "Team parameters" << endl;
+    File11 << "number of teams" << "\t" << "\t" << pP->num_teams << endl;
     for (int team=0; team<pP->num_teams; team++)
     {
-        File7 << "team" << "\t" << team << "\t" << "number of agents" << "\t" << pP->team_sizes.at(team) << endl;
+        File11 << "team" << "\t" << team << "\t" << "number of agents" << "\t" << pP->team_sizes.at(team) << endl;
     }
-    File7 << "number of policies" << "\t" << pP->num_policies << endl;
-    File7 << "number of waypoints" << "\t" << pP->num_waypoints << endl;
-    File7 << " " << endl;
-    File7 << "EA parameters" << endl;
-    File7 << "gerneration max" << "\t" << "\t" << pP->gen_max << endl;
-    File7 << "mutation percentage" << "\t" << pP->mutate_percentage << endl;
-    File7 << "mutation range" << "\t" << pP->mutation_range << endl;
-    File7 << " " << endl;
+    File11 << "number of policies" << "\t" << pP->num_policies << endl;
+    File11 << "number of waypoints" << "\t" << pP->num_waypoints << endl;
+    File11 << " " << endl;
+    File11 << "EA parameters" << endl;
+    File11 << "gerneration max" << "\t" << "\t" << pP->gen_max << endl;
+    File11 << "mutation percentage" << "\t" << pP->mutate_percentage << endl;
+    File11 << "mutation range" << "\t" << pP->mutation_range << endl;
+    File11 << " " << endl;
     if (pP->leniency == 0)
     {
-        File7 << "leniency off" << endl;
+        File11 << "leniency off" << endl;
     }
     if (pP->leniency == 1)
     {
-        File7 << "leniency on" << endl;
+        File11 << "leniency on" << endl;
     }
     if (pP->fair_trial == 0)
     {
-        File7 << "fair trial off" << endl;
+        File11 << "fair trial off" << endl;
     }
     if (pP->fair_trial == 1)
     {
-        File7 << "fair trial on" << endl;
+        File11 << "fair trial on" << endl;
     }
     if (pP->uncoop == 0)
     {
-        File7 << "uncoop off" << endl;
+        File11 << "uncoop off" << endl;
     }
     if (pP->uncoop == 1)
     {
-        File7 << "uncoop on" << endl;
+        File11 << "uncoop on" << endl;
     }
     if (pP->behavior_change == 0)
     {
-        File7 << "behavior change off" << endl;
+        File11 << "behavior change off" << endl;
     }
     if (pP->behavior_change == 1)
     {
-        File7 << "behavior change on" << endl;
+        File11 << "behavior change on" << endl;
     }
     if (pP->domino == 0)
     {
-        File7 << "domino off" << endl;
+        File11 << "domino off" << endl;
     }
     if (pP->domino == 1)
     {
-        File7 << "domino on" << endl;
+        File11 << "domino on" << endl;
     }
-    File7 << " " << endl;
-    File7 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;
-    File7.close();
+    File11 << " " << endl;
+    File11 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;
+    File11.close();
 }
 
 
 
 
-/////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Runs the entire CCEA process
 void CCEA::run_CCEA()
 {
@@ -982,20 +1038,19 @@ void CCEA::run_CCEA()
     Simulator_test_functions();     //go to function to run tests
     for (int gen=0; gen<pP->gen_max; gen++)
     {
+        set_conflict_counter();     //restes the conflict counters
         if (gen < pP->gen_max-1)
         {
             cout << "-----------------------------------------------------------------------------------" << endl;
             cout << "generation" << "\t" << gen << endl;
             cout << endl;
-            build_team(gen);       //runs the entire build and simulation for each sim_team
+            build_team(gen);            //runs the entire build and simulation for each sim_team
             //cout << "---------------------------------------------" << endl;
             sort_agent_policies();
             if (pP->fair_trial == 0)
             {
                 get_statistics();
             }
-            
-            
             if (gen == 0)
             {
                 cout << "First Generation" << endl;
@@ -1070,11 +1125,9 @@ void CCEA::run_CCEA()
                 }
             }
         }
+        //store conflict data here
+        store_ave_conflict_data();
     }
-    cout << "0_0 conflicts" << "\t" << conflict_counter.at(0) << endl;
-    cout << "1_0 conflicts" << "\t" << conflict_counter.at(1) << endl;
-    cout << "0_1 conflicts" << "\t" << conflict_counter.at(2) << endl;
-    cout << "1_1 conflicts" << "\t" << conflict_counter.at(3) << endl;
     cout << endl;
     t2 = clock();
     float diff ((float)t2-(float)t1);
@@ -1083,6 +1136,7 @@ void CCEA::run_CCEA()
     float seconds = diff / CLOCKS_PER_SEC;
     cout << "run time" << "\t" << seconds << endl;
     write_statistics_to_file();
+    write_conflict_data_to_file();
     write_parameters_to_file(seconds);
     
 }
