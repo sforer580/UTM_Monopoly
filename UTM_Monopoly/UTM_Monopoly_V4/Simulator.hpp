@@ -68,6 +68,7 @@ public:
     void run_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     void run_uncoop_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     void run_behavorial_change_case(vector<Policy>* sim_team, int gen, int sim_p, int sim_pp);
+    void run_behaviroal_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp, int gen);
     
     //New Telemetry Calculations
     void get_new_telem(vector<Policy>* sim_team, int sim_p);
@@ -508,6 +509,10 @@ void Simulator::run_behavorial_change_case(vector<Policy>* sim_team, int gen, in
 {
     if (gen >= pP->gen_max/2)
     {
+        sim_team->at(sim_p).policy_fitness += 1;
+    }
+    if (gen >= pP->gen_max/2)
+    {
         if (sim_team->at(sim_p).corp_id == 0)
         {
             if (sim_team->at(sim_p).corp_id == sim_team->at(sim_pp).corp_id)
@@ -541,6 +546,49 @@ void Simulator::run_behavorial_change_case(vector<Policy>* sim_team, int gen, in
     }
 }
 
+
+/////////////////////////////////////////////////////////////////
+//runs the behavorial domino change case
+void Simulator::run_behaviroal_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp, int gen)
+{
+    if (gen >= pP->gen_max/2)
+    {
+        sim_team->at(sim_p).policy_fitness += 1;
+    }
+    if (gen >= pP->gen_max/2)
+    {
+        if (sim_team->at(sim_p).corp_id == 0)
+        {
+            sim_team->at(sim_p).policy_fitness += 1;
+        }
+        if (sim_team->at(sim_p).corp_id == 1)
+        {
+            sim_team->at(sim_p).policy_fitness += 1;
+            //team 1 will recieve a penalty for all conflicts that are with their own team and the other team
+            if (sim_team->at(sim_p).corp_id == sim_team->at(sim_pp).corp_id)
+            {
+                sim_team->at(0).policy_fitness = sim_team->at(0).policy_fitness - 1;
+                /*
+                 for (int tt=0; tt<sim_team->size(); tt++)
+                 {
+                 //rewards all policies on team 0 if team 1 comflicts with team 1
+                 if (sim_team->at(tt).corp_id == 0)
+                 {
+                 sim_team->at(tt).policy_fitness = sim_team->at(tt).policy_fitness - 1/pP->team_sizes.at(0);
+                 }
+                 }
+                 */
+                //cout << "team 1 inner team conflict" << endl;
+                //cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
+            }
+            if (sim_team->at(sim_p).corp_id != sim_team->at(sim_pp).corp_id)
+            {
+                //cout << "team 1 conflict" << endl;
+                //cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
+            }
+        }
+    }
+}
 
 
 /////////////////////////////////////////////////////////////////
@@ -582,11 +630,18 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 {
                                     if (pP->domino ==0)
                                     {
-                                        run_cooperative_case(sim_team, sim_p, sim_pp);
+                                        if (pP->behavioral_domino == 0)
+                                        {
+                                            run_cooperative_case(sim_team, sim_p, sim_pp);
+                                        }
                                     }
                                     if (pP->domino == 1)
                                     {
                                         run_domino_case(sim_team, sim_p, sim_pp);
+                                    }
+                                    if (pP->behavioral_domino == 1)
+                                    {
+                                        run_behaviroal_domino_case(sim_team, sim_p, sim_pp, gen);
                                     }
                                     //cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
                                 }
