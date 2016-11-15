@@ -507,7 +507,7 @@ void Simulator::run_uncoop_case(vector<Policy>* sim_team, int sim_p, int sim_pp)
 //runs the behavorial change case
 void Simulator::run_behavorial_change_case(vector<Policy>* sim_team, int gen, int sim_p, int sim_pp)
 {
-    if (gen >= pP->gen_max/2)
+    if (gen < pP->gen_max/2)
     {
         sim_team->at(sim_p).policy_fitness += 1;
     }
@@ -551,7 +551,7 @@ void Simulator::run_behavorial_change_case(vector<Policy>* sim_team, int gen, in
 //runs the behavorial domino change case
 void Simulator::run_behaviroal_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp, int gen)
 {
-    if (gen >= pP->gen_max/2)
+    if (gen < pP->gen_max/2)
     {
         sim_team->at(sim_p).policy_fitness += 1;
     }
@@ -623,44 +623,43 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                             }
                             if (sim_team->at(sim_p).current_travel_speed == pP->ca_flight_speed)
                             {
-                                
                                 ////////////////////////////////////////////////////////////////////////
-                                //for cooperative teams
-                                if (pP->uncoop == 0)
+                                //coop no leniency
+                                if (pP->coop_no_len == 1)
                                 {
-                                    if (pP->domino ==0)
-                                    {
-                                        if (pP->behavioral_domino == 0)
-                                        {
-                                            run_cooperative_case(sim_team, sim_p, sim_pp);
-                                        }
-                                    }
-                                    if (pP->domino == 1)
-                                    {
-                                        run_domino_case(sim_team, sim_p, sim_pp);
-                                    }
-                                    if (pP->behavioral_domino == 1)
-                                    {
-                                        run_behaviroal_domino_case(sim_team, sim_p, sim_pp, gen);
-                                    }
-                                    //cout << "agent" << "\t" << sim_p << "\t" << "CA acitvated by" << "\t" << "agent" << "\t" << sim_pp << endl;
+                                    run_cooperative_case(sim_team, sim_p, sim_pp);
                                 }
-                                
-                                ////////////////////////////////////////////////////////////////////////
-                                //for one uncooperative team
-                                if (pP->uncoop == 1)
+                                //coop with leniency
+                                if (pP->coop_with_len == 1)
+                                {
+                                    run_cooperative_case(sim_team, sim_p, sim_pp);
+                                }
+                                //coop fair trial
+                                if (pP->coop_fair == 1)
+                                {
+                                    run_cooperative_case(sim_team, sim_p, sim_pp);
+                                }
+                                //uncoop with leniency
+                                if (pP->uncoop_with_len == 1)
                                 {
                                     run_uncoop_case(sim_team, sim_p, sim_pp);
                                 }
-                                
-                                ////////////////////////////////////////////////////////////////////////
-                                //for a behavior change
-                                if (pP->behavior_change == 1)
+                                //uncoop behavioral switch with leniency
+                                if (pP->uncoop_behavioral_switch_with_len == 1)
                                 {
                                     run_behavorial_change_case(sim_team, gen, sim_p, sim_pp);
                                 }
+                                //domino effect with leniency
+                                if (pP->domino_with_len == 1)
+                                {
+                                    run_domino_case(sim_team, sim_p, sim_pp);
+                                }
+                                //domino behavioral switch with leniency
+                                if (pP->domino_behavioral_switch_with_len == 1)
+                                {
+                                    run_behaviroal_domino_case(sim_team, sim_p, sim_pp, gen);
+                                }
                                 run_conflict_counter(sim_team, sim_p, sim_pp, pconflict_counter);
-                                
                             }
                         }
                         else

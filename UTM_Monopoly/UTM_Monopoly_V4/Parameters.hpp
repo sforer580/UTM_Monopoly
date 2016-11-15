@@ -79,14 +79,19 @@ public:
     int to_replicate = to_kill;
     double mutate_percentage = 50;
     double mutation_range = 1;
-    int leniency = 1;           //0=off, 1=on
-    int amount_lenient = 5;
-    int fair_trial = 0;         //0=off, 1=on
+    
     //Experiments
-    int uncoop = 0;             //0=off, 1=on
-    int behavior_change = 0;    //0=off, 1=on       //if on team 0 will switch to uncooperative at gen_max/2    uncoop must = 0
-    int domino = 0;             //0=off, 1=on       //if on uncoop must = 0
-    int behavioral_domino = 1;  //0=off, 1=on       //if on uncoop must = 0
+    int coop_no_len = 0;                            //0=off, 1=on
+    int coop_with_len = 0;                          //0=off, 1=on
+    int coop_fair = 0;                              //0=off, 1=on
+    int uncoop_with_len = 0;                        //0=off, 1=on
+    int uncoop_behavioral_switch_with_len = 0;      //0=off, 1=on
+    int domino_with_len = 0;                        //0=off, 1=on
+    int domino_behavioral_switch_with_len = 1;      //0=off, 1=on
+    int leniency;
+    int amount_lenient;
+    int fair_trial;
+    int uncoop;
     
 private:
 };

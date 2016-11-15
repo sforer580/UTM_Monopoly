@@ -51,6 +51,7 @@ public:
     void build_world();
     
     //Functions for Simulation
+    void set_up_experiment_parameters();
     void build_team(int gen);
     void reset_selction_counter();
     void reset_selection_identifiers();
@@ -67,6 +68,7 @@ public:
     int kill;
     void mutation(Policy &MP);
     void check_new_telem(Policy &MP, int w);
+    
     
     //CCEA main
     void run_CCEA();
@@ -307,6 +309,69 @@ void CCEA::build_world()
     create_starting_telem();
     create_checkpoints();
     create_target_telem();
+}
+
+
+/////////////////////////////////////////////////////////////////
+//changes the parameters based on which experiment is being ran
+void CCEA::set_up_experiment_parameters()
+{
+    //ccop no leniency
+    if (pP->coop_no_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 0;
+        pP->amount_lenient = 1;
+        pP->fair_trial = 0;
+    }
+    //coop with leniency
+    if (pP->coop_with_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+    }
+    //coop fair trial
+    if (pP->coop_fair == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 0;
+        pP->amount_lenient = 1;
+        pP->fair_trial = 1;
+    }
+    //uncoop with leniency
+    if (pP->uncoop_with_len == 1)
+    {
+        pP->uncoop = 1;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+    }
+    //uncoop behavioral switch with leniency
+    if (pP->uncoop_behavioral_switch_with_len == 1)
+    {
+        pP->uncoop = 1;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+    }
+    //domino effect with leniency
+    if (pP->domino_with_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+    }
+    //domino behavioral switch with leniency
+    if (pP->domino_behavioral_switch_with_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+    }
 }
 
 
@@ -798,13 +863,13 @@ void CCEA::natural_selection()
 void CCEA::store_ave_conflict_data()
 {
     ave_0_0_conflict.push_back(conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient));
-    cout << "average 0_0 conflict" << "\t" << ave_0_0_conflict.at(ave_0_0_conflict.size()-1) << endl;
+    //cout << "average 0_0 conflict" << "\t" << ave_0_0_conflict.at(ave_0_0_conflict.size()-1) << endl;
     ave_0_1_conflict.push_back(conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient));
-    cout << "average 0_1 conflict" << "\t" << ave_0_1_conflict.at(ave_0_1_conflict.size()-1) << endl;
+    //cout << "average 0_1 conflict" << "\t" << ave_0_1_conflict.at(ave_0_1_conflict.size()-1) << endl;
     ave_1_0_conflict.push_back(conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient));
-    cout << "average 1_0 conflict" << "\t" << ave_1_0_conflict.at(ave_1_0_conflict.size()-1) << endl;
+    //cout << "average 1_0 conflict" << "\t" << ave_1_0_conflict.at(ave_1_0_conflict.size()-1) << endl;
     ave_1_1_conflict.push_back(conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient));
-    cout << "average 1_1 conflict" << "\t" << ave_1_1_conflict.at(ave_1_1_conflict.size()-1) << endl;
+    //cout << "average 1_1 conflict" << "\t" << ave_1_1_conflict.at(ave_1_1_conflict.size()-1) << endl;
 }
 
 
@@ -980,45 +1045,61 @@ void CCEA::write_parameters_to_file(float seconds)
     File11 << "mutation percentage" << "\t" << pP->mutate_percentage << endl;
     File11 << "mutation range" << "\t" << pP->mutation_range << endl;
     File11 << " " << endl;
-    if (pP->leniency == 0)
+    if (pP->coop_no_len == 0)
     {
-        File11 << "leniency off" << endl;
+        File11 << "coop no leniency off" << endl;
     }
-    if (pP->leniency == 1)
+    if (pP->coop_no_len == 1)
     {
-        File11 << "leniency on" << endl;
+        File11 << "coop no leniency on" << endl;
     }
-    if (pP->fair_trial == 0)
+    if (pP->coop_with_len == 0)
     {
-        File11 << "fair trial off" << endl;
+        File11 << "coop with leniency off" << endl;
     }
-    if (pP->fair_trial == 1)
+    if (pP->coop_with_len == 1)
     {
-        File11 << "fair trial on" << endl;
+        File11 << "coop no leniency on" << endl;
     }
-    if (pP->uncoop == 0)
+    if (pP->coop_fair == 0)
     {
-        File11 << "uncoop off" << endl;
+        File11 << "coop fair trial off" << endl;
     }
-    if (pP->uncoop == 1)
+    if (pP->coop_fair == 1)
     {
-        File11 << "uncoop on" << endl;
+        File11 << "coop fair trial on" << endl;
     }
-    if (pP->behavior_change == 0)
+    if (pP->uncoop_with_len == 0)
     {
-        File11 << "behavior change off" << endl;
+        File11 << "uncoop with len off" << endl;
     }
-    if (pP->behavior_change == 1)
+    if (pP->uncoop_with_len == 1)
     {
-        File11 << "behavior change on" << endl;
+        File11 << "ucoop with len on" << endl;
     }
-    if (pP->domino == 0)
+    if (pP->uncoop_behavioral_switch_with_len == 0)
     {
-        File11 << "domino off" << endl;
+        File11 << "uncoop behavioral switch with len off" << endl;
     }
-    if (pP->domino == 1)
+    if (pP->uncoop_behavioral_switch_with_len == 1)
     {
-        File11 << "domino on" << endl;
+        File11 << "uncoop behavioral switch with len on" << endl;
+    }
+    if (pP->domino_with_len == 0)
+    {
+        File11 << "domino with len off" << endl;
+    }
+    if (pP->domino_with_len == 1)
+    {
+        File11 << "domino with len on" << endl;
+    }
+    if (pP->domino_behavioral_switch_with_len == 0)
+    {
+        File11 << "domino behavioral switch with len off" << endl;
+    }
+    if (pP->domino_behavioral_switch_with_len == 1)
+    {
+        File11 << "domino behavioral switch with len on" << endl;
     }
     File11 << " " << endl;
     File11 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;
@@ -1036,6 +1117,7 @@ void CCEA::run_CCEA()
     t1 = clock();
     build_world();
     Simulator_test_functions();     //go to function to run tests
+    set_up_experiment_parameters();
     for (int gen=0; gen<pP->gen_max; gen++)
     {
         set_conflict_counter();     //restes the conflict counters
@@ -1138,7 +1220,6 @@ void CCEA::run_CCEA()
     write_statistics_to_file();
     write_conflict_data_to_file();
     write_parameters_to_file(seconds);
-    
 }
 
 
