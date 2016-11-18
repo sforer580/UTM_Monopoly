@@ -32,7 +32,7 @@ int main()
     Simulator S;
     Parameters P;
     CCEA EA;
-    EA.pP =  &P;
+    EA.pP = &P;
     S.pP = &P;
     
     P.set_team_sizes();

@@ -336,9 +336,17 @@ void CCEA::set_up_experiment_parameters()
     if (pP->coop_fair == 1)
     {
         pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 1;
+    }
+    //uncoop no leniency
+    if (pP->uncoop_with_len == 1)
+    {
+        pP->uncoop = 1;
         pP->leniency = 0;
         pP->amount_lenient = 1;
-        pP->fair_trial = 1;
+        pP->fair_trial = 0;
     }
     //uncoop with leniency
     if (pP->uncoop_with_len == 1)
@@ -351,7 +359,7 @@ void CCEA::set_up_experiment_parameters()
     //uncoop behavioral switch with leniency
     if (pP->uncoop_behavioral_switch_with_len == 1)
     {
-        pP->uncoop = 1;
+        pP->uncoop = 0;
         pP->leniency = 1;
         pP->amount_lenient = 5;
         pP->fair_trial = 0;
@@ -366,6 +374,14 @@ void CCEA::set_up_experiment_parameters()
     }
     //domino behavioral switch with leniency
     if (pP->domino_behavioral_switch_with_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+    }
+    //malicious with leniency
+    if (pP->malicious_with_len == 1)
     {
         pP->uncoop = 0;
         pP->leniency = 1;
@@ -862,13 +878,13 @@ void CCEA::natural_selection()
 //gets and sotres the average conflict data
 void CCEA::store_ave_conflict_data()
 {
-    ave_0_0_conflict.push_back(conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient));
+    ave_0_0_conflict.push_back((conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient))/2);
     //cout << "average 0_0 conflict" << "\t" << ave_0_0_conflict.at(ave_0_0_conflict.size()-1) << endl;
     ave_0_1_conflict.push_back(conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient));
     //cout << "average 0_1 conflict" << "\t" << ave_0_1_conflict.at(ave_0_1_conflict.size()-1) << endl;
     ave_1_0_conflict.push_back(conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient));
     //cout << "average 1_0 conflict" << "\t" << ave_1_0_conflict.at(ave_1_0_conflict.size()-1) << endl;
-    ave_1_1_conflict.push_back(conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient));
+    ave_1_1_conflict.push_back((conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient))/2);
     //cout << "average 1_1 conflict" << "\t" << ave_1_1_conflict.at(ave_1_1_conflict.size()-1) << endl;
 }
 
@@ -1045,11 +1061,12 @@ void CCEA::write_parameters_to_file(float seconds)
     File11 << "mutation percentage" << "\t" << pP->mutate_percentage << endl;
     File11 << "mutation range" << "\t" << pP->mutation_range << endl;
     File11 << " " << endl;
+    File11 << "Experiment Parameters" << endl;
     if (pP->coop_no_len == 0)
     {
         File11 << "coop no leniency off" << endl;
     }
-    if (pP->coop_no_len == 1)
+    else
     {
         File11 << "coop no leniency on" << endl;
     }
@@ -1057,49 +1074,89 @@ void CCEA::write_parameters_to_file(float seconds)
     {
         File11 << "coop with leniency off" << endl;
     }
-    if (pP->coop_with_len == 1)
+    else
     {
-        File11 << "coop no leniency on" << endl;
+        File11 << "coop with leniency on" << endl;
     }
     if (pP->coop_fair == 0)
     {
         File11 << "coop fair trial off" << endl;
     }
-    if (pP->coop_fair == 1)
+    else
     {
         File11 << "coop fair trial on" << endl;
     }
+    if (pP->uncoop_no_len == 0)
+    {
+        File11 << "uncoop no leniency off" << endl;
+    }
+    else
+    {
+        File11 << "ucoop no leniency on" << endl;
+    }
     if (pP->uncoop_with_len == 0)
     {
-        File11 << "uncoop with len off" << endl;
+        File11 << "uncoop with leniency off" << endl;
     }
-    if (pP->uncoop_with_len == 1)
+    else
     {
-        File11 << "ucoop with len on" << endl;
+        File11 << "ucoop with leniency on" << endl;
     }
     if (pP->uncoop_behavioral_switch_with_len == 0)
     {
-        File11 << "uncoop behavioral switch with len off" << endl;
+        File11 << "uncoop behavioral switch with leniency off" << endl;
     }
-    if (pP->uncoop_behavioral_switch_with_len == 1)
+    else
     {
-        File11 << "uncoop behavioral switch with len on" << endl;
+        File11 << "uncoop behavioral switch with leniency on" << endl;
     }
     if (pP->domino_with_len == 0)
     {
-        File11 << "domino with len off" << endl;
+        File11 << "domino with leniency off" << endl;
     }
-    if (pP->domino_with_len == 1)
+    else
     {
-        File11 << "domino with len on" << endl;
+        File11 << "domino with leniency on" << endl;
     }
     if (pP->domino_behavioral_switch_with_len == 0)
     {
-        File11 << "domino behavioral switch with len off" << endl;
+        File11 << "domino behavioral switch with leniency off" << endl;
     }
-    if (pP->domino_behavioral_switch_with_len == 1)
+    else
     {
-        File11 << "domino behavioral switch with len on" << endl;
+        File11 << "domino behavioral switch with leniency on" << endl;
+    }
+    if (pP->malicious_with_len == 0)
+    {
+        File11 << "malicious with leniency off" << endl;
+    }
+    else
+    {
+        File11 << "malicious with leniency on" << endl;
+    }
+    if (pP->leniency == 0)
+    {
+        File11 << "leniency off" << endl;
+    }
+    else
+    {
+        File11 << "leniency on" << endl;
+    }
+    if (pP->fair_trial == 0)
+    {
+        File11 << "fair trial off" << endl;
+    }
+    else
+    {
+        File11 << "fair trial on" << endl;
+    }
+    if (pP->uncoop == 0)
+    {
+        File11 << "uncoop off" << endl;
+    }
+    else
+    {
+        File11 << "uncoop on" << endl;
     }
     File11 << " " << endl;
     File11 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;

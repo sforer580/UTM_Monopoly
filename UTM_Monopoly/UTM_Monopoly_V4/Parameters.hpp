@@ -41,11 +41,11 @@ public:
     int max_y_dim = 100;
     int min_z_dim = 0;
     int max_z_dim = 100;
-    int time_max = 200;                                         //max time simulator will run
-    double delta_t = 0.1;                                         //simulator time step
+    int time_max = 150;                                         //max time simulator will run
+    double delta_t = 0.1;                                       //simulator time step
     double max_flight_velocity = 5.0;                           //max velocity at which any given agetn can travel
     double max_travel_dist = max_flight_velocity*delta_t;       //max distance a agetn can travel in a time step
-    int ca_radius = 5;                                         //collision avoidance radius
+    int ca_radius = 5;                                          //collision avoidance radius
     int ca_inc = 100;                                           //amount of increments between the current telem and projected telem
     double ca_flight_speed = max_flight_velocity/2;             //collision avoidance speed
     double ca_max_travel_dist = ca_flight_speed*delta_t;        //max distance any agent can travel when collision avoidance is acitvated
@@ -55,7 +55,7 @@ public:
     void set_sim_dim();
     
     //Team Settings
-    int num_teams = 2;          //must be an interger 0-10
+    int num_teams = 2;          //must be an interger 0-2
     int team_0 = 14;
     int team_1 = 14;
     int team_2 = 0;
@@ -84,10 +84,12 @@ public:
     int coop_no_len = 0;                            //0=off, 1=on
     int coop_with_len = 0;                          //0=off, 1=on
     int coop_fair = 0;                              //0=off, 1=on
+    int uncoop_no_len = 0;                          //0=off, 1=on
     int uncoop_with_len = 0;                        //0=off, 1=on
     int uncoop_behavioral_switch_with_len = 0;      //0=off, 1=on
     int domino_with_len = 0;                        //0=off, 1=on
-    int domino_behavioral_switch_with_len = 1;      //0=off, 1=on
+    int domino_behavioral_switch_with_len = 0;      //0=off, 1=on
+    int malicious_with_len = 1;                     //0=off, 1=on
     int leniency;
     int amount_lenient;
     int fair_trial;
