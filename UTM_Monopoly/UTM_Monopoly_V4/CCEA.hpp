@@ -71,7 +71,7 @@ public:
     
     
     //CCEA main
-    void run_CCEA();
+    void run_CCEA(int sr, int stat_run);
     
     //Statistics
     int fcount = 0;
@@ -88,8 +88,8 @@ public:
     vector<double> ave_1_1_conflict;
     void store_ave_conflict_data();
     void get_statistics();
-    void write_statistics_to_file();
-    void write_conflict_data_to_file();
+    void write_statistics_to_file(int sr);
+    void write_conflict_data_to_file(int sr);
     void write_parameters_to_file(float seconds);
     
     
@@ -949,73 +949,90 @@ void CCEA::get_statistics()
 
 /////////////////////////////////////////////////////////////////
 //writes the statistical data for the trail to a txt file
-void CCEA::write_statistics_to_file()
+void CCEA::write_statistics_to_file(int sr)
 {
     ofstream File1;
-    File1.open("Team 0 Min Fitness For All Gens.txt");
+    File1.open("Team 0 Min Fitness For All Gens.txt", ios_base::app);
     ofstream File2;
-    File2.open("Team 0 Ave Fitness For All Gens.txt");
+    File2.open("Team 0 Ave Fitness For All Gens.txt", ios_base::app);
     ofstream File3;
-    File3.open("Team 0 Max Fitness For All Gens.txt");
+    File3.open("Team 0 Max Fitness For All Gens.txt", ios_base::app);
+    File1 << "Stat Run" << "\t" << sr << "\t";
+    File2 << "Stat Run" << "\t" << sr << "\t";
+    File3 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<pP->gen_max; i++)
     {
-        File1 << min_team_0_fitness.at(i) << endl;
-        File2 << ave_team_0_fitness.at(i) << endl;
-        File3 << max_team_0_fitness.at(i) << endl;
+        File1 << min_team_0_fitness.at(i) << "\t";
+        File2 << ave_team_0_fitness.at(i) << "\t";
+        File3 << max_team_0_fitness.at(i) << "\t";
+    }
+    File1 << endl;
+    File2 << endl;
+    File3 << endl;
+    
+    ofstream File4;
+    File4.open("Team 1 Min Fitness For All Gens.txt", ios_base::app);
+    ofstream File5;
+    File5.open("Team 1 Ave Fitness For All Gens.txt", ios_base::app);
+    ofstream File6;
+    File6.open("Team 1 Max Fitness For All Gens.txt", ios_base::app);
+    if (pP->num_teams == 2)
+    {
+        File4 << "Stat Run" << "\t" << sr << "\t";
+        File5 << "Stat Run" << "\t" << sr << "\t";
+        File6 << "Stat Run" << "\t" << sr << "\t";
+        for (int i=0; i<pP->gen_max; i++)
+        {
+            File4 << min_team_1_fitness.at(i) << "\t";
+            File5 << ave_team_1_fitness.at(i) << "\t";
+            File6 << max_team_1_fitness.at(i) << "\t";
+        }
+        File4 << endl;
+        File5 << endl;
+        File6 << endl;
     }
     File1.close();
     File2.close();
     File3.close();
-    
-    if (pP->num_teams == 2)
-    {
-        ofstream File4;
-        File4.open("Team 1 Min Fitness For All Gens.txt");
-        ofstream File5;
-        File5.open("Team 1 Ave Fitness For All Gens.txt");
-        ofstream File6;
-        File6.open("Team 1 Max Fitness For All Gens.txt");
-        for (int i=0; i<pP->gen_max; i++)
-        {
-            File4 << min_team_1_fitness.at(i) << endl;
-            File5 << ave_team_1_fitness.at(i) << endl;
-            File6 << max_team_1_fitness.at(i) << endl;
-        }
-        File4.close();
-        File5.close();
-        File6.close();
-    }
 }
 
 
 /////////////////////////////////////////////////////////////////
 //writes the conflict data for the trail to a txt file
-void CCEA::write_conflict_data_to_file()
+void CCEA::write_conflict_data_to_file(int sr)
 {
     ofstream File7;
-    File7.open("0_0 Conflict Data.txt");
+    File7.open("0_0 Conflict Data.txt", ios_base::app);
     ofstream File8;
-    File8.open("0_1 Conflict Data.txt");
+    File8.open("0_1 Conflict Data.txt", ios_base::app);
     ofstream File9;
-    File9.open("1_0 Conflict Data.txt");
+    File9.open("1_0 Conflict Data.txt", ios_base::app);
     ofstream File10;
-    File10.open("1_1 Conflict Data.txt");
+    File10.open("1_1 Conflict Data.txt", ios_base::app);
+    File7 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_0_0_conflict.size(); i++)
     {
-        File7 << ave_0_0_conflict.at(i) << endl;
+        File7 << ave_0_0_conflict.at(i) << "\t";
     }
+    File7 << endl;
+    File8 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_0_1_conflict.size(); i++)
     {
-        File8 << ave_0_1_conflict.at(i) << endl;
+        File8 << ave_0_1_conflict.at(i) << "\t";
     }
+    File8 << endl;
+    File9 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_1_0_conflict.size(); i++)
     {
-        File9 << ave_1_0_conflict.at(i) << endl;
+        File9 << ave_1_0_conflict.at(i) << "\t";
     }
+    File9 << endl;
+    File10 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_1_1_conflict.size(); i++)
     {
-        File10 << ave_1_1_conflict.at(i) << endl;
+        File10 << ave_1_1_conflict.at(i) << "\t";
     }
+    File10 << endl;
     File7.close();
     File8.close();
     File9.close();
@@ -1168,7 +1185,7 @@ void CCEA::write_parameters_to_file(float seconds)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Runs the entire CCEA process
-void CCEA::run_CCEA()
+void CCEA::run_CCEA(int sr, int stat_run)
 {
     clock_t t1, t2;
     t1 = clock();
@@ -1180,8 +1197,7 @@ void CCEA::run_CCEA()
         set_conflict_counter();     //restes the conflict counters
         if (gen < pP->gen_max-1)
         {
-            cout << "-----------------------------------------------------------------------------------" << endl;
-            cout << "generation" << "\t" << gen << endl;
+            cout << "sr::gen" << "\t" << sr << "::" << gen << endl;
             cout << endl;
             build_team(gen);            //runs the entire build and simulation for each sim_team
             //cout << "---------------------------------------------" << endl;
@@ -1274,9 +1290,12 @@ void CCEA::run_CCEA()
     //system ("pause");
     float seconds = diff / CLOCKS_PER_SEC;
     cout << "run time" << "\t" << seconds << endl;
-    write_statistics_to_file();
-    write_conflict_data_to_file();
-    write_parameters_to_file(seconds);
+    write_statistics_to_file(sr);
+    write_conflict_data_to_file(sr);
+    if (sr == stat_run-1)
+    {
+     write_parameters_to_file(seconds);   
+    }
 }
 
 

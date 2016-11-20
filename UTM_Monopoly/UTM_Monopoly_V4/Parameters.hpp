@@ -81,7 +81,7 @@ public:
     double mutation_range = 1;
     
     //Experiments
-    int coop_no_len = 0;                            //0=off, 1=on
+    int coop_no_len = 1;                            //0=off, 1=on
     int coop_with_len = 0;                          //0=off, 1=on
     int coop_fair = 0;                              //0=off, 1=on
     int uncoop_no_len = 0;                          //0=off, 1=on
@@ -89,7 +89,7 @@ public:
     int uncoop_behavioral_switch_with_len = 0;      //0=off, 1=on
     int domino_with_len = 0;                        //0=off, 1=on
     int domino_behavioral_switch_with_len = 0;      //0=off, 1=on
-    int malicious_with_len = 1;                     //0=off, 1=on
+    int malicious_with_len = 0;                     //0=off, 1=on
     int leniency;
     int amount_lenient;
     int fair_trial;

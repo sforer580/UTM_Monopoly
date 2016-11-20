@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <fstream>
 #include <iomanip>
+#include <cassert>
+#include <ctime>
 
 #include "Parameters.hpp"
 #include "Team.hpp"
@@ -28,14 +30,20 @@ using namespace std;
 
 int main()
 {
+    int stat_run = 2;
     srand(time(NULL));
-    Simulator S;
-    Parameters P;
-    CCEA EA;
-    EA.pP = &P;
-    S.pP = &P;
-    
-    P.set_team_sizes();
-    EA.run_CCEA();
-
+    for (int sr=0; sr<stat_run; sr++)
+    {
+        cout << "-----------------------------------------------------------------------------------" << endl;
+        cout << "New Stat Run" << endl;
+        Simulator S;
+        Parameters P;
+        CCEA EA;
+        EA.pP = &P;
+        S.pP = &P;
+        
+        P.set_team_sizes();
+        EA.run_CCEA(sr, stat_run);
+    }
 }
+
