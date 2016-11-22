@@ -36,11 +36,11 @@ protected:
 public:
     //Simulator Settings
     int min_x_dim = 0;
-    int max_x_dim = 100;
+    int max_x_dim = 50;
     int min_y_dim = 0;
-    int max_y_dim = 100;
+    int max_y_dim = 50;
     int min_z_dim = 0;
-    int max_z_dim = 100;
+    int max_z_dim = 50;
     int time_max = 150;                                         //max time simulator will run
     double delta_t = 0.1;                                       //simulator time step
     double max_flight_velocity = 5.0;                           //max velocity at which any given agetn can travel
@@ -81,7 +81,7 @@ public:
     double mutation_range = 1;
     
     //Experiments
-    int coop_no_len = 1;                            //0=off, 1=on
+    int coop_no_len = 0;                            //0=off, 1=on
     int coop_with_len = 0;                          //0=off, 1=on
     int coop_fair = 0;                              //0=off, 1=on
     int uncoop_no_len = 0;                          //0=off, 1=on
@@ -90,6 +90,7 @@ public:
     int domino_with_len = 0;                        //0=off, 1=on
     int domino_behavioral_switch_with_len = 0;      //0=off, 1=on
     int malicious_with_len = 0;                     //0=off, 1=on
+    int static_full_malicious = 1;                  //0=off, 1=on
     int leniency;
     int amount_lenient;
     int fair_trial;

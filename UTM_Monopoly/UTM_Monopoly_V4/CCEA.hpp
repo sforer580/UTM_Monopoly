@@ -52,6 +52,7 @@ public:
     
     //Functions for Simulation
     void set_up_experiment_parameters();
+    void clone_policies();
     void build_team(int gen);
     void reset_selction_counter();
     void reset_selection_identifiers();
@@ -86,6 +87,9 @@ public:
     vector<double> ave_0_1_conflict;
     vector<double> ave_1_0_conflict;
     vector<double> ave_1_1_conflict;
+    vector<double> ave_0_conflict;
+    vector<double> ave_1_conflict;
+    
     void store_ave_conflict_data();
     void get_statistics();
     void write_statistics_to_file(int sr);
@@ -312,6 +316,19 @@ void CCEA::build_world()
 }
 
 
+//clones the policies for each agent in team 1
+void CCEA::clone_policies()
+{
+    for (int i=0; i<pP->team_sizes.at(1); i++)
+    {
+        for (int j=0; j<pP->num_policies; j++)
+        {
+            corp.at(1).agents.at(i).policies.at(j) = corp.at(1).agents.at(i).policies.at(0);
+        }
+    }
+}
+
+
 /////////////////////////////////////////////////////////////////
 //changes the parameters based on which experiment is being ran
 void CCEA::set_up_experiment_parameters()
@@ -387,6 +404,15 @@ void CCEA::set_up_experiment_parameters()
         pP->leniency = 1;
         pP->amount_lenient = 5;
         pP->fair_trial = 0;
+    }
+    //static full malicious with leniency
+    if (pP->static_full_malicious == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+        clone_policies();
     }
 }
 
@@ -866,7 +892,17 @@ void CCEA::natural_selection()
                 int spot = 0;
                 spot = rand() % corp.at(team).agents.at(indv).policies.size();
                 MP = corp.at(team).agents.at(indv).policies.at(spot);
-                mutation(MP);
+                if (pP->static_full_malicious == 0)
+                {
+                 mutation(MP);
+                }
+                if (pP->static_full_malicious == 1)
+                {
+                    if (team == 0)
+                    {
+                        mutation(MP);
+                    }
+                }
                 corp.at(team).agents.at(indv).policies.push_back(MP);
             }
         }
@@ -886,6 +922,9 @@ void CCEA::store_ave_conflict_data()
     //cout << "average 1_0 conflict" << "\t" << ave_1_0_conflict.at(ave_1_0_conflict.size()-1) << endl;
     ave_1_1_conflict.push_back((conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient))/2);
     //cout << "average 1_1 conflict" << "\t" << ave_1_1_conflict.at(ave_1_1_conflict.size()-1) << endl;
+    
+    ave_0_conflict.push_back(((conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient))/2)+(conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient)));
+    ave_1_conflict.push_back(((conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient))/2)+(conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient)));
 }
 
 
@@ -1009,6 +1048,10 @@ void CCEA::write_conflict_data_to_file(int sr)
     File9.open("1_0 Conflict Data.txt", ios_base::app);
     ofstream File10;
     File10.open("1_1 Conflict Data.txt", ios_base::app);
+    ofstream File12;
+    File12.open("Team 0 Conflict Data.txt", ios_base::app);
+    ofstream File13;
+    File13.open("Team 1 Conflict Data.txt", ios_base::app);
     File7 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_0_0_conflict.size(); i++)
     {
@@ -1033,10 +1076,25 @@ void CCEA::write_conflict_data_to_file(int sr)
         File10 << ave_1_1_conflict.at(i) << "\t";
     }
     File10 << endl;
+    File12 << "Stat Run" << "\t" << sr << "\t";
+    for (int i=0; i<ave_0_conflict.size(); i++)
+    {
+        File12 << ave_0_conflict.at(i) << "\t";
+    }
+    File12 << endl;
+    File13 << "Stat Run" << "\t" << sr << "\t";
+    for (int i=0; i<ave_1_conflict.size(); i++)
+    {
+        File13 << ave_1_conflict.at(i) << "\t";
+    }
+    File13 << endl;
+    
     File7.close();
     File8.close();
     File9.close();
     File10.close();
+    File12.close();
+    File13.close();
 }
 
 
