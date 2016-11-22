@@ -406,7 +406,7 @@ void CCEA::set_up_experiment_parameters()
         pP->fair_trial = 0;
     }
     //static full malicious with leniency
-    if (pP->static_full_malicious == 1)
+    if (pP->stat_full_malicious_with_len == 1)
     {
         pP->uncoop = 0;
         pP->leniency = 1;
@@ -892,11 +892,11 @@ void CCEA::natural_selection()
                 int spot = 0;
                 spot = rand() % corp.at(team).agents.at(indv).policies.size();
                 MP = corp.at(team).agents.at(indv).policies.at(spot);
-                if (pP->static_full_malicious == 0)
+                if (pP->stat_full_malicious_with_len == 0)
                 {
                  mutation(MP);
                 }
-                if (pP->static_full_malicious == 1)
+                if (pP->stat_full_malicious_with_len == 1)
                 {
                     if (team == 0)
                     {

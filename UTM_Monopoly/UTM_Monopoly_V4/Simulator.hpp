@@ -70,6 +70,7 @@ public:
     void run_behavorial_change_case(vector<Policy>* sim_team, int gen, int sim_p, int sim_pp);
     void run_behaviroal_domino_case(vector<Policy>* sim_team, int sim_p, int sim_pp, int gen);
     void run_malicious_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
+    void run_static_full_malicious_case(vector<Policy>* sim_team, int sim_p, int sim_pp);
     
     //New Telemetry Calculations
     void get_new_telem(vector<Policy>* sim_team, int sim_p);
@@ -592,7 +593,6 @@ void Simulator::run_behaviroal_domino_case(vector<Policy>* sim_team, int sim_p, 
 }
 
 
-
 /////////////////////////////////////////////////////////////////
 //runs the malicious case
 void Simulator::run_malicious_case(vector<Policy>* sim_team, int sim_p, int sim_pp)
@@ -600,6 +600,22 @@ void Simulator::run_malicious_case(vector<Policy>* sim_team, int sim_p, int sim_
     if (sim_team->at(sim_p).corp_id == 0)
     {
        //Do nothing
+    }
+    if (sim_team->at(sim_p).corp_id == 1)
+    {
+        sim_team->at(sim_p).policy_fitness += 1;
+        sim_team->at(0).policy_fitness = sim_team->at(0).policy_fitness - 1;
+    }
+}
+
+
+/////////////////////////////////////////////////////////////////
+//runs the static full malicious case
+void Simulator::run_static_full_malicious_case(vector<Policy>* sim_team, int sim_p, int sim_pp)
+{
+    if (sim_team->at(sim_p).corp_id == 0)
+    {
+        //Do nothing
     }
     if (sim_team->at(sim_p).corp_id == 1)
     {
@@ -686,6 +702,11 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 if (pP->malicious_with_len == 1)
                                 {
                                     run_malicious_case(sim_team, sim_p, sim_pp);
+                                }
+                                //static full malicious with leniency
+                                if (pP->stat_full_malicious_with_len == 1)
+                                {
+                                    run_static_full_malicious_case(sim_team, sim_p, sim_pp);
                                 }
                                 run_conflict_counter(sim_team, sim_p, sim_pp, pconflict_counter);
                             }

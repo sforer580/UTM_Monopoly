@@ -90,7 +90,7 @@ public:
     int domino_with_len = 0;                        //0=off, 1=on
     int domino_behavioral_switch_with_len = 0;      //0=off, 1=on
     int malicious_with_len = 0;                     //0=off, 1=on
-    int static_full_malicious = 1;                  //0=off, 1=on
+    int stat_full_malicious_with_len = 1;           //0=off, 1=on
     int leniency;
     int amount_lenient;
     int fair_trial;
