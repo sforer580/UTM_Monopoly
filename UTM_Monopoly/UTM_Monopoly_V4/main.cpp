@@ -30,7 +30,7 @@ using namespace std;
 
 int main()
 {
-    int stat_run = 3;
+    int stat_run = 1;
     srand(time(NULL));
     for (int sr=0; sr<stat_run; sr++)
     {

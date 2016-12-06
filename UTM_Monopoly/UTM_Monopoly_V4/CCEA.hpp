@@ -21,6 +21,7 @@
 #include <iomanip>
 #include <cassert>
 #include <ctime>
+#include <sstream>
 
 
 using namespace std;
@@ -49,6 +50,7 @@ public:
     void create_target_telem();
     void set_conflict_counter();
     void build_world();
+    int loadwaypoints();
     
     //Functions for Simulation
     void set_up_experiment_parameters();
@@ -82,7 +84,7 @@ public:
     vector<double> min_team_1_fitness;
     vector<double> ave_team_1_fitness;
     vector<double> max_team_1_fitness;
-    vector<double> conflict_counter;          //0_0, 0_0, 1_0, 1_1
+    vector<double> conflict_counter;          //0_0, 0_1, 1_0, 1_1
     vector<double> ave_0_0_conflict;
     vector<double> ave_0_1_conflict;
     vector<double> ave_1_0_conflict;
@@ -95,6 +97,7 @@ public:
     void write_statistics_to_file(int sr);
     void write_conflict_data_to_file(int sr);
     void write_parameters_to_file(float seconds);
+    void write_policies_to_file();
     
     
     //Simulator Test Functions
@@ -289,6 +292,53 @@ void CCEA::create_target_telem()
         }
     }
 }
+
+
+
+/////////////////////////////////////////////////////////////////
+//loads the waypoints for a static case
+int CCEA::loadwaypoints()
+{
+    if (pP->stat_full_malicious_with_loaded_wp_with_len)
+    {
+        ifstream ifile("static_waypoints.txt", ios::in);
+        vector<double> sw;
+        
+        //check to see that the file was opened correctly:
+        if (!ifile.is_open())
+        {
+            cerr << "There was a problem opening the input file!\n";
+            exit(1);//exit or do additional error checking
+        }
+        
+        double num = 0.0;
+        //keep storing values from the text file so long as data exists:
+        while (ifile >> num)
+        {
+            sw.push_back(num);
+        }
+        
+        //verify that the scores were stored correctly:
+        for (int i = 0; i < sw.size(); ++i)
+        {
+            //cout << sw[i] << endl;
+        }
+        int counter = 0;
+        for (int inv=0; inv<pP->team_sizes.at(1); inv++)
+        {
+            for (int w=0; w<pP->num_waypoints+2; w++)
+            {
+                for (int i=0; i<3; i++)
+                {
+                    corp.at(1).agents.at(inv).policies.at(0).check_points.at(w).waypoint_telem.at(i) = sw.at(counter);
+                    counter += 1;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 
 
 /////////////////////////////////////////////////////////////////
@@ -996,9 +1046,9 @@ void CCEA::write_statistics_to_file(int sr)
     File2.open("Team 0 Ave Fitness For All Gens.txt", ios_base::app);
     ofstream File3;
     File3.open("Team 0 Max Fitness For All Gens.txt", ios_base::app);
-    File1 << "Stat Run" << "\t" << sr << "\t";
-    File2 << "Stat Run" << "\t" << sr << "\t";
-    File3 << "Stat Run" << "\t" << sr << "\t";
+    //File1 << "Stat Run" << "\t" << sr << "\t";
+    //File2 << "Stat Run" << "\t" << sr << "\t";
+    //File3 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<pP->gen_max; i++)
     {
         File1 << min_team_0_fitness.at(i) << "\t";
@@ -1017,9 +1067,9 @@ void CCEA::write_statistics_to_file(int sr)
     File6.open("Team 1 Max Fitness For All Gens.txt", ios_base::app);
     if (pP->num_teams == 2)
     {
-        File4 << "Stat Run" << "\t" << sr << "\t";
-        File5 << "Stat Run" << "\t" << sr << "\t";
-        File6 << "Stat Run" << "\t" << sr << "\t";
+        //File4 << "Stat Run" << "\t" << sr << "\t";
+        //File5 << "Stat Run" << "\t" << sr << "\t";
+        //File6 << "Stat Run" << "\t" << sr << "\t";
         for (int i=0; i<pP->gen_max; i++)
         {
             File4 << min_team_1_fitness.at(i) << "\t";
@@ -1052,37 +1102,37 @@ void CCEA::write_conflict_data_to_file(int sr)
     File12.open("Team 0 Conflict Data.txt", ios_base::app);
     ofstream File13;
     File13.open("Team 1 Conflict Data.txt", ios_base::app);
-    File7 << "Stat Run" << "\t" << sr << "\t";
+    //File7 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_0_0_conflict.size(); i++)
     {
         File7 << ave_0_0_conflict.at(i) << "\t";
     }
     File7 << endl;
-    File8 << "Stat Run" << "\t" << sr << "\t";
+    //File8 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_0_1_conflict.size(); i++)
     {
         File8 << ave_0_1_conflict.at(i) << "\t";
     }
     File8 << endl;
-    File9 << "Stat Run" << "\t" << sr << "\t";
+    //File9 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_1_0_conflict.size(); i++)
     {
         File9 << ave_1_0_conflict.at(i) << "\t";
     }
     File9 << endl;
-    File10 << "Stat Run" << "\t" << sr << "\t";
+    //File10 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_1_1_conflict.size(); i++)
     {
         File10 << ave_1_1_conflict.at(i) << "\t";
     }
     File10 << endl;
-    File12 << "Stat Run" << "\t" << sr << "\t";
+    //File12 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_0_conflict.size(); i++)
     {
         File12 << ave_0_conflict.at(i) << "\t";
     }
     File12 << endl;
-    File13 << "Stat Run" << "\t" << sr << "\t";
+    //File13 << "Stat Run" << "\t" << sr << "\t";
     for (int i=0; i<ave_1_conflict.size(); i++)
     {
         File13 << ave_1_conflict.at(i) << "\t";
@@ -1209,6 +1259,14 @@ void CCEA::write_parameters_to_file(float seconds)
     {
         File11 << "malicious with leniency on" << endl;
     }
+    if (pP->stat_full_malicious_with_len == 0)
+    {
+        File11 << "static full malicious with leniency off" << endl;
+    }
+    else
+    {
+        File11 << "static full malicious with leniency on" << endl;
+    }
     if (pP->leniency == 0)
     {
         File11 << "leniency off" << endl;
@@ -1233,12 +1291,32 @@ void CCEA::write_parameters_to_file(float seconds)
     {
         File11 << "uncoop on" << endl;
     }
+    
     File11 << " " << endl;
     File11 << "run time" << "\t" << seconds << "\t" << "seconds" << endl;
     File11.close();
 }
 
-
+void CCEA::write_policies_to_file()
+{
+    if (pP->num_teams == 1)
+    {
+        ofstream File12;
+        File12.open("Best_Policies");
+        for (int inv=0; inv<pP->team_sizes.at(0); inv++)
+        {
+            for (int w=0; w<pP->num_waypoints+2; w++)
+            {
+                for (int i=0; i<3; i++)
+                {
+                 File12 << corp.at(0).agents.at(inv).policies.at(0).check_points.at(w).waypoint_telem.at(i) << "\t";
+                }
+            }
+            File12 << " " << endl;
+        }
+        File12.close();
+    }
+}
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1248,6 +1326,7 @@ void CCEA::run_CCEA(int sr, int stat_run)
     clock_t t1, t2;
     t1 = clock();
     build_world();
+    loadwaypoints();
     Simulator_test_functions();     //go to function to run tests
     set_up_experiment_parameters();
     for (int gen=0; gen<pP->gen_max; gen++)
@@ -1350,6 +1429,7 @@ void CCEA::run_CCEA(int sr, int stat_run)
     cout << "run time" << "\t" << seconds << endl;
     write_statistics_to_file(sr);
     write_conflict_data_to_file(sr);
+    write_policies_to_file();
     if (sr == stat_run-1)
     {
      write_parameters_to_file(seconds);   
