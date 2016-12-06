@@ -964,17 +964,37 @@ void CCEA::natural_selection()
 //gets and sotres the average conflict data
 void CCEA::store_ave_conflict_data()
 {
-    ave_0_0_conflict.push_back((conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient))/2);
+
+    double a = 0;
+    double b = 0;
+    double c = 0;
+    double d = 0;
+    double e = 0;
+    double f = 0;
+    a = (conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient))/2;
+    b = conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient);
+    c = conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient);
+    d = (conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient))/2;
+    e = a+b;
+    f = c+d;
+    cout << a << endl;
+    cout << b << endl;
+    cout << e << endl;
+    cout << c << endl;
+    cout << d << endl;
+    cout << f << endl;
+    
+    ave_0_0_conflict.push_back(a);
     //cout << "average 0_0 conflict" << "\t" << ave_0_0_conflict.at(ave_0_0_conflict.size()-1) << endl;
-    ave_0_1_conflict.push_back(conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient));
+    ave_0_1_conflict.push_back(b);
     //cout << "average 0_1 conflict" << "\t" << ave_0_1_conflict.at(ave_0_1_conflict.size()-1) << endl;
-    ave_1_0_conflict.push_back(conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient));
+    ave_1_0_conflict.push_back(c);
     //cout << "average 1_0 conflict" << "\t" << ave_1_0_conflict.at(ave_1_0_conflict.size()-1) << endl;
-    ave_1_1_conflict.push_back((conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient))/2);
+    ave_1_1_conflict.push_back(d);
     //cout << "average 1_1 conflict" << "\t" << ave_1_1_conflict.at(ave_1_1_conflict.size()-1) << endl;
     
-    ave_0_conflict.push_back(((conflict_counter.at(0)/(pP->num_policies*pP->amount_lenient))/2)+(conflict_counter.at(1)/(pP->num_policies*pP->amount_lenient)));
-    ave_1_conflict.push_back(((conflict_counter.at(2)/(pP->num_policies*pP->amount_lenient))/2)+(conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient)));
+    ave_0_conflict.push_back(e);
+    ave_1_conflict.push_back(f);
 }
 
 
@@ -1331,7 +1351,7 @@ void CCEA::run_CCEA(int sr, int stat_run)
     set_up_experiment_parameters();
     for (int gen=0; gen<pP->gen_max; gen++)
     {
-        set_conflict_counter();     //restes the conflict counters
+        set_conflict_counter();     //resets the conflict counters
         if (gen < pP->gen_max-1)
         {
             cout << "sr::gen" << "\t" << sr << "::" << gen << endl;
