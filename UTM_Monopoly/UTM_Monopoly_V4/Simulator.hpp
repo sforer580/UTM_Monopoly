@@ -708,6 +708,10 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 {
                                     run_static_full_malicious_case(sim_team, sim_p, sim_pp);
                                 }
+                                if (pP->stat_full_malicious_with_loaded_wp_with_len == 1)
+                                {
+                                    run_static_full_malicious_case(sim_team, sim_p, sim_pp);
+                                }
                                 run_conflict_counter(sim_team, sim_p, sim_pp, pconflict_counter);
                             }
                         }

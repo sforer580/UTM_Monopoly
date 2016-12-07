@@ -299,7 +299,7 @@ void CCEA::create_target_telem()
 //loads the waypoints for a static case
 int CCEA::loadwaypoints()
 {
-    if (pP->stat_full_malicious_with_loaded_wp_with_len)
+    if (pP->stat_full_malicious_with_loaded_wp_with_len == 1)
     {
         ifstream ifile("static_waypoints.txt", ios::in);
         vector<double> sw;
@@ -335,6 +335,7 @@ int CCEA::loadwaypoints()
                 }
             }
         }
+        clone_policies();
     }
     return 0;
 }
@@ -457,6 +458,14 @@ void CCEA::set_up_experiment_parameters()
     }
     //static full malicious with leniency
     if (pP->stat_full_malicious_with_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+        clone_policies();
+    }
+    if (pP->stat_full_malicious_with_loaded_wp_with_len == 1)
     {
         pP->uncoop = 0;
         pP->leniency = 1;
@@ -944,9 +953,19 @@ void CCEA::natural_selection()
                 MP = corp.at(team).agents.at(indv).policies.at(spot);
                 if (pP->stat_full_malicious_with_len == 0)
                 {
-                 mutation(MP);
+                    if (pP->stat_full_malicious_with_loaded_wp_with_len == 0)
+                    {
+                        mutation(MP);
+                    }
                 }
                 if (pP->stat_full_malicious_with_len == 1)
+                {
+                    if (team == 0)
+                    {
+                        mutation(MP);
+                    }
+                }
+                if (pP->stat_full_malicious_with_loaded_wp_with_len == 1)
                 {
                     if (team == 0)
                     {
@@ -977,12 +996,12 @@ void CCEA::store_ave_conflict_data()
     d = (conflict_counter.at(3)/(pP->num_policies*pP->amount_lenient))/2;
     e = a+b;
     f = c+d;
-    cout << a << endl;
-    cout << b << endl;
-    cout << e << endl;
-    cout << c << endl;
-    cout << d << endl;
-    cout << f << endl;
+    //cout << a << endl;
+    //cout << b << endl;
+    //cout << e << endl;
+    //cout << c << endl;
+    //cout << d << endl;
+    //cout << f << endl;
     
     ave_0_0_conflict.push_back(a);
     //cout << "average 0_0 conflict" << "\t" << ave_0_0_conflict.at(ave_0_0_conflict.size()-1) << endl;
@@ -1286,6 +1305,14 @@ void CCEA::write_parameters_to_file(float seconds)
     else
     {
         File11 << "static full malicious with leniency on" << endl;
+    }
+    if (pP->stat_full_malicious_with_loaded_wp_with_len == 0)
+    {
+        File11 << "static full malicious with loaded wp with leniency off" << endl;
+    }
+    else
+    {
+        File11 << "static full malicious with loaded wp with leniency on" << endl;
     }
     if (pP->leniency == 0)
     {

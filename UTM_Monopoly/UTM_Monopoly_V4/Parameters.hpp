@@ -66,7 +66,7 @@ public:
     int team_7 = 0;
     int team_8 = 0;
     int team_9 = 0;
-    int num_policies = 50;
+    int num_policies = 10;
     int num_waypoints = 6;      //number of intermediate waypoints, total number of waypoints is num_waypoints + 2
     
     vector<int> team_sizes;
@@ -74,14 +74,14 @@ public:
     void set_team_sizes();
     
     //CCEA Settings
-    int gen_max = 100;
+    int gen_max = 10;
     int to_kill = num_policies/2;
     int to_replicate = to_kill;
     double mutate_percentage = 50;
     double mutation_range = 1;
     
     //Experiments
-    int coop_no_len = 1;                                    //0=off, 1=on
+    int coop_no_len = 0;                                    //0=off, 1=on
     int coop_with_len = 0;                                  //0=off, 1=on
     int coop_fair = 0;                                      //0=off, 1=on
     int uncoop_no_len = 0;                                  //0=off, 1=on
@@ -91,7 +91,7 @@ public:
     int domino_behavioral_switch_with_len = 0;              //0=off, 1=on
     int malicious_with_len = 0;                             //0=off, 1=on
     int stat_full_malicious_with_len = 0;                   //0=off, 1=on
-    int stat_full_malicious_with_loaded_wp_with_len = 0;    //0=off, 1=on
+    int stat_full_malicious_with_loaded_wp_with_len = 1;    //0=off, 1=on
     int leniency;
     int amount_lenient;
     int fair_trial;
