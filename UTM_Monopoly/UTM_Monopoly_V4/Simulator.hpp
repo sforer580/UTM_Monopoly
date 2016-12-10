@@ -668,6 +668,10 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 {
                                     run_cooperative_case(sim_team, sim_p, sim_pp);
                                 }
+                                if (pP->stat_coop_with_loaded_wp_with_len == 1)
+                                {
+                                    run_cooperative_case(sim_team, sim_p, sim_pp);
+                                }
                                 //coop fair trial
                                 if (pP->coop_fair == 1)
                                 {
