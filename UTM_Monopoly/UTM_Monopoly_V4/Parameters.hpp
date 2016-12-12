@@ -89,6 +89,7 @@ public:
     int uncoop_with_len = 0;                                //0=off, 1=on
     int uncoop_behavioral_switch_with_len = 0;              //0=off, 1=on
     int domino_with_len = 0;                                //0=off, 1=on
+    int stat_domino_with_loaded_wp_with_len = 0;            //0=off, 1=on
     int domino_behavioral_switch_with_len = 0;              //0=off, 1=on
     int malicious_with_len = 0;                             //0=off, 1=on
     int stat_full_malicious_with_len = 0;                   //0=off, 1=on

@@ -375,6 +375,44 @@ int CCEA::loadwaypoints()
         }
         clone_policies();
     }
+    if (pP->stat_domino_with_loaded_wp_with_len == 1)
+    {
+        ifstream ifile("static_waypoints.txt", ios::in);
+        vector<double> sw;
+        
+        //check to see that the file was opened correctly:
+        if (!ifile.is_open())
+        {
+            cerr << "There was a problem opening the input file!\n";
+            exit(1);//exit or do additional error checking
+        }
+        
+        double num = 0.0;
+        //keep storing values from the text file so long as data exists:
+        while (ifile >> num)
+        {
+            sw.push_back(num);
+        }
+        
+        //verify that the scores were stored correctly:
+        for (int i = 0; i < sw.size(); ++i)
+        {
+            //cout << sw[i] << endl;
+        }
+        int counter = 0;
+        for (int inv=0; inv<pP->team_sizes.at(1); inv++)
+        {
+            for (int w=0; w<pP->num_waypoints+2; w++)
+            {
+                for (int i=0; i<3; i++)
+                {
+                    corp.at(1).agents.at(inv).policies.at(0).check_points.at(w).waypoint_telem.at(i) = sw.at(counter);
+                    counter += 1;
+                }
+            }
+        }
+        clone_policies();
+    }
     return 0;
 }
 
@@ -486,6 +524,14 @@ void CCEA::set_up_experiment_parameters()
         pP->leniency = 1;
         pP->amount_lenient = 5;
         pP->fair_trial = 0;
+    }
+    if (pP->stat_domino_with_loaded_wp_with_len == 1)
+    {
+        pP->uncoop = 0;
+        pP->leniency = 1;
+        pP->amount_lenient = 5;
+        pP->fair_trial = 0;
+        clone_policies();
     }
     //domino behavioral switch with leniency
     if (pP->domino_behavioral_switch_with_len == 1)
@@ -1346,6 +1392,14 @@ void CCEA::write_parameters_to_file(float seconds)
     else
     {
         File11 << "domino with leniency on" << endl;
+    }
+    if (pP->stat_domino_with_loaded_wp_with_len == 0)
+    {
+        File11 << "static domino with loaded waypoints with leniency off" << endl;
+    }
+    else
+    {
+        File11 << "static domino with loaded waypoints with leniency on" << endl;
     }
     if (pP->domino_behavioral_switch_with_len == 0)
     {
