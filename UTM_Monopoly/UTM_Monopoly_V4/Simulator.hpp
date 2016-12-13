@@ -687,6 +687,10 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 {
                                     run_uncoop_case(sim_team, sim_p, sim_pp);
                                 }
+                                if (pP->stat_uncoop_with_loaded_wp_with_len == 1)
+                                {
+                                    run_uncoop_case(sim_team, sim_p, sim_pp);
+                                }
                                 //uncoop behavioral switch with leniency
                                 if (pP->uncoop_behavioral_switch_with_len == 1)
                                 {
@@ -694,6 +698,10 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 }
                                 //domino effect with leniency
                                 if (pP->domino_with_len == 1)
+                                {
+                                    run_domino_case(sim_team, sim_p, sim_pp);
+                                }
+                                if (pP->stat_domino_with_loaded_wp_with_len == 1)
                                 {
                                     run_domino_case(sim_team, sim_p, sim_pp);
                                 }
@@ -715,10 +723,6 @@ void Simulator::check_for_collisions(vector<Policy>* sim_team, int gen, vector<d
                                 if (pP->stat_full_malicious_with_loaded_wp_with_len == 1)
                                 {
                                     run_static_full_malicious_case(sim_team, sim_p, sim_pp);
-                                }
-                                if (pP->stat_domino_with_loaded_wp_with_len == 1)
-                                {
-                                    run_domino_case(sim_team, sim_p, sim_pp);
                                 }
                                 run_conflict_counter(sim_team, sim_p, sim_pp, pconflict_counter);
                             }
